@@ -1,19 +1,13 @@
-import {
-  Resolver,
-  Query,
-  Ctx,
-  FieldResolver,
-  Mutation,
-  Authorized,
-} from "type-graphql";
+import { Resolver, Query, Ctx, Mutation, Authorized } from "type-graphql";
 import { User } from "../../entity/User";
 import { MyContext } from "../../types/Context";
+import { getMongoManager } from "typeorm";
 
 @Resolver(User)
 export class UserResolver {
   constructor() {}
 
-  
+  @Query(())
 
   @Authorized()
   @Mutation(() => Boolean)
@@ -35,6 +29,7 @@ export class UserResolver {
     ctx: MyContext
   ) {
     const { userId } = ctx.req.session!;
-    return userId ? User.findOne(userId) : null;
+    const manage = getMongoManager();
+    return userId ? manage.findOne(User, { id: userId }) : null;
   }
 }
