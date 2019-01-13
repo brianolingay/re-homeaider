@@ -13,13 +13,26 @@ import { redis } from "./redis";
 
 import { createTypeormConn } from "./createTypeormConn";
 
-const SESSION_SECRET = "ajslkjalksjdfkl";
 const RedisStore = connectRedis(session as any);
 
 const startServer = async () => {
   const conn = await createTypeormConn();
   if (conn) {
     await conn.runMigrations();
+    if (process.env.NODE_ENV !== "production") {
+      const entities: any = [];
+      (await conn.entityMetadatas).forEach(x =>
+        entities.push({ name: x.name, tableName: x.tableName })
+      );
+      try {
+        for (const entity of entities) {
+          const repository = await conn.getMongoRepository(entity.name);
+          await repository.deleteMany({});
+        }
+      } catch (error) {
+        throw new Error(`ERROR: Cleaning test db: ${error}`);
+      }
+    }
   }
 
   const app = express();
@@ -32,7 +45,7 @@ const startServer = async () => {
       },
     }),
     context: ({ req }: any) => ({
-      req
+      req,
     }),
     formatError: (error: GraphQLError) => {
       if (error.originalError instanceof ApolloError) {
@@ -78,7 +91,7 @@ const startServer = async () => {
         client: redis as any,
       }),
       name: "qid",
-      secret: SESSION_SECRET,
+      secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
       cookie: {

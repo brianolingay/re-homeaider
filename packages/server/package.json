@@ -10,17 +10,20 @@
     "@types/express-session": "^1.15.11",
     "@types/graphql": "^14.0.4",
     "@types/ioredis": "^4.0.4",
+    "@types/mongodb": "^3.1.18",
     "@types/node": "^8.0.29",
     "@types/uuid": "^3.4.4",
     "cross-env": "^5.2.0",
     "nodemon": "^1.18.9",
     "ts-node": "3.3.0",
     "tslint": "^5.12.0",
-    "typescript": "2.5.2"
+    "typescript": "2.5.2",
+    "yup": "^0.26.7"
   },
   "dependencies": {
+    "@homeaider/common": "0.0.1",
     "apollo-server-express": "^2.3.1",
-    "bcryptjs": "^2.4.3",
+    "argon2": "^0.20.0",
     "connect-redis": "^3.4.0",
     "cors": "^2.8.5",
     "dataloader": "^1.4.0",

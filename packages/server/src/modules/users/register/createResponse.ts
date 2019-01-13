@@ -1,8 +1,8 @@
 import { ObjectType, Field } from "type-graphql";
-import { ErrorResponse } from "./../../shared/errorResponse";
+import { ErrorResponse } from "../../shared/errorResponse";
 
 @ObjectType()
-export class LoginResponse {
+export class RegisterResponse {
   @Field(() => [ErrorResponse], { nullable: true })
   errors: ErrorResponse[];
 }

@@ -1,5 +1,6 @@
-import { Entity, ObjectIdColumn, ObjectID, Column } from "typeorm";
+import { Entity, ObjectIdColumn, Column } from "typeorm";
 import { ObjectType, Field, ID } from "type-graphql";
+import { ObjectID } from "mongodb";
 
 @Entity()
 @ObjectType()
@@ -8,8 +9,8 @@ export class User {
   @ObjectIdColumn()
   id: ObjectID;
 
-  @Field(() => String)
-  @Column()
+  @Field()
+  @Column({ unique: true })
   email: string;
 
   @Field()
@@ -20,22 +21,28 @@ export class User {
   @Column()
   lastName: string;
 
-  @Column()
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
   phone: string | null;
 
+  @Field()
   @Column()
-  mobile: string | null;
+  mobile: string;
 
-  @Column()
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
   address: string | null;
 
-  @Column()
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
   city: string | null;
 
-  @Column()
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
   county: string | null;
 
-  @Column()
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
   coordinates: any;
 
   @Column()
