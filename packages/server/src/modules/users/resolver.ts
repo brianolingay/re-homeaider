@@ -49,7 +49,6 @@ export class UserResolver {
     }).exec();
 
     if (userAlreadyExists) {
-      console.log(userAlreadyExists);
       return {
         errors: [
           {
@@ -65,9 +64,7 @@ export class UserResolver {
       password: await argon.hash(password),
     });
 
-    const newUser = await user.save();
-
-    console.log(newUser);
+    await user.save();
 
     return null;
   }
@@ -110,10 +107,10 @@ export class UserResolver {
     @Ctx()
     ctx: MyContext
   ) {
-    return new Promise(res =>
+    return await new Promise(res =>
       ctx.req.session!.destroy(err => {
         console.log(err);
-        res(!!err);
+        res(!err);
       })
     );
   }
@@ -127,11 +124,11 @@ export class UserResolver {
     if (!userId) {
       return null;
     }
-    console.log(userId);
+
     const user = await UserModel.findById(userId)
       .lean()
       .exec();
-    console.log(user);
+
     return user ? { ...user, _id: user!._id.toString() } : null;
   }
 }
