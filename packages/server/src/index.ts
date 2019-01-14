@@ -11,29 +11,12 @@ import * as cors from "cors";
 
 import { redis } from "./redis";
 
-import { createTypeormConn } from "./createTypeormConn";
+import { createMongooseConn } from "./utils/createMongooseConn";
 
 const RedisStore = connectRedis(session as any);
 
 const startServer = async () => {
-  const conn = await createTypeormConn();
-  if (conn) {
-    await conn.runMigrations();
-    if (process.env.NODE_ENV !== "production") {
-      const entities: any = [];
-      (await conn.entityMetadatas).forEach(x =>
-        entities.push({ name: x.name, tableName: x.tableName })
-      );
-      try {
-        for (const entity of entities) {
-          const repository = await conn.getMongoRepository(entity.name);
-          await repository.deleteMany({});
-        }
-      } catch (error) {
-        throw new Error(`ERROR: Cleaning test db: ${error}`);
-      }
-    }
-  }
+  await createMongooseConn();
 
   const app = express();
 

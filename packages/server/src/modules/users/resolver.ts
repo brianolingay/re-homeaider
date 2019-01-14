@@ -1,8 +1,8 @@
 import { Resolver, Query, Ctx, Mutation, Authorized, Arg } from "type-graphql";
-import { getMongoRepository } from "typeorm";
 import * as argon from "argon2";
 import { validUserSchema, loginSchema } from "@homeaider/common";
 
+import { UserModel } from "./../../models/User";
 import { User } from "../../entity/User";
 import { MyContext } from "../../types/Context";
 
@@ -40,13 +40,13 @@ export class UserResolver {
     // const subscription = Subscription.findOne({ amount: 0 }, "_id");
     // const services = Service.find();
 
-    const { email, firstName, lastName, mobile, password } = registerInput;
+    const { email, password } = registerInput;
 
     // const roleV = Role.findOne({ _id: role });
 
-    const repo = getMongoRepository(User);
-
-    const userAlreadyExists = await repo.findOne({ email });
+    const userAlreadyExists = await UserModel.findOne({ email }, "_id", {
+      lean: true,
+    }).exec();
 
     if (userAlreadyExists) {
       console.log(userAlreadyExists);
@@ -60,14 +60,12 @@ export class UserResolver {
       };
     }
 
-    const user = new User();
-    user.email = email;
-    user.firstName = firstName;
-    user.lastName = lastName;
-    user.mobile = mobile;
-    user.password = await argon.hash(password);
+    const user = new UserModel({
+      ...registerInput,
+      password: await argon.hash(password),
+    });
 
-    const newUser = await repo.save(user);
+    const newUser = await user.save();
 
     console.log(newUser);
 
@@ -87,9 +85,9 @@ export class UserResolver {
     }
 
     const { email, password } = loginInput;
-
-    const repo = getMongoRepository(User);
-    const user = await repo.findOne({ email });
+    const user = await UserModel.findOne({ email })
+      .lean()
+      .exec();
 
     if (!user) {
       return { errors: errorResponse };
@@ -101,8 +99,7 @@ export class UserResolver {
       return { errors: errorResponse };
     }
 
-    console.log(user);
-    ctx.req.session!.userId = user.id;
+    ctx.req.session!.userId = user._id;
 
     return null;
   }
@@ -131,11 +128,10 @@ export class UserResolver {
       return null;
     }
     console.log(userId);
-    const user = new User();
-    user.id = userId;
-    const repo = getMongoRepository(User);
-    const newUser = await repo.findOne(user);
-    console.log(newUser);
-    return newUser ? newUser : null;
+    const user = await UserModel.findById(userId)
+      .lean()
+      .exec();
+    console.log(user);
+    return user ? { ...user, _id: user!._id.toString() } : null;
   }
 }
