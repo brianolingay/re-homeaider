@@ -10,7 +10,7 @@ import { RoleInput } from "./input";
 import { formatYupError } from "../../utils/formatYupError";
 
 @Resolver(Role)
-export class UserResolver {
+export class RoleResolver {
   constructor() {}
 
   @Authorized()
