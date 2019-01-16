@@ -8,5 +8,5 @@ export const validSubscriptionSchema = yup.object().shape({
     .max(255)
     .required(),
   benefits: yup.array().required(),
-  paymentBy: yup.string().required()
+  paymentMode: yup.string().required(),
 });
