@@ -1,7 +1,7 @@
 import { Request } from "express";
 import * as DataLoader from "dataloader";
 
-import { User } from "../entity/User";
+import { User } from "./objects/User";
 
 export interface MyContext {
   req: Request;

@@ -3,7 +3,7 @@ import * as argon from "argon2";
 import { validUserSchema, loginSchema } from "@homeaider/common";
 
 import { UserModel } from "./../../models/User";
-import { User } from "../../entity/User";
+import { User } from "../../types/objects/User";
 import { MyContext } from "../../types/Context";
 
 import { LoginInput } from "./login/createInput";
