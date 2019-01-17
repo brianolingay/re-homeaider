@@ -1,4 +1,6 @@
 import { Document, Schema, model } from "mongoose";
+import { SubscriptionInterface } from "./Subscription";
+import { RoleInterface } from "./Role";
 
 export interface UserInterface extends Document {
   email: string;
@@ -11,19 +13,18 @@ export interface UserInterface extends Document {
   country: string | null;
   coordinates: number[] | null;
   password: string;
-  // trial: boolean;
-  // subscription: string; // Schema.Types.ObjectId
+  subscription: SubscriptionInterface | null;
+  subscribedAt: Date | null;
+  role: RoleInterface;
   // online: boolean;
   // confirmed: boolean;
   // forgotPasswordLocked: boolean;
   // createdAt: Date;
   // updatedAt: Date;
   // trialedAt: Date;
-  // subscribedAt: Date;
   // cetertificates?: string[] | null;
   // avatar?: ImageModel | null;
   // services?: string[] | null; // Schema.Types.ObjectId
-  // role: RoleModel;
 }
 
 const userSchema: Schema = new Schema(

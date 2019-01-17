@@ -1,4 +1,5 @@
-import { ObjectType, Field, ID, registerEnumType } from "type-graphql";
+import { ObjectType, Field, registerEnumType } from "type-graphql";
+import { ObjectId } from "mongodb";
 import { PaymentMode } from "../paymentModeEnum";
 
 registerEnumType(PaymentMode, {
@@ -8,8 +9,8 @@ registerEnumType(PaymentMode, {
 
 @ObjectType()
 export class Subscription {
-  @Field(() => ID)
-  _id: string;
+  @Field()
+  readonly _id: ObjectId;
 
   @Field()
   name: string;

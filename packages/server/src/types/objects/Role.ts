@@ -1,9 +1,10 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { ObjectType, Field } from "type-graphql";
+import { ObjectId } from "mongodb";
 
 @ObjectType()
 export class Role {
-  @Field(() => ID)
-  _id: string;
+  @Field()
+  readonly _id: ObjectId;
 
   @Field()
   name: string;

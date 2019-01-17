@@ -1,9 +1,12 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { ObjectType, Field } from "type-graphql";
+import { ObjectId } from "mongodb";
+import { Subscription } from "./Subscription";
+import { Role } from "./Role";
 
 @ObjectType()
 export class User {
-  @Field(() => ID)
-  _id: string;
+  @Field()
+  readonly _id: ObjectId;
 
   @Field()
   email: string;
@@ -31,4 +34,13 @@ export class User {
 
   @Field(() => [Number], { nullable: true })
   coordinates: number[] | null;
+
+  @Field(() => Subscription, { nullable: true })
+  subscription: Subscription | null;
+
+  @Field(() => Date, { nullable: true })
+  subscribedAt: Date | null;
+
+  @Field(() => Role, { nullable: true })
+  role: Role | null;
 }

@@ -7,11 +7,13 @@ import * as session from "express-session";
 import * as connectRedis from "connect-redis";
 import * as express from "express";
 import { buildSchema } from "type-graphql";
+import { ObjectId } from "mongodb";
 import * as cors from "cors";
 
 import { redis } from "./redis";
 
 import { createMongooseConn } from "./utils/createMongooseConn";
+import { ObjectIdScalar } from "./scalars/ObjectIDScalar";
 
 const RedisStore = connectRedis(session as any);
 
@@ -23,6 +25,7 @@ const startServer = async () => {
   const server = new ApolloServer({
     schema: await buildSchema({
       resolvers: [__dirname + "/modules/**/resolver.*"],
+      scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }],
       authChecker: ({ context }) => {
         return context.req.session && context.req.session.userId; // or false if access denied
       },

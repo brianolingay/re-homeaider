@@ -1,4 +1,5 @@
 import { Resolver, Query, Mutation, Authorized, Arg } from "type-graphql";
+import { ObjectId } from "mongodb";
 import { validRoleSchema } from "@homeaider/common";
 
 import { RoleModel } from "./../../models/Role";
@@ -51,7 +52,7 @@ export class RoleResolver {
   @Authorized()
   @Mutation(() => RoleResponse, { nullable: true })
   async updateRole(
-    @Arg("roleId") roleId: string,
+    @Arg("roleId") roleId: ObjectId,
     @Arg("input") roleInput: RoleInput
   ): Promise<RoleResponse | null> {
     try {
@@ -89,7 +90,7 @@ export class RoleResolver {
   @Authorized()
   @Mutation(() => RoleResponse, { nullable: true })
   async deleteRole(
-    @Arg("roleId") roleId: string
+    @Arg("roleId") roleId: ObjectId
   ): Promise<RoleResponse | null> {
     try {
       await RoleModel.deleteOne({ _id: roleId });
@@ -114,8 +115,6 @@ export class RoleResolver {
       .lean()
       .exec();
 
-    console.log(roles);
-
-    return roles.map((role: Role) => ({ ...role, _id: role!._id.toString() }));
+    return roles;
   }
 }

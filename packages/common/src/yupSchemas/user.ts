@@ -32,6 +32,8 @@ export const validUserSchema = yup.object().shape({
     .max(255)
     .required(),
   mobile: yup.string().required(),
+  subscriptionId: yup.string().required(),
+  roleId: yup.string().required(),
 });
 
 export const validUpdateUserSchema = yup.object().shape({

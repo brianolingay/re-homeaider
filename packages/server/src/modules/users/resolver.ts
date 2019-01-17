@@ -1,3 +1,4 @@
+import { RoleModel } from "./../../models/Role";
 import { Resolver, Query, Ctx, Mutation, Authorized, Arg } from "type-graphql";
 import * as argon from "argon2";
 import { validUserSchema, loginSchema } from "@homeaider/common";
@@ -13,6 +14,8 @@ import { invalidLogin } from "./login/constants";
 import { RegisterResponse } from "./register/createResponse";
 import { RegisterInput } from "./register/createInput";
 import { duplicateEmail } from "./register/constants";
+
+import { SubscriptionModel } from "./../../models/Subscription";
 
 import { formatYupError } from "../../utils/formatYupError";
 
@@ -37,12 +40,12 @@ export class UserResolver {
       return { errors: formatYupError(err) };
     }
 
-    // const subscription = Subscription.findOne({ amount: 0 }, "_id");
+    const subscription = await SubscriptionModel.findOne({ amount: 0 }).exec();
     // const services = Service.find();
 
-    const { email, password } = registerInput;
+    const { email, password, roleId } = registerInput;
 
-    // const roleV = Role.findOne({ _id: role });
+    const role = await RoleModel.findOne({ _id: roleId }).exec();
 
     const userAlreadyExists = await UserModel.findOne({ email }, "_id", {
       lean: true,
@@ -62,6 +65,8 @@ export class UserResolver {
     const user = new UserModel({
       ...registerInput,
       password: await argon.hash(password),
+      subscription,
+      role,
     });
 
     await user.save();
@@ -129,6 +134,6 @@ export class UserResolver {
       .lean()
       .exec();
 
-    return user ? { ...user, _id: user!._id.toString() } : null;
+    return user ? user : null;
   }
 }

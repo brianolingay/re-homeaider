@@ -1,4 +1,5 @@
 import { Resolver, Query, Mutation, Authorized, Arg } from "type-graphql";
+import { ObjectId } from "mongodb";
 import { validSubscriptionSchema } from "@homeaider/common";
 
 import { SubscriptionModel } from "./../../models/Subscription";
@@ -57,7 +58,7 @@ export class SubscriptionResolver {
   @Authorized()
   @Mutation(() => SubscriptionResponse, { nullable: true })
   async updateSubscription(
-    @Arg("subscriptionId") subscriptionId: string,
+    @Arg("subscriptionId") subscriptionId: ObjectId,
     @Arg("input") subscriptionInput: SubscriptionInput
   ): Promise<SubscriptionResponse | null> {
     try {
@@ -100,7 +101,7 @@ export class SubscriptionResolver {
   @Authorized()
   @Mutation(() => SubscriptionResponse, { nullable: true })
   async deleteSubscription(
-    @Arg("subscriptionId") subscriptionId: string
+    @Arg("subscriptionId") subscriptionId: ObjectId
   ): Promise<SubscriptionResponse | null> {
     try {
       await SubscriptionModel.deleteOne({ _id: subscriptionId });
@@ -125,9 +126,6 @@ export class SubscriptionResolver {
       .lean()
       .exec();
 
-    return subscriptions.map((role: Subscription) => ({
-      ...role,
-      _id: role!._id.toString(),
-    }));
+    return subscriptions;
   }
 }
