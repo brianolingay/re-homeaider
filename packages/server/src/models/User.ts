@@ -1,5 +1,8 @@
-import { Document, Schema, model } from "mongoose";
+import { Document, Schema, Types, model } from "mongoose";
+import { ImageInterface, imageSchema } from "./Image";
+import { CertificateInterface, certificateSchema } from "./Certificate";
 import { SubscriptionInterface } from "./Subscription";
+import { ServiceInterface } from "./Service";
 import { RoleInterface } from "./Role";
 
 export interface UserInterface extends Document {
@@ -15,16 +18,15 @@ export interface UserInterface extends Document {
   password: string;
   subscription: SubscriptionInterface | null;
   subscribedAt: Date | null;
+  services: [ServiceInterface] | null;
+  cetertificates: [CertificateInterface] | null;
+  avatar: ImageInterface | null;
   role: RoleInterface;
-  // online: boolean;
-  // confirmed: boolean;
-  // forgotPasswordLocked: boolean;
-  // createdAt: Date;
-  // updatedAt: Date;
-  // trialedAt: Date;
-  // cetertificates?: string[] | null;
-  // avatar?: ImageModel | null;
-  // services?: string[] | null; // Schema.Types.ObjectId
+  status: string;
+  confirmed: boolean;
+  forgotPasswordLocked: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const userSchema: Schema = new Schema(
@@ -57,20 +59,18 @@ const userSchema: Schema = new Schema(
       required: true,
       minlength: 5,
     },
-    // online: { type: Boolean, default: false },
-    // trial: { type: Boolean, default: false },
-    // subscription: { type: Schema.Types.ObjectId, ref: "Subscription" },
-    // confirmed: { type: Boolean, default: false },
-    // forgotPasswordLocked: {
-    //   type: Boolean,
-    //   default: false,
-    // },
-    // trialedAt: Date,
-    // subscribedAt: Date,
-    // cetertificates: [certificateSchema],
-    // avatar: imageSchema,
-    // services: [{ type: Schema.Types.ObjectId, ref: "Service" }],
-    // role: { type: Schema.Types.ObjectId, ref: "Role" },
+    subscription: { type: Types.ObjectId, ref: "Subscription" },
+    subscribedAt: Date,
+    services: [{ type: Types.ObjectId, ref: "Service" }],
+    role: { type: Types.ObjectId, ref: "Role" },
+    status: { type: String, enum: ["online", "idle", "office"] },
+    confirmed: { type: Boolean, default: false },
+    forgotPasswordLocked: {
+      type: Boolean,
+      default: false,
+    },
+    cetertificates: [certificateSchema],
+    avatar: imageSchema,
   },
   { autoIndex: false }
 );
