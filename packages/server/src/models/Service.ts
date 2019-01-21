@@ -3,10 +3,10 @@ import { CateogryInterface } from "./Category";
 
 export interface ServiceInterface extends Document {
   name: string;
-  description?: string;
+  description: string | null;
   category: CateogryInterface;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | null;
+  updatedAt: Date | null;
 }
 
 export const serviceSchema: Schema = new Schema(

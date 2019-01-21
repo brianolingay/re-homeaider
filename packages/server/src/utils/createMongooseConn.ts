@@ -8,7 +8,7 @@ export const createMongooseConn = async () => {
   const conn = await mongoose.connect(
     dbUri,
     {
-      useNewUrlParser: true
+      useNewUrlParser: true,
     }
   );
 

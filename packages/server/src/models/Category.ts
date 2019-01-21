@@ -1,10 +1,10 @@
-import { ServiceInterface } from "./Service";
 import { Document, Schema, model } from "mongoose";
+import { ServiceInterface } from "./Service";
 
 export interface CateogryInterface extends Document {
   name: string;
   description: string | null;
-  services: [ServiceInterface] | null;
+  services: ServiceInterface[] | null;
   createdAt: Date;
   updatedAt: Date;
 }

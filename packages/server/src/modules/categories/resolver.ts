@@ -11,7 +11,7 @@ import { CategoryInput } from "./input";
 import { formatYupError } from "../../utils/formatYupError";
 
 @Resolver(Category)
-export class RoleResolver {
+export class CategoryResolver {
   constructor() {}
 
   @Authorized()
@@ -98,7 +98,7 @@ export class RoleResolver {
       return {
         errors: [
           {
-            path: "role",
+            path: "category",
             message: "Something went wrong!",
           },
         ],
@@ -112,7 +112,7 @@ export class RoleResolver {
   @Query(() => [Category], { nullable: true })
   async categories(): Promise<Category[]> {
     const categories = await CategoryModel.find({})
-      .lean()
+      .populate({ path: "services", populate: { path: "category" } })
       .exec();
 
     return categories;
