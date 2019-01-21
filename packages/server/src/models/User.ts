@@ -61,7 +61,7 @@ const userSchema: Schema = new Schema(
     },
     subscription: { type: Types.ObjectId, ref: "Subscription" },
     subscribedAt: Date,
-    services: [{ type: Types.ObjectId, ref: "Service" }],
+    services: [{ type: Schema.Types.ObjectId, ref: "Service" }],
     role: { type: Types.ObjectId, ref: "Role" },
     status: { type: String, enum: ["online", "idle", "office"] },
     confirmed: { type: Boolean, default: false },

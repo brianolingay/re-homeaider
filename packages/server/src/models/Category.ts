@@ -1,5 +1,5 @@
-import { Document, Schema, Types, model } from "mongoose";
 import { ServiceInterface } from "./Service";
+import { Document, Schema, model } from "mongoose";
 
 export interface CateogryInterface extends Document {
   name: string;
@@ -9,20 +9,23 @@ export interface CateogryInterface extends Document {
   updatedAt: Date;
 }
 
-export const categorySchema: Schema = new Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-    unique: true,
-    index: true,
+export const categorySchema: Schema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+      unique: true,
+      index: true,
+    },
+    description: {
+      type: String,
+      trim: true,
+    },
+    services: [{ type: Schema.Types.ObjectId, ref: "Service" }],
   },
-  description: {
-    type: String,
-    trim: true,
-  },
-  services: [{ type: Types.ObjectId, ref: "Service" }],
-});
+  { autoIndex: false }
+);
 
 categorySchema.set("timestamps", true);
 

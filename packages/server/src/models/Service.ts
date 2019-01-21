@@ -9,21 +9,24 @@ export interface ServiceInterface extends Document {
   updatedAt: Date;
 }
 
-export const serviceSchema: Schema = new Schema({
-  name: {
-    type: String,
-    required: true,
-    maxlength: 60,
-    trim: true,
-    unique: true,
-    index: true,
+export const serviceSchema: Schema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      maxlength: 60,
+      trim: true,
+      unique: true,
+      index: true,
+    },
+    description: {
+      type: String,
+      trim: true,
+    },
+    category: { type: Schema.Types.ObjectId, ref: "Category" },
   },
-  description: {
-    type: String,
-    trim: true,
-  },
-  category: { type: Schema.Types.ObjectId, ref: "Category" },
-});
+  { autoIndex: false }
+);
 
 serviceSchema.set("timestamps", true);
 
