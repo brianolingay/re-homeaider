@@ -1,21 +1,20 @@
 import { Button, Form } from "semantic-ui-react";
 import { Formik, Field } from "formik";
-import { registerSchema } from "@codeponder/common";
+import { validUserSchema } from "@homeaider/common";
 import { Mutation } from "react-apollo";
 import Router from "next/router";
 
 import { InputField } from "../components/formik-fields/InputField";
 import { ErrorMessage } from "../components/ErrorMessage";
 import { normalizeErrors } from "../utils/normalizeErrors";
-import { registerMutation } from "../graphql/user/mutation/register";
+import { registerMutation } from "../graphql/user/mutations/register";
 import {
   RegisterMutation,
-  RegisterMutationVariables
-} from "../lib/schema-types";
+  RegisterMutationVariables,
+} from "../components/apollo-components";
 import Layout from "../components/Layout";
 
 interface FormValues {
-  username: string;
   email: string;
   password: string;
 }
@@ -30,7 +29,7 @@ export default () => (
           initialValues={{ username: "", email: "", password: "" }}
           onSubmit={async (input, { setErrors, setSubmitting }) => {
             const response = await mutate({
-              variables: { input }
+              variables: { input },
             });
 
             if (
@@ -45,7 +44,7 @@ export default () => (
               Router.push("/login");
             }
           }}
-          validationSchema={registerSchema}
+          validationSchema={validUserSchema}
           validateOnBlur={false}
           validateOnChange={false}
         >
