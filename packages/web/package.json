@@ -18,6 +18,8 @@
     "react": "16.7.0",
     "react-apollo": "2.4.0",
     "react-dom": "16.7.0",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.84.0",
     "styled-components": "4.1.3"
   },
   "devDependencies": {
@@ -30,8 +32,8 @@
     "graphql-code-generator": "0.16.0",
     "graphql-codegen-typescript-client": "0.16.0",
     "graphql-codegen-typescript-common": "0.16.0",
-    "nodemon": "1.18.9",
     "graphql-codegen-typescript-react-apollo": "0.16.0",
+    "nodemon": "1.18.9",
     "ts-node": "8.0.1",
     "typescript": "3.2.4",
     "url-loader": "1.1.2"
