@@ -5,12 +5,9 @@ export const createMongooseConn = async () => {
   //   process.env.NODE_ENV === "test" ? "test-homeaider" : "homeaider";
   const dbUri = `${process.env.MONGODB_URI}`;
 
-  const conn = await mongoose.connect(
-    dbUri,
-    {
-      useNewUrlParser: true,
-    }
-  );
+  const conn = await mongoose.connect(dbUri, {
+    useNewUrlParser: true,
+  });
 
   conn.set("debug", true);
 

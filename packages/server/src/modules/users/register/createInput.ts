@@ -16,8 +16,5 @@ export class RegisterInput implements Partial<User> {
   mobile: string;
 
   @Field()
-  roleId: string;
-
-  @Field()
   password: string;
 }

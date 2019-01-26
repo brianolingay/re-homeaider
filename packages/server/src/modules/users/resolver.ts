@@ -32,8 +32,9 @@ export class UserResolver {
 
   @Mutation(() => RegisterResponse, { nullable: true })
   async register(
+    @Arg("role") role: String,
     @Arg("input") registerInput: RegisterInput
-  ): Promise<RegisterResponse | null> {
+  ): Promise<RegisterResponse> {
     try {
       await validUserSchema.validate(registerInput, { abortEarly: false });
     } catch (err) {
@@ -43,9 +44,11 @@ export class UserResolver {
     const subscription = await SubscriptionModel.findOne({ amount: 0 }).exec();
     // const services = Service.find();
 
-    const { email, password, roleId } = registerInput;
+    const { email, password } = registerInput;
 
-    const role = await RoleModel.findOne({ _id: roleId }).exec();
+    const roleData = await RoleModel.findOne({ name: role }, "_id")
+      .lean()
+      .exec();
 
     const userAlreadyExists = await UserModel.findOne({ email }, "_id", {
       lean: true,
@@ -66,12 +69,12 @@ export class UserResolver {
       ...registerInput,
       password: await argon.hash(password),
       subscription,
-      role,
+      role: roleData._id,
     });
 
     await user.save();
 
-    return null;
+    return { errors: [] };
   }
 
   @Mutation(() => LoginResponse, { nullable: true })

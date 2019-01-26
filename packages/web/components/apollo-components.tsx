@@ -39,8 +39,6 @@ export interface RegisterInput {
 
   mobile: string;
 
-  roleId: string;
-
   password: string;
 }
 
@@ -97,23 +95,24 @@ export type LogoutMutation = {
   logout: boolean;
 };
 
-export type RegisterMutationVariables = {
+export type RegisterVariables = {
+  role: string;
   input: RegisterInput;
 };
 
-export type RegisterMutationMutation = {
+export type RegisterMutation = {
   __typename?: "Mutation";
 
-  register: Maybe<RegisterMutationRegister>;
+  register: Maybe<RegisterRegister>;
 };
 
-export type RegisterMutationRegister = {
+export type RegisterRegister = {
   __typename?: "RegisterResponse";
 
-  errors: Maybe<RegisterMutationErrors[]>;
+  errors: Maybe<RegisterErrors[]>;
 };
 
-export type RegisterMutationErrors = {
+export type RegisterErrors = {
   __typename?: "ErrorResponse";
 
   path: string;
@@ -268,9 +267,9 @@ export function LogoutHOC<TProps, TChildProps = any>(
     LogoutProps<TChildProps>
   >(LogoutDocument, operationOptions);
 }
-export const RegisterMutationDocument = gql`
-  mutation RegisterMutation($input: RegisterInput!) {
-    register(input: $input) {
+export const RegisterDocument = gql`
+  mutation Register($role: String!, $input: RegisterInput!) {
+    register(role: $role, input: $input) {
       errors {
         path
         message
@@ -278,47 +277,42 @@ export const RegisterMutationDocument = gql`
     }
   }
 `;
-export class RegisterMutationComponent extends React.Component<
-  Partial<
-    ReactApollo.MutationProps<
-      RegisterMutationMutation,
-      RegisterMutationVariables
-    >
-  >
+export class RegisterComponent extends React.Component<
+  Partial<ReactApollo.MutationProps<RegisterMutation, RegisterVariables>>
 > {
   render() {
     return (
-      <ReactApollo.Mutation<RegisterMutationMutation, RegisterMutationVariables>
-        mutation={RegisterMutationDocument}
+      <ReactApollo.Mutation<RegisterMutation, RegisterVariables>
+        mutation={RegisterDocument}
         {...(this as any)["props"] as any}
       />
     );
   }
 }
-export type RegisterMutationProps<TChildProps = any> = Partial<
-  ReactApollo.MutateProps<RegisterMutationMutation, RegisterMutationVariables>
+export type RegisterProps<TChildProps = any> = Partial<
+  ReactApollo.MutateProps<RegisterMutation, RegisterVariables>
 > &
   TChildProps;
-export type RegisterMutationMutationFn = ReactApollo.MutationFn<
-  RegisterMutationMutation,
-  RegisterMutationVariables
+export type RegisterMutationFn = ReactApollo.MutationFn<
+  RegisterMutation,
+  RegisterVariables
 >;
-export function RegisterMutationHOC<TProps, TChildProps = any>(
+export function RegisterHOC<TProps, TChildProps = any>(
   operationOptions:
     | ReactApollo.OperationOption<
         TProps,
-        RegisterMutationMutation,
-        RegisterMutationVariables,
-        RegisterMutationProps<TChildProps>
+        RegisterMutation,
+        RegisterVariables,
+        RegisterProps<TChildProps>
       >
     | undefined
 ) {
   return ReactApollo.graphql<
     TProps,
-    RegisterMutationMutation,
-    RegisterMutationVariables,
-    RegisterMutationProps<TChildProps>
-  >(RegisterMutationDocument, operationOptions);
+    RegisterMutation,
+    RegisterVariables,
+    RegisterProps<TChildProps>
+  >(RegisterDocument, operationOptions);
 }
 export const MeDocument = gql`
   query Me {

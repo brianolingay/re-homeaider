@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 export const registerMutation = gql`
-  mutation RegisterMutation($input: RegisterInput!) {
-    register(input: $input) {
+  mutation Register($role: String!, $input: RegisterInput!) {
+    register(role: $role, input: $input) {
       errors {
         path
         message
