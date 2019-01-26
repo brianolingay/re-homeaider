@@ -1,5 +1,6 @@
 import gql from "graphql-tag";
 import { errorInfoFragment } from "../../shared/fragments/ErrorInfo";
+import { userInfoFragment } from "./../fragments/UserInfo";
 
 export const loginMutation = gql`
   mutation Login($input: LoginInput!) {
@@ -7,8 +8,12 @@ export const loginMutation = gql`
       errors {
         ...ErrorInfo
       }
+      user {
+        ...UserInfo
+      }
     }
   }
 
   ${errorInfoFragment}
+  ${userInfoFragment}
 `;

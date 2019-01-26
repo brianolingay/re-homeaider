@@ -6,22 +6,22 @@ import Router from "next/router";
 import { InputField } from "../components/formik-fields/InputField";
 import { ErrorMessage } from "../components/ErrorMessage";
 import { normalizeErrors } from "../utils/normalizeErrors";
-import { LoginMutation, LoginMutationVariables } from "../lib/schema-types";
-import { loginMutation } from "../graphql/user/mutation/login";
+import { LoginMutation, LoginVariables } from "../components/apollo-components";
+import { loginMutation } from "../graphql/user/mutations/login";
 import Layout from "../components/Layout";
-import { meQuery } from "../graphql/user/query/me";
+import { meQuery } from "../graphql/user/queries/me";
 
 interface FormValues {
-  usernameOrEmail: string;
+  email: string;
   password: string;
 }
 
 export default () => (
   <Layout title="login">
-    <Mutation<LoginMutation, LoginMutationVariables> mutation={loginMutation}>
+    <Mutation<LoginMutation, LoginVariables> mutation={loginMutation}>
       {mutate => (
         <Formik<FormValues>
-          initialValues={{ usernameOrEmail: "", password: "" }}
+          initialValues={{ email: "", password: "" }}
           onSubmit={async (input, { setErrors, setSubmitting }) => {
             const response = await mutate({
               variables: { input },
@@ -33,10 +33,10 @@ export default () => (
                 store.writeQuery({
                   query: meQuery,
                   data: {
-                    me: data.login.user
-                  }
+                    me: data.login.user,
+                  },
                 });
-              }
+              },
             });
 
             if (
@@ -57,9 +57,9 @@ export default () => (
           {({ errors, handleSubmit, isSubmitting }) => (
             <Form onSubmit={handleSubmit}>
               <Field
-                name="usernameOrEmail"
-                label="Username or Email"
-                placeholder="Username or Email"
+                name="email"
+                label="Email"
+                placeholder="Email"
                 component={InputField}
               />
               <Field

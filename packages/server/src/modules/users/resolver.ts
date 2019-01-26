@@ -79,11 +79,11 @@ export class UserResolver {
     @Arg("input") loginInput: LoginInput,
     @Ctx()
     ctx: MyContext
-  ): Promise<LoginResponse | null> {
+  ): Promise<LoginResponse> {
     try {
       await loginSchema.validate(loginInput, { abortEarly: false });
     } catch (err) {
-      return { errors: formatYupError(err) };
+      return { errors: formatYupError(err), user: null };
     }
 
     const { email, password } = loginInput;
@@ -92,18 +92,18 @@ export class UserResolver {
       .exec();
 
     if (!user) {
-      return { errors: errorResponse };
+      return { errors: errorResponse, user: null };
     }
 
     const valid = await argon.verify(user.password, password);
 
     if (!valid) {
-      return { errors: errorResponse };
+      return { errors: errorResponse, user: null };
     }
 
     ctx.req.session!.userId = user._id;
 
-    return null;
+    return { errors: [], user };
   }
 
   @Authorized()
