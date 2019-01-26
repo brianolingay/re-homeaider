@@ -28,9 +28,9 @@ interface FormValues {
   password: string;
 }
 
-interface Props {
+type Props = {
   role: string;
-}
+};
 
 export default class Register extends React.PureComponent<Props> {
   static async getInitialProps(context: NextContextWithApollo) {
@@ -54,7 +54,7 @@ export default class Register extends React.PureComponent<Props> {
   render() {
     const { role } = this.props;
     return (
-      <Layout title="register">
+      <Layout title="register" showMenu={true}>
         <Mutation<RegisterMutation, RegisterVariables>
           mutation={registerMutation}
         >
@@ -96,6 +96,7 @@ export default class Register extends React.PureComponent<Props> {
             >
               {({ errors, handleSubmit, isSubmitting }) => (
                 <Form onSubmit={handleSubmit}>
+                  <ErrorMessage errors={errors} />
                   <Field
                     name="email"
                     label="Email"
@@ -125,7 +126,6 @@ export default class Register extends React.PureComponent<Props> {
                     component={InputField}
                     type="password"
                   />
-                  <ErrorMessage errors={errors} />
                   <Button disabled={isSubmitting} type="submit">
                     Create Account
                   </Button>

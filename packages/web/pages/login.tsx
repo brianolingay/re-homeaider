@@ -35,7 +35,7 @@ export default class Login extends React.PureComponent<{}> {
 
   render() {
     return (
-      <Layout title="login">
+      <Layout title="login" showMenu={true}>
         <Mutation<LoginMutation, LoginVariables> mutation={loginMutation}>
           {mutate => (
             <Formik<FormValues>
@@ -66,7 +66,7 @@ export default class Login extends React.PureComponent<{}> {
                   setSubmitting(false);
                   return setErrors(normalizeErrors(response.data.login.errors));
                 } else {
-                  Router.push("/home");
+                  Router.push("/");
                 }
               }}
               validateOnBlur={false}

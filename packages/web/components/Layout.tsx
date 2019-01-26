@@ -1,6 +1,6 @@
 import * as React from "react";
 import Head from "next/head";
-import { Container, Menu } from "semantic-ui-react";
+import { Container, Menu, Segment } from "semantic-ui-react";
 import { Query, Mutation } from "react-apollo";
 
 import { meQuery } from "../graphql/user/queries/me";
@@ -36,46 +36,42 @@ const Layout: React.SFC<Props> = ({
               }
 
               return (
-                <Menu>
-                  <Menu.Item onClick={() => Router.push("/home")}>
-                    Home
-                  </Menu.Item>
-                  {isLoggedIn && (
-                    <Menu.Item onClick={() => Router.push("/")}>
-                      Request a Code Review
-                    </Menu.Item>
-                  )}
-
-                  <Menu.Menu position="right">
-                    {isLoggedIn ? (
-                      <>
-                        <Menu.Item>{data.me.email}</Menu.Item>
-                        <Menu.Item onClick={() => Router.push("/view-offers")}>
-                          offers
-                        </Menu.Item>
-                        <Menu.Item
-                          onClick={async () => {
-                            await mutate({});
-                            (window as any).location = "/home";
-                            // Router.push("/home");
-                            // await client.resetStore();
-                          }}
-                        >
-                          logout
-                        </Menu.Item>
-                      </>
-                    ) : (
-                      <>
-                        <Menu.Item onClick={() => Router.push("/register")}>
-                          register
-                        </Menu.Item>
-                        <Menu.Item onClick={() => Router.push("/login")}>
-                          login
-                        </Menu.Item>
-                      </>
+                <Segment inverted>
+                  <Menu inverted pointing secondary>
+                    <Menu.Item onClick={() => Router.push("/")}>Home</Menu.Item>
+                    {isLoggedIn && (
+                      <Menu.Item onClick={() => Router.push("/categories")}>
+                        Categories
+                      </Menu.Item>
                     )}
-                  </Menu.Menu>
-                </Menu>
+                    <Menu.Menu position="right">
+                      {isLoggedIn ? (
+                        <>
+                          <Menu.Item>{data.me.email}</Menu.Item>
+                          <Menu.Item
+                            onClick={async () => {
+                              await mutate({});
+                              (window as any).location = "/home";
+                              // Router.push("/home");
+                              // await client.resetStore();
+                            }}
+                          >
+                            logout
+                          </Menu.Item>
+                        </>
+                      ) : (
+                        <>
+                          <Menu.Item onClick={() => Router.push("/register")}>
+                            register
+                          </Menu.Item>
+                          <Menu.Item onClick={() => Router.push("/login")}>
+                            login
+                          </Menu.Item>
+                        </>
+                      )}
+                    </Menu.Menu>
+                  </Menu>
+                </Segment>
               );
             }}
           </Query>

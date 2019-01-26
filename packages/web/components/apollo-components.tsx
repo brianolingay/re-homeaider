@@ -65,6 +65,89 @@ export type DateTime = any;
 // Documents
 // ====================================================
 
+export type CreateCategoryVariables = {
+  input: CategoryInput;
+};
+
+export type CreateCategoryMutation = {
+  __typename?: "Mutation";
+
+  createCategory: Maybe<CreateCategoryCreateCategory>;
+};
+
+export type CreateCategoryCreateCategory = {
+  __typename?: "CategoryResponse";
+
+  errors: Maybe<CreateCategoryErrors[]>;
+};
+
+export type CreateCategoryErrors = {
+  __typename?: "ErrorResponse";
+
+  path: string;
+
+  message: string;
+};
+
+export type DeleteCategoryVariables = {
+  categoryId: ObjectId;
+};
+
+export type DeleteCategoryMutation = {
+  __typename?: "Mutation";
+
+  deleteCategory: Maybe<DeleteCategoryDeleteCategory>;
+};
+
+export type DeleteCategoryDeleteCategory = {
+  __typename?: "CategoryResponse";
+
+  errors: Maybe<DeleteCategoryErrors[]>;
+};
+
+export type DeleteCategoryErrors = {
+  __typename?: "ErrorResponse";
+
+  path: string;
+
+  message: string;
+};
+
+export type UpdateCategoryVariables = {
+  categoryId: ObjectId;
+  input: CategoryInput;
+};
+
+export type UpdateCategoryMutation = {
+  __typename?: "Mutation";
+
+  updateCategory: Maybe<UpdateCategoryUpdateCategory>;
+};
+
+export type UpdateCategoryUpdateCategory = {
+  __typename?: "CategoryResponse";
+
+  errors: Maybe<UpdateCategoryErrors[]>;
+};
+
+export type UpdateCategoryErrors = {
+  __typename?: "ErrorResponse";
+
+  path: string;
+
+  message: string;
+};
+
+export type CategoriesVariables = {};
+
+export type CategoriesQuery = {
+  __typename?: "Query";
+
+  categories: Maybe<CategoriesCategories[]>;
+};
+
+export type CategoriesCategories = CategoryInfoFragment;
+
 export type LoginVariables = {
   input: LoginInput;
 };
@@ -130,6 +213,16 @@ export type MeQuery = {
 
 export type MeMe = UserInfoFragment;
 
+export type CategoryInfoFragment = {
+  __typename?: "Category";
+
+  _id: ObjectId;
+
+  name: string;
+
+  description: Maybe<string>;
+};
+
 export type ErrorInfoFragment = {
   __typename?: "ErrorResponse";
 
@@ -155,6 +248,14 @@ import gql from "graphql-tag";
 // Fragments
 // ====================================================
 
+export const CategoryInfoFragmentDoc = gql`
+  fragment CategoryInfo on Category {
+    _id
+    name
+    description
+  }
+`;
+
 export const ErrorInfoFragmentDoc = gql`
   fragment ErrorInfo on ErrorResponse {
     path
@@ -173,6 +274,195 @@ export const UserInfoFragmentDoc = gql`
 // Components
 // ====================================================
 
+export const CreateCategoryDocument = gql`
+  mutation CreateCategory($input: CategoryInput!) {
+    createCategory(input: $input) {
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;
+export class CreateCategoryComponent extends React.Component<
+  Partial<
+    ReactApollo.MutationProps<CreateCategoryMutation, CreateCategoryVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<CreateCategoryMutation, CreateCategoryVariables>
+        mutation={CreateCategoryDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type CreateCategoryProps<TChildProps = any> = Partial<
+  ReactApollo.MutateProps<CreateCategoryMutation, CreateCategoryVariables>
+> &
+  TChildProps;
+export type CreateCategoryMutationFn = ReactApollo.MutationFn<
+  CreateCategoryMutation,
+  CreateCategoryVariables
+>;
+export function CreateCategoryHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        CreateCategoryMutation,
+        CreateCategoryVariables,
+        CreateCategoryProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    CreateCategoryMutation,
+    CreateCategoryVariables,
+    CreateCategoryProps<TChildProps>
+  >(CreateCategoryDocument, operationOptions);
+}
+export const DeleteCategoryDocument = gql`
+  mutation DeleteCategory($categoryId: ObjectId!) {
+    deleteCategory(categoryId: $categoryId) {
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;
+export class DeleteCategoryComponent extends React.Component<
+  Partial<
+    ReactApollo.MutationProps<DeleteCategoryMutation, DeleteCategoryVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<DeleteCategoryMutation, DeleteCategoryVariables>
+        mutation={DeleteCategoryDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type DeleteCategoryProps<TChildProps = any> = Partial<
+  ReactApollo.MutateProps<DeleteCategoryMutation, DeleteCategoryVariables>
+> &
+  TChildProps;
+export type DeleteCategoryMutationFn = ReactApollo.MutationFn<
+  DeleteCategoryMutation,
+  DeleteCategoryVariables
+>;
+export function DeleteCategoryHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        DeleteCategoryMutation,
+        DeleteCategoryVariables,
+        DeleteCategoryProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    DeleteCategoryMutation,
+    DeleteCategoryVariables,
+    DeleteCategoryProps<TChildProps>
+  >(DeleteCategoryDocument, operationOptions);
+}
+export const UpdateCategoryDocument = gql`
+  mutation UpdateCategory($categoryId: ObjectId!, $input: CategoryInput!) {
+    updateCategory(categoryId: $categoryId, input: $input) {
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;
+export class UpdateCategoryComponent extends React.Component<
+  Partial<
+    ReactApollo.MutationProps<UpdateCategoryMutation, UpdateCategoryVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<UpdateCategoryMutation, UpdateCategoryVariables>
+        mutation={UpdateCategoryDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type UpdateCategoryProps<TChildProps = any> = Partial<
+  ReactApollo.MutateProps<UpdateCategoryMutation, UpdateCategoryVariables>
+> &
+  TChildProps;
+export type UpdateCategoryMutationFn = ReactApollo.MutationFn<
+  UpdateCategoryMutation,
+  UpdateCategoryVariables
+>;
+export function UpdateCategoryHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        UpdateCategoryMutation,
+        UpdateCategoryVariables,
+        UpdateCategoryProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    UpdateCategoryMutation,
+    UpdateCategoryVariables,
+    UpdateCategoryProps<TChildProps>
+  >(UpdateCategoryDocument, operationOptions);
+}
+export const CategoriesDocument = gql`
+  query Categories {
+    categories {
+      ...CategoryInfo
+    }
+  }
+
+  ${CategoryInfoFragmentDoc}
+`;
+export class CategoriesComponent extends React.Component<
+  Partial<ReactApollo.QueryProps<CategoriesQuery, CategoriesVariables>>
+> {
+  render() {
+    return (
+      <ReactApollo.Query<CategoriesQuery, CategoriesVariables>
+        query={CategoriesDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type CategoriesProps<TChildProps = any> = Partial<
+  ReactApollo.DataProps<CategoriesQuery, CategoriesVariables>
+> &
+  TChildProps;
+export function CategoriesHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        CategoriesQuery,
+        CategoriesVariables,
+        CategoriesProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    CategoriesQuery,
+    CategoriesVariables,
+    CategoriesProps<TChildProps>
+  >(CategoriesDocument, operationOptions);
+}
 export const LoginDocument = gql`
   mutation Login($input: LoginInput!) {
     login(input: $input) {

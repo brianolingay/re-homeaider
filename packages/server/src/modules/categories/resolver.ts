@@ -46,7 +46,7 @@ export class CategoryResolver {
 
     await category.save();
 
-    return null;
+    return { errors: [] };
   }
 
   @Authorized()
@@ -84,7 +84,7 @@ export class CategoryResolver {
 
     await CategoryModel.updateOne({ _id: categoryId }, { ...categoryInput });
 
-    return null;
+    return { errors: [] };
   }
 
   @Authorized()
