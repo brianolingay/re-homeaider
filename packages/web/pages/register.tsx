@@ -15,6 +15,9 @@ import {
 } from "../components/apollo-components";
 import Layout from "../components/Layout";
 import { render } from "react-dom";
+import checkLoggedIn from "../lib/checkLoggedIn";
+import redirect from "../lib/redirect";
+import { NextContextWithApollo } from "../types/NextContextWithApollo";
 
 interface FormValues {
   email: string;
@@ -30,7 +33,19 @@ interface Props {
 }
 
 export default class Register extends React.PureComponent<Props> {
-  static async getInitialProps({ query: { role } }) {
+  static async getInitialProps(context: NextContextWithApollo) {
+    const {
+      query: { role },
+    } = context;
+
+    const { loggedInUser } = await checkLoggedIn(context);
+
+    if (loggedInUser.me) {
+      // Already signed in? No need to continue.
+      // Throw them back to the main page
+      redirect(context, "/");
+    }
+
     return {
       role,
     };

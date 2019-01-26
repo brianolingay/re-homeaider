@@ -11,6 +11,7 @@
   "dependencies": {
     "@homeaider/common": "0.0.1",
     "apollo-boost": "0.1.27",
+    "apollo-link-context": "^1.0.12",
     "formik": "1.4.2",
     "isomorphic-unfetch": "3.0.0",
     "next": "7.0.2",
