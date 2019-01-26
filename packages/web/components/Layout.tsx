@@ -51,7 +51,7 @@ const Layout: React.SFC<Props> = ({
                           <Menu.Item
                             onClick={async () => {
                               await mutate({});
-                              (window as any).location = "/home";
+                              (window as any).location = "/";
                               // Router.push("/home");
                               // await client.resetStore();
                             }}
