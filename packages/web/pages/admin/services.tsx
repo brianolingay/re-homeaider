@@ -6,23 +6,31 @@ import { NextContextWithApollo } from "../../types/NextContextWithApollo";
 import {
   ServicesComponent,
   CategoriesQuery,
-  CategoryInfoFragment,
 } from "../../components/apollo-components";
 import { categoriesQuery } from "../../graphql/category/queries/categories";
 import { CreateButton } from "../../components/service/CreateButton";
 import { UpdateButton } from "../../components/service/UpdateButton";
 import { DeleteButton } from "../../components/service/DeleteButton";
-import { withAuth } from "../../components/withAuth";
+import { CategoriesOptions } from "../../components/service/ServiceForm";
+import redirect from "../../lib/redirect";
+import checkLoggedIn from "../../lib/checkLoggedIn";
 
-class Services extends React.PureComponent<{
-  categories: CategoryInfoFragment[];
+export default class Services extends React.PureComponent<{
+  categories: CategoriesOptions[];
 }> {
-  static async getInitialProps({ apolloClient }: NextContextWithApollo) {
+  static async getInitialProps(context: NextContextWithApollo) {
+    const { loggedInUser } = await checkLoggedIn(context);
+
+    if (!loggedInUser.me) {
+      redirect(context, "/admin/login");
+    }
+
     const {
       data: { categories },
-    } = await apolloClient.query<CategoriesQuery>({
+    } = await context.apolloClient.query<CategoriesQuery>({
       query: categoriesQuery,
     });
+
     return {
       categories: categories.map(item => ({
         key: item._id,
@@ -64,17 +72,19 @@ class Services extends React.PureComponent<{
                     <Table.Body>
                       {data ? (
                         data.services.map(item => (
-                          <Table.Row key={item._id}>
+                          <Table.Row key={`tr-service-${item._id}`}>
                             <Table.Cell>{item.name}</Table.Cell>
                             <Table.Cell>{item.category.name}</Table.Cell>
                             <Table.Cell>{item.description}</Table.Cell>
                             <Table.Cell>
                               <DeleteButton
+                                key={`service-del-${item._id}`}
                                 serviceId={item._id}
                                 categoryId={item.category._id}
                                 refetch={refetch}
                               />
                               <UpdateButton
+                                key={`service-update-${item._id}`}
                                 categories={this.props.categories}
                                 item={item}
                                 refetch={refetch}
@@ -100,5 +110,3 @@ class Services extends React.PureComponent<{
     );
   }
 }
-
-export default withAuth(Services);

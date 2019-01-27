@@ -1,19 +1,42 @@
 import * as React from "react";
 import { Table, Grid } from "semantic-ui-react";
 import Layout from "../../components/Layout";
-import { CategoriesComponent } from "../../components/apollo-components";
 import Loading from "../../components/Loader";
-import { CreateButton } from "../../components/category/CreateButton";
-import { UpdateButton } from "../../components/category/UpdateButton";
-import { DeleteButton } from "../../components/category/DeleteButton";
+import { NextContextWithApollo } from "../../types/NextContextWithApollo";
+import {
+  ServicesComponent,
+  CategoriesQuery,
+  CategoryInfoFragment,
+} from "../../components/apollo-components";
+import { categoriesQuery } from "../../graphql/category/queries/categories";
+import { CreateButton } from "../../components/service/CreateButton";
+import { UpdateButton } from "../../components/service/UpdateButton";
+import { DeleteButton } from "../../components/service/DeleteButton";
 import { withAuth } from "../../components/withAuth";
 
-class Component extends React.PureComponent<{}> {
+class Users extends React.PureComponent<{
+  categories: CategoryInfoFragment[];
+}> {
+  static async getInitialProps({ apolloClient }: NextContextWithApollo) {
+    const {
+      data: { categories },
+    } = await apolloClient.query<CategoriesQuery>({
+      query: categoriesQuery,
+    });
+    return {
+      categories: categories.map(item => ({
+        key: item._id,
+        value: item._id,
+        text: item.name,
+      })),
+    };
+  }
+
   render() {
     return (
-      <Layout title="Categories" showMenu={true}>
+      <Layout title="Services" showMenu={true}>
         {/* @ts-ignore */}
-        <CategoriesComponent>
+        <ServicesComponent>
           {({ data, loading, refetch }) => {
             if (loading) {
               return <Loading />;
@@ -22,13 +45,17 @@ class Component extends React.PureComponent<{}> {
             return (
               <Grid columns={1} padded="vertically">
                 <Grid.Column>
-                  <CreateButton refetch={refetch} />
+                  <CreateButton
+                    categories={this.props.categories}
+                    refetch={refetch}
+                  />
                 </Grid.Column>
                 <Grid.Column>
                   <Table fixed>
                     <Table.Header>
                       <Table.Row>
                         <Table.HeaderCell>Name</Table.HeaderCell>
+                        <Table.HeaderCell>Category</Table.HeaderCell>
                         <Table.HeaderCell>Description</Table.HeaderCell>
                         <Table.HeaderCell>Actions</Table.HeaderCell>
                       </Table.Row>
@@ -36,18 +63,19 @@ class Component extends React.PureComponent<{}> {
 
                     <Table.Body>
                       {data ? (
-                        data.categories.map(item => (
-                          <Table.Row key={`tr-category-${item._id}`}>
+                        data.services.map(item => (
+                          <Table.Row key={item._id}>
                             <Table.Cell>{item.name}</Table.Cell>
+                            <Table.Cell>{item.category.name}</Table.Cell>
                             <Table.Cell>{item.description}</Table.Cell>
                             <Table.Cell>
                               <DeleteButton
-                                key={`category-del-${item._id}`}
-                                categoryId={item._id}
+                                serviceId={item._id}
+                                categoryId={item.category._id}
                                 refetch={refetch}
                               />
                               <UpdateButton
-                                key={`category-update-${item._id}`}
+                                categories={this.props.categories}
                                 item={item}
                                 refetch={refetch}
                               />
@@ -67,10 +95,10 @@ class Component extends React.PureComponent<{}> {
               </Grid>
             );
           }}
-        </CategoriesComponent>
+        </ServicesComponent>
       </Layout>
     );
   }
 }
 
-export default withAuth(Component);
+export default withAuth(Users);

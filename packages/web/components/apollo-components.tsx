@@ -47,6 +47,26 @@ export interface LoginInput {
 
   password: string;
 }
+
+export interface CreateUserInput {
+  email: string;
+
+  firstName: string;
+
+  lastName: string;
+
+  mobile: string;
+
+  password: string;
+}
+
+export interface UpdateUserInput {
+  firstName: string;
+
+  lastName: string;
+
+  mobile: string;
+}
 /** Type of payment mode */
 export enum PaymentMode {
   Free = "Free",
@@ -443,7 +463,7 @@ export type RegisterMutation = {
 };
 
 export type RegisterRegister = {
-  __typename?: "RegisterResponse";
+  __typename?: "UserResponse";
 
   errors: Maybe<RegisterErrors[]>;
 };

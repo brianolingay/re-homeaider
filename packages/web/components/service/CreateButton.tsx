@@ -2,15 +2,15 @@ import * as React from "react";
 import { ApolloQueryResult } from "apollo-boost";
 import { Button, Icon } from "semantic-ui-react";
 import { ModalFormContainer } from "../ModelFormContainer";
+import { ServicesQuery, CreateServiceComponent } from "../apollo-components";
 import {
-  ServicesQuery,
-  CreateServiceComponent,
-  CategoryInfoFragment,
-} from "../apollo-components";
-import { ServiceForm, ServiceFormValues } from "./ServiceForm";
+  ServiceForm,
+  ServiceFormValues,
+  CategoriesOptions,
+} from "./ServiceForm";
 
 type Props = {
-  categories: CategoryInfoFragment[];
+  categories: CategoriesOptions[];
   refetch: () => Promise<ApolloQueryResult<ServicesQuery>>;
 };
 

@@ -14,7 +14,6 @@ import {
   RegisterVariables,
 } from "../components/apollo-components";
 import Layout from "../components/Layout";
-import { render } from "react-dom";
 import checkLoggedIn from "../lib/checkLoggedIn";
 import redirect from "../lib/redirect";
 import { NextContextWithApollo } from "../types/NextContextWithApollo";

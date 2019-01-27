@@ -115,6 +115,8 @@ export class CategoryResolver {
       .populate({ path: "services", populate: { path: "category" } })
       .exec();
 
+    console.log(categories);
+
     return categories;
   }
 }

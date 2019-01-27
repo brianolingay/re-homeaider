@@ -49,7 +49,10 @@ const Layout: React.SFC<Props> = ({
                     {isLoggedIn &&
                       data.me.role.name === "admin" &&
                       adminPages.map(page => (
-                        <Menu.Item onClick={() => Router.push(page.push)}>
+                        <Menu.Item
+                          key={`admin-${page.title}`}
+                          onClick={() => Router.push(page.push)}
+                        >
                           {page.title}
                         </Menu.Item>
                       ))}

@@ -8,10 +8,14 @@ import {
   UpdateServiceComponent,
   CategoryInfoFragment,
 } from "../apollo-components";
-import { ServiceFormValues, ServiceForm } from "./ServiceForm";
+import {
+  ServiceFormValues,
+  ServiceForm,
+  CategoriesOptions,
+} from "./ServiceForm";
 
 type Props = {
-  categories: CategoryInfoFragment[];
+  categories: CategoriesOptions[];
   item: ServiceInfoFragment;
   refetch: () => Promise<ApolloQueryResult<ServicesQuery>>;
 };

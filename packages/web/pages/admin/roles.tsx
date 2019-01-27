@@ -37,15 +37,20 @@ class Roles extends React.PureComponent<{}> {
                     <Table.Body>
                       {data ? (
                         data.roles.map(item => (
-                          <Table.Row key={item._id}>
+                          <Table.Row key={`tr-role-${item._id}`}>
                             <Table.Cell>{item.name}</Table.Cell>
                             <Table.Cell>{item.description}</Table.Cell>
                             <Table.Cell>
                               <DeleteButton
+                                key={`role-del-${item._id}`}
                                 roleId={item._id}
                                 refetch={refetch}
                               />
-                              <UpdateButton item={item} refetch={refetch} />
+                              <UpdateButton
+                                key={`role-update-${item._id}`}
+                                item={item}
+                                refetch={refetch}
+                              />
                             </Table.Cell>
                           </Table.Row>
                         ))

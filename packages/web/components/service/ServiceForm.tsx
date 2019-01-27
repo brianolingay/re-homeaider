@@ -11,6 +11,12 @@ import { TextAreaField } from "../formik-fields/TextAreaField";
 import { ServicesQuery, CategoryInfoFragment } from "../apollo-components";
 import { SelectField } from "../formik-fields/SelectField";
 
+export interface CategoriesOptions {
+  key: string;
+  value: string;
+  text: string;
+}
+
 export interface ServiceFormValues {
   category: string;
   serviceId: string;
@@ -19,7 +25,7 @@ export interface ServiceFormValues {
 }
 
 type Props = {
-  categories: CategoryInfoFragment[];
+  categories: CategoriesOptions[];
   service: any | null;
   submit: any;
   handleModal: any;
@@ -43,53 +49,57 @@ export const ServiceForm: React.SFC<Props> = ({
   refetch,
 }) => {
   const initialValues = service ? service : defaultInitialValue;
-  return (
-    <Formik<ServiceFormValues>
-      initialValues={initialValues}
-      onSubmit={async (input, { setErrors, setSubmitting, resetForm }) => {
-        const response = await submit(input);
 
-        if (
-          response &&
-          response.data &&
-          response.data[method].errors &&
-          response.data[method].errors.length
-        ) {
-          setSubmitting(false);
-          return setErrors(normalizeErrors(response.data[method].errors));
-        } else {
-          resetForm();
-          await refetch();
-          handleModal();
-        }
-      }}
-      validationSchema={validServiceSchema}
-      validateOnBlur={false}
-      validateOnChange={false}
-    >
-      {({ errors, handleSubmit, isSubmitting }) => (
-        <Form onSubmit={handleSubmit}>
-          <ErrorMessage errors={errors} />
-          <Field
-            name="category"
-            label="Categories"
-            options={categories}
-            component={SelectField}
-          />
-          <Field name="name" label="Name" component={InputField} />
-          <Field
-            name="description"
-            label="Description"
-            component={TextAreaField}
-          />
-          <Button disabled={isSubmitting} onClick={handleModal}>
-            Cancel
-          </Button>
-          <Button disabled={isSubmitting} type="submit">
-            Submit
-          </Button>
-        </Form>
-      )}
-    </Formik>
-  );
+  if (categories) {
+    return (
+      <Formik<ServiceFormValues>
+        initialValues={initialValues}
+        onSubmit={async (input, { setErrors, setSubmitting, resetForm }) => {
+          const response = await submit(input);
+
+          if (
+            response &&
+            response.data &&
+            response.data[method].errors &&
+            response.data[method].errors.length
+          ) {
+            setSubmitting(false);
+            return setErrors(normalizeErrors(response.data[method].errors));
+          } else {
+            resetForm();
+            await refetch();
+            handleModal();
+          }
+        }}
+        validationSchema={validServiceSchema}
+        validateOnBlur={false}
+        validateOnChange={false}
+      >
+        {({ errors, handleSubmit, isSubmitting }) => (
+          <Form onSubmit={handleSubmit}>
+            <ErrorMessage errors={errors} />
+            <Field
+              name="category"
+              label="Categories"
+              options={categories}
+              component={SelectField}
+            />
+            <Field name="name" label="Name" component={InputField} />
+            <Field
+              name="description"
+              label="Description"
+              component={TextAreaField}
+            />
+            <Button disabled={isSubmitting} onClick={handleModal}>
+              Cancel
+            </Button>
+            <Button disabled={isSubmitting} type="submit">
+              Submit
+            </Button>
+          </Form>
+        )}
+      </Formik>
+    );
+  }
+  return null;
 };

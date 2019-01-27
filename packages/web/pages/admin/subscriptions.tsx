@@ -42,7 +42,7 @@ class Subscriptions extends React.PureComponent<{}> {
                     <Table.Body>
                       {data ? (
                         data.subscriptions.map(item => (
-                          <Table.Row key={item._id}>
+                          <Table.Row key={`tr-subscription-${item._id}`}>
                             <Table.Cell verticalAlign="top">
                               {item.name}
                             </Table.Cell>
@@ -64,10 +64,15 @@ class Subscriptions extends React.PureComponent<{}> {
                             </Table.Cell>
                             <Table.Cell verticalAlign="top">
                               <DeleteButton
+                                key={`subscription-del-${item._id}`}
                                 subscriptionId={item._id}
                                 refetch={refetch}
                               />
-                              <UpdateButton item={item} refetch={refetch} />
+                              <UpdateButton
+                                key={`subscription-update-${item._id}`}
+                                item={item}
+                                refetch={refetch}
+                              />
                             </Table.Cell>
                           </Table.Row>
                         ))
