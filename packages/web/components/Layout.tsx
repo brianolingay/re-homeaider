@@ -60,8 +60,10 @@ const Layout: React.SFC<Props> = ({
                           <Menu.Item>{data.me.email}</Menu.Item>
                           <Menu.Item
                             onClick={async () => {
+                              const goto =
+                                data.me.role.name === "admin" ? "/admin" : "/";
                               await mutate({});
-                              (window as any).location = "/";
+                              (window as any).location = goto;
                               // Router.push("/home");
                               // await client.resetStore();
                             }}
