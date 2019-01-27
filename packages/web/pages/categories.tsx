@@ -7,20 +7,7 @@ import { CreateButton } from "../components/category/CreateButton";
 import { UpdateButton } from "../components/category/UpdateButton";
 import { DeleteButton } from "../components/category/DeleteButton";
 
-interface State {
-  modalOpen: boolean;
-}
-
-export default class PickRepo extends React.PureComponent<{}, State> {
-  state = {
-    modalOpen: false,
-  };
-
-  handleModalFormContainer = () => {
-    console.log(this.state);
-    this.setState({ modalOpen: !this.state.modalOpen });
-  };
-
+export default class PickRepo extends React.PureComponent<{}> {
   render() {
     return (
       <Layout title="Categories" showMenu={true}>
@@ -34,11 +21,7 @@ export default class PickRepo extends React.PureComponent<{}, State> {
             return (
               <Grid columns={1} padded="vertically">
                 <Grid.Column>
-                  <CreateButton
-                    modalOpen={this.state.modalOpen}
-                    handleModalFormContainer={this.handleModalFormContainer}
-                    refetch={refetch}
-                  />
+                  <CreateButton refetch={refetch} />
                 </Grid.Column>
                 <Grid.Column>
                   <Table fixed>
@@ -61,14 +44,7 @@ export default class PickRepo extends React.PureComponent<{}, State> {
                                 categoryId={item._id}
                                 refetch={refetch}
                               />
-                              <UpdateButton
-                                item={item}
-                                modalOpen={this.state.modalOpen}
-                                handleModalFormContainer={
-                                  this.handleModalFormContainer
-                                }
-                                refetch={refetch}
-                              />
+                              <UpdateButton item={item} refetch={refetch} />
                             </Table.Cell>
                           </Table.Row>
                         ))

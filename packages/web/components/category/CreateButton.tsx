@@ -6,46 +6,59 @@ import { CreateCategoryComponent, CategoriesQuery } from "../apollo-components";
 import { CategoryForm, CategoryFormValues } from "./CategoryForm";
 
 type Props = {
-  handleModalFormContainer: () => void;
-  modalOpen: boolean;
   refetch: () => Promise<ApolloQueryResult<CategoriesQuery>>;
 };
 
-export const CreateButton: React.SFC<Props> = ({
-  handleModalFormContainer,
-  modalOpen,
-  refetch,
-}) => (
-  <ModalFormContainer
-    trigger={
-      <Button
-        floated="right"
-        icon
-        labelPosition="left"
-        primary
-        size="small"
-        onClick={handleModalFormContainer}
+interface State {
+  modalOpen: boolean;
+}
+
+class CreateButtonComponent extends React.PureComponent<Props, State> {
+  state = {
+    modalOpen: false,
+  };
+
+  handleModalFormContainer = () => {
+    this.setState({ modalOpen: !this.state.modalOpen });
+  };
+
+  render() {
+    const { refetch } = this.props;
+    return (
+      <ModalFormContainer
+        trigger={
+          <Button
+            floated="right"
+            icon
+            labelPosition="left"
+            primary
+            size="small"
+            onClick={this.handleModalFormContainer}
+          >
+            <Icon name="plus" /> New Category
+          </Button>
+        }
+        open={this.state.modalOpen}
+        header="New Category"
       >
-        <Icon name="plus" /> New Category
-      </Button>
-    }
-    open={modalOpen}
-    header="New Category"
-  >
-    <CreateCategoryComponent>
-      {mutate => (
-        <CategoryForm
-          category={null}
-          handleModal={handleModalFormContainer}
-          submit={async ({ categoryId, ...input }: CategoryFormValues) => {
-            return await mutate({
-              variables: { input },
-            });
-          }}
-          method="createCategory"
-          refetch={refetch}
-        />
-      )}
-    </CreateCategoryComponent>
-  </ModalFormContainer>
-);
+        <CreateCategoryComponent>
+          {mutate => (
+            <CategoryForm
+              category={null}
+              handleModal={this.handleModalFormContainer}
+              submit={async ({ categoryId, ...input }: CategoryFormValues) => {
+                return await mutate({
+                  variables: { input },
+                });
+              }}
+              method="createCategory"
+              refetch={refetch}
+            />
+          )}
+        </CreateCategoryComponent>
+      </ModalFormContainer>
+    );
+  }
+}
+
+export const CreateButton = CreateButtonComponent;
