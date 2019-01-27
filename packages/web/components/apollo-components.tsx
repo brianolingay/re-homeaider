@@ -148,6 +148,89 @@ export type CategoriesQuery = {
 
 export type CategoriesCategories = CategoryInfoFragment;
 
+export type CreateRoleVariables = {
+  input: RoleInput;
+};
+
+export type CreateRoleMutation = {
+  __typename?: "Mutation";
+
+  createRole: Maybe<CreateRoleCreateRole>;
+};
+
+export type CreateRoleCreateRole = {
+  __typename?: "RoleResponse";
+
+  errors: Maybe<CreateRoleErrors[]>;
+};
+
+export type CreateRoleErrors = {
+  __typename?: "ErrorResponse";
+
+  path: string;
+
+  message: string;
+};
+
+export type DeleteRoleVariables = {
+  roleId: ObjectId;
+};
+
+export type DeleteRoleMutation = {
+  __typename?: "Mutation";
+
+  deleteRole: Maybe<DeleteRoleDeleteRole>;
+};
+
+export type DeleteRoleDeleteRole = {
+  __typename?: "RoleResponse";
+
+  errors: Maybe<DeleteRoleErrors[]>;
+};
+
+export type DeleteRoleErrors = {
+  __typename?: "ErrorResponse";
+
+  path: string;
+
+  message: string;
+};
+
+export type UpdateRoleVariables = {
+  roleId: ObjectId;
+  input: RoleInput;
+};
+
+export type UpdateRoleMutation = {
+  __typename?: "Mutation";
+
+  updateRole: Maybe<UpdateRoleUpdateRole>;
+};
+
+export type UpdateRoleUpdateRole = {
+  __typename?: "RoleResponse";
+
+  errors: Maybe<UpdateRoleErrors[]>;
+};
+
+export type UpdateRoleErrors = {
+  __typename?: "ErrorResponse";
+
+  path: string;
+
+  message: string;
+};
+
+export type RolesVariables = {};
+
+export type RolesQuery = {
+  __typename?: "Query";
+
+  roles: Maybe<RolesRoles[]>;
+};
+
+export type RolesRoles = RoleInfoFragment;
+
 export type CreateServiceVariables = {
   categoryId: ObjectId;
   input: ServiceInput;
@@ -392,6 +475,16 @@ export type CategoryInfoFragment = {
   description: Maybe<string>;
 };
 
+export type RoleInfoFragment = {
+  __typename?: "Role";
+
+  _id: ObjectId;
+
+  name: string;
+
+  description: Maybe<string>;
+};
+
 export type ServiceInfoFragment = {
   __typename?: "Service";
 
@@ -455,6 +548,14 @@ import gql from "graphql-tag";
 
 export const CategoryInfoFragmentDoc = gql`
   fragment CategoryInfo on Category {
+    _id
+    name
+    description
+  }
+`;
+
+export const RoleInfoFragmentDoc = gql`
+  fragment RoleInfo on Role {
     _id
     name
     description
@@ -690,6 +791,189 @@ export function CategoriesHOC<TProps, TChildProps = any>(
     CategoriesVariables,
     CategoriesProps<TChildProps>
   >(CategoriesDocument, operationOptions);
+}
+export const CreateRoleDocument = gql`
+  mutation CreateRole($input: RoleInput!) {
+    createRole(input: $input) {
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;
+export class CreateRoleComponent extends React.Component<
+  Partial<ReactApollo.MutationProps<CreateRoleMutation, CreateRoleVariables>>
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<CreateRoleMutation, CreateRoleVariables>
+        mutation={CreateRoleDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type CreateRoleProps<TChildProps = any> = Partial<
+  ReactApollo.MutateProps<CreateRoleMutation, CreateRoleVariables>
+> &
+  TChildProps;
+export type CreateRoleMutationFn = ReactApollo.MutationFn<
+  CreateRoleMutation,
+  CreateRoleVariables
+>;
+export function CreateRoleHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        CreateRoleMutation,
+        CreateRoleVariables,
+        CreateRoleProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    CreateRoleMutation,
+    CreateRoleVariables,
+    CreateRoleProps<TChildProps>
+  >(CreateRoleDocument, operationOptions);
+}
+export const DeleteRoleDocument = gql`
+  mutation DeleteRole($roleId: ObjectId!) {
+    deleteRole(roleId: $roleId) {
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;
+export class DeleteRoleComponent extends React.Component<
+  Partial<ReactApollo.MutationProps<DeleteRoleMutation, DeleteRoleVariables>>
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<DeleteRoleMutation, DeleteRoleVariables>
+        mutation={DeleteRoleDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type DeleteRoleProps<TChildProps = any> = Partial<
+  ReactApollo.MutateProps<DeleteRoleMutation, DeleteRoleVariables>
+> &
+  TChildProps;
+export type DeleteRoleMutationFn = ReactApollo.MutationFn<
+  DeleteRoleMutation,
+  DeleteRoleVariables
+>;
+export function DeleteRoleHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        DeleteRoleMutation,
+        DeleteRoleVariables,
+        DeleteRoleProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    DeleteRoleMutation,
+    DeleteRoleVariables,
+    DeleteRoleProps<TChildProps>
+  >(DeleteRoleDocument, operationOptions);
+}
+export const UpdateRoleDocument = gql`
+  mutation UpdateRole($roleId: ObjectId!, $input: RoleInput!) {
+    updateRole(roleId: $roleId, input: $input) {
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;
+export class UpdateRoleComponent extends React.Component<
+  Partial<ReactApollo.MutationProps<UpdateRoleMutation, UpdateRoleVariables>>
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<UpdateRoleMutation, UpdateRoleVariables>
+        mutation={UpdateRoleDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type UpdateRoleProps<TChildProps = any> = Partial<
+  ReactApollo.MutateProps<UpdateRoleMutation, UpdateRoleVariables>
+> &
+  TChildProps;
+export type UpdateRoleMutationFn = ReactApollo.MutationFn<
+  UpdateRoleMutation,
+  UpdateRoleVariables
+>;
+export function UpdateRoleHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        UpdateRoleMutation,
+        UpdateRoleVariables,
+        UpdateRoleProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    UpdateRoleMutation,
+    UpdateRoleVariables,
+    UpdateRoleProps<TChildProps>
+  >(UpdateRoleDocument, operationOptions);
+}
+export const RolesDocument = gql`
+  query Roles {
+    roles {
+      ...RoleInfo
+    }
+  }
+
+  ${RoleInfoFragmentDoc}
+`;
+export class RolesComponent extends React.Component<
+  Partial<ReactApollo.QueryProps<RolesQuery, RolesVariables>>
+> {
+  render() {
+    return (
+      <ReactApollo.Query<RolesQuery, RolesVariables>
+        query={RolesDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type RolesProps<TChildProps = any> = Partial<
+  ReactApollo.DataProps<RolesQuery, RolesVariables>
+> &
+  TChildProps;
+export function RolesHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        RolesQuery,
+        RolesVariables,
+        RolesProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    RolesQuery,
+    RolesVariables,
+    RolesProps<TChildProps>
+  >(RolesDocument, operationOptions);
 }
 export const CreateServiceDocument = gql`
   mutation CreateService($categoryId: ObjectId!, $input: ServiceInput!) {

@@ -46,7 +46,7 @@ export class RoleResolver {
 
     await role.save();
 
-    return null;
+    return { errors: [] };
   }
 
   @Authorized()
@@ -84,7 +84,7 @@ export class RoleResolver {
 
     await RoleModel.updateOne({ _id: roleId }, { ...roleInput });
 
-    return null;
+    return { errors: [] };
   }
 
   @Authorized()
