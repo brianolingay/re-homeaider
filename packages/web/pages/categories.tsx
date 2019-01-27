@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Table, Grid, Button, Icon } from "semantic-ui-react";
+import { Table, Grid } from "semantic-ui-react";
 import Layout from "../components/Layout";
 import { CategoriesComponent } from "../components/apollo-components";
 import Loading from "../components/Loader";

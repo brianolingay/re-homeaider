@@ -7,6 +7,5 @@ export const validSubscriptionSchema = yup.object().shape({
     .min(3, nameNotLongEnough)
     .max(255)
     .required(),
-  benefits: yup.array().required(),
   paymentMode: yup.string().required(),
 });

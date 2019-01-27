@@ -52,7 +52,7 @@ export class SubscriptionResolver {
 
     await subscription.save();
 
-    return null;
+    return { errors: [] };
   }
 
   @Authorized()
@@ -95,7 +95,7 @@ export class SubscriptionResolver {
       { ...subscriptionInput }
     );
 
-    return null;
+    return { errors: [] };
   }
 
   @Authorized()
