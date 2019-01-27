@@ -20,17 +20,27 @@ interface FormValues {
   password: string;
 }
 
-export default class Login extends React.PureComponent<{}> {
+export default class Login extends React.PureComponent<{
+  goTo: string;
+  isAdmin: boolean;
+}> {
   static async getInitialProps(context: NextContextWithApollo) {
     const { loggedInUser } = await checkLoggedIn(context);
+
+    const { asPath } = context;
+    const admin = asPath.match(/admin/);
+
+    const isAdmin = admin ? true : false;
+    const goTo = admin ? "/admin" : "/";
 
     if (loggedInUser.me) {
       // Already signed in? No need to continue.
       // Throw them back to the main page
-      redirect(context, "/");
+
+      redirect(context, goTo);
     }
 
-    return {};
+    return { goTo, isAdmin };
   }
 
   render() {
@@ -41,8 +51,9 @@ export default class Login extends React.PureComponent<{}> {
             <Formik<FormValues>
               initialValues={{ email: "", password: "" }}
               onSubmit={async (input, { setErrors, setSubmitting }) => {
+                const { isAdmin } = this.props;
                 const response = await mutate({
-                  variables: { input },
+                  variables: { isAdmin, input },
                   update: (store, { data }) => {
                     if (!data || !data.login.user) {
                       return;
@@ -66,7 +77,7 @@ export default class Login extends React.PureComponent<{}> {
                   setSubmitting(false);
                   return setErrors(normalizeErrors(response.data.login.errors));
                 } else {
-                  Router.push("/");
+                  Router.push(this.props.goTo);
                 }
               }}
               validateOnBlur={false}

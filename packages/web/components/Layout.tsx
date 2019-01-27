@@ -13,6 +13,13 @@ type Props = {
   showMenu?: boolean;
 };
 
+const adminPages = [
+  { push: "/admin", title: "Categories" },
+  { push: "/admin/services", title: "Services" },
+  { push: "/admin/subscriptions", title: "Subscriptions" },
+  { push: "/admin/roles", title: "Roles" },
+];
+
 const Layout: React.SFC<Props> = ({
   children,
   title = "This is the default title",
@@ -39,26 +46,14 @@ const Layout: React.SFC<Props> = ({
                 <Segment inverted>
                   <Menu inverted pointing secondary>
                     <Menu.Item onClick={() => Router.push("/")}>Home</Menu.Item>
-                    {isLoggedIn && (
-                      <Menu.Item onClick={() => Router.push("/categories")}>
-                        Categories
-                      </Menu.Item>
-                    )}
-                    {isLoggedIn && (
-                      <Menu.Item onClick={() => Router.push("/services")}>
-                        Services
-                      </Menu.Item>
-                    )}
-                    {isLoggedIn && (
-                      <Menu.Item onClick={() => Router.push("/subscriptions")}>
-                        Subscriptions
-                      </Menu.Item>
-                    )}
-                    {isLoggedIn && (
-                      <Menu.Item onClick={() => Router.push("/roles")}>
-                        Roles
-                      </Menu.Item>
-                    )}
+                    {isLoggedIn &&
+                      data.me.role.name === "admin" &&
+                      adminPages.map(page => (
+                        <Menu.Item onClick={() => Router.push(page.push)}>
+                          {page.title}
+                        </Menu.Item>
+                      ))}
+
                     <Menu.Menu position="right">
                       {isLoggedIn ? (
                         <>

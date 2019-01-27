@@ -1,19 +1,20 @@
 import * as React from "react";
 import { Table, Grid } from "semantic-ui-react";
-import Layout from "../components/Layout";
-import Loading from "../components/Loader";
-import { NextContextWithApollo } from "../types/NextContextWithApollo";
+import Layout from "../../components/Layout";
+import Loading from "../../components/Loader";
+import { NextContextWithApollo } from "../../types/NextContextWithApollo";
 import {
   ServicesComponent,
   CategoriesQuery,
   CategoryInfoFragment,
-} from "../components/apollo-components";
-import { categoriesQuery } from "../graphql/category/queries/categories";
-import { CreateButton } from "../components/service/CreateButton";
-import { UpdateButton } from "../components/service/UpdateButton";
-import { DeleteButton } from "../components/service/DeleteButton";
+} from "../../components/apollo-components";
+import { categoriesQuery } from "../../graphql/category/queries/categories";
+import { CreateButton } from "../../components/service/CreateButton";
+import { UpdateButton } from "../../components/service/UpdateButton";
+import { DeleteButton } from "../../components/service/DeleteButton";
+import { withAuth } from "../../components/withAuth";
 
-export default class Services extends React.PureComponent<{
+class Services extends React.PureComponent<{
   categories: CategoryInfoFragment[];
 }> {
   static async getInitialProps({ apolloClient }: NextContextWithApollo) {
@@ -99,3 +100,5 @@ export default class Services extends React.PureComponent<{
     );
   }
 }
+
+export default withAuth(Services);

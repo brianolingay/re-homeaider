@@ -401,6 +401,7 @@ export type SubscriptionsQuery = {
 export type SubscriptionsSubscriptions = SubscriptionInfoFragment;
 
 export type LoginVariables = {
+  isAdmin: boolean;
   input: LoginInput;
 };
 
@@ -535,6 +536,16 @@ export type UserInfoFragment = {
   _id: ObjectId;
 
   email: string;
+
+  role: Maybe<UserInfoRole>;
+};
+
+export type UserInfoRole = {
+  __typename?: "Role";
+
+  _id: ObjectId;
+
+  name: string;
 };
 
 import * as ReactApollo from "react-apollo";
@@ -596,6 +607,10 @@ export const UserInfoFragmentDoc = gql`
   fragment UserInfo on User {
     _id
     email
+    role {
+      _id
+      name
+    }
   }
 `;
 
@@ -1392,8 +1407,8 @@ export function SubscriptionsHOC<TProps, TChildProps = any>(
   >(SubscriptionsDocument, operationOptions);
 }
 export const LoginDocument = gql`
-  mutation Login($input: LoginInput!) {
-    login(input: $input) {
+  mutation Login($isAdmin: Boolean!, $input: LoginInput!) {
+    login(isAdmin: $isAdmin, input: $input) {
       errors {
         ...ErrorInfo
       }

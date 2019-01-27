@@ -38,6 +38,10 @@ export default class Register extends React.PureComponent<Props> {
       query: { role },
     } = context;
 
+    if (role === "admin") {
+      redirect(context, "/");
+    }
+
     const { loggedInUser } = await checkLoggedIn(context);
 
     if (loggedInUser.me) {

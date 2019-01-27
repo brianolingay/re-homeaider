@@ -4,8 +4,8 @@ import { errorInfoFragment } from "../../shared/fragments/ErrorInfo";
 import { userInfoFragment } from "./../fragments/UserInfo";
 
 export const loginMutation = gql`
-  mutation Login($input: LoginInput!) {
-    login(input: $input) {
+  mutation Login($isAdmin: Boolean!, $input: LoginInput!) {
+    login(isAdmin: $isAdmin, input: $input) {
       errors {
         ...ErrorInfo
       }

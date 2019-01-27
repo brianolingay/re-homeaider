@@ -79,6 +79,7 @@ export class UserResolver {
 
   @Mutation(() => LoginResponse, { nullable: true })
   async login(
+    @Arg("isAdmin") isAdmin: Boolean,
     @Arg("input") loginInput: LoginInput,
     @Ctx()
     ctx: MyContext
@@ -91,6 +92,7 @@ export class UserResolver {
 
     const { email, password } = loginInput;
     const user = await UserModel.findOne({ email })
+      .populate("role")
       .lean()
       .exec();
 
@@ -102,6 +104,12 @@ export class UserResolver {
 
     if (!valid) {
       return { errors: errorResponse, user: null };
+    }
+
+    if (isAdmin) {
+      if (user.role.name !== "admin") {
+        return { errors: errorResponse, user: null };
+      }
     }
 
     ctx.req.session!.userId = user._id;
@@ -134,6 +142,7 @@ export class UserResolver {
     }
 
     const user = await UserModel.findById(userId)
+      .populate("role")
       .lean()
       .exec();
 

@@ -1,13 +1,14 @@
 import * as React from "react";
 import { Table, Grid, List } from "semantic-ui-react";
-import Layout from "../components/Layout";
-import { SubscriptionsComponent } from "../components/apollo-components";
-import Loading from "../components/Loader";
-import { CreateButton } from "../components/subscriptions/CreateButton";
-import { UpdateButton } from "../components/subscriptions/UpdateButton";
-import { DeleteButton } from "../components/subscriptions/DeleteButton";
+import Layout from "../../components/Layout";
+import { SubscriptionsComponent } from "../../components/apollo-components";
+import Loading from "../../components/Loader";
+import { CreateButton } from "../../components/subscriptions/CreateButton";
+import { UpdateButton } from "../../components/subscriptions/UpdateButton";
+import { DeleteButton } from "../../components/subscriptions/DeleteButton";
+import { withAuth } from "../../components/withAuth";
 
-export default class PickRepo extends React.PureComponent<{}> {
+class Subscriptions extends React.PureComponent<{}> {
   render() {
     return (
       <Layout title="Subscriptions" showMenu={true}>
@@ -91,3 +92,5 @@ export default class PickRepo extends React.PureComponent<{}> {
     );
   }
 }
+
+export default withAuth(Subscriptions);

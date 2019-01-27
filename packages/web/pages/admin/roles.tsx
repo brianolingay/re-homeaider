@@ -1,18 +1,19 @@
 import * as React from "react";
 import { Table, Grid } from "semantic-ui-react";
-import Layout from "../components/Layout";
-import { CategoriesComponent } from "../components/apollo-components";
-import Loading from "../components/Loader";
-import { CreateButton } from "../components/category/CreateButton";
-import { UpdateButton } from "../components/category/UpdateButton";
-import { DeleteButton } from "../components/category/DeleteButton";
+import Layout from "../../components/Layout";
+import { RolesComponent } from "../../components/apollo-components";
+import Loading from "../../components/Loader";
+import { CreateButton } from "../../components/role/CreateButton";
+import { UpdateButton } from "../../components/role/UpdateButton";
+import { DeleteButton } from "../../components/role/DeleteButton";
+import { withAuth } from "../../components/withAuth";
 
-export default class PickRepo extends React.PureComponent<{}> {
+class Roles extends React.PureComponent<{}> {
   render() {
     return (
-      <Layout title="Categories" showMenu={true}>
+      <Layout title="Role" showMenu={true}>
         {/* @ts-ignore */}
-        <CategoriesComponent>
+        <RolesComponent>
           {({ data, loading, refetch }) => {
             if (loading) {
               return <Loading />;
@@ -35,13 +36,13 @@ export default class PickRepo extends React.PureComponent<{}> {
 
                     <Table.Body>
                       {data ? (
-                        data.categories.map(item => (
+                        data.roles.map(item => (
                           <Table.Row key={item._id}>
                             <Table.Cell>{item.name}</Table.Cell>
                             <Table.Cell>{item.description}</Table.Cell>
                             <Table.Cell>
                               <DeleteButton
-                                categoryId={item._id}
+                                roleId={item._id}
                                 refetch={refetch}
                               />
                               <UpdateButton item={item} refetch={refetch} />
@@ -61,8 +62,10 @@ export default class PickRepo extends React.PureComponent<{}> {
               </Grid>
             );
           }}
-        </CategoriesComponent>
+        </RolesComponent>
       </Layout>
     );
   }
 }
+
+export default withAuth(Roles);
