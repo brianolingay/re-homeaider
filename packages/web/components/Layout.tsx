@@ -44,6 +44,11 @@ const Layout: React.SFC<Props> = ({
                         Categories
                       </Menu.Item>
                     )}
+                    {isLoggedIn && (
+                      <Menu.Item onClick={() => Router.push("/services")}>
+                        Services
+                      </Menu.Item>
+                    )}
                     <Menu.Menu position="right">
                       {isLoggedIn ? (
                         <>

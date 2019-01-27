@@ -148,6 +148,92 @@ export type CategoriesQuery = {
 
 export type CategoriesCategories = CategoryInfoFragment;
 
+export type CreateServiceVariables = {
+  categoryId: ObjectId;
+  input: ServiceInput;
+};
+
+export type CreateServiceMutation = {
+  __typename?: "Mutation";
+
+  createService: Maybe<CreateServiceCreateService>;
+};
+
+export type CreateServiceCreateService = {
+  __typename?: "ServiceResponse";
+
+  errors: Maybe<CreateServiceErrors[]>;
+};
+
+export type CreateServiceErrors = {
+  __typename?: "ErrorResponse";
+
+  path: string;
+
+  message: string;
+};
+
+export type DeleteServiceVariables = {
+  categoryId: ObjectId;
+  serviceId: ObjectId;
+};
+
+export type DeleteServiceMutation = {
+  __typename?: "Mutation";
+
+  deleteService: Maybe<DeleteServiceDeleteService>;
+};
+
+export type DeleteServiceDeleteService = {
+  __typename?: "ServiceResponse";
+
+  errors: Maybe<DeleteServiceErrors[]>;
+};
+
+export type DeleteServiceErrors = {
+  __typename?: "ErrorResponse";
+
+  path: string;
+
+  message: string;
+};
+
+export type UpdateServiceVariables = {
+  categoryId: ObjectId;
+  serviceId: ObjectId;
+  input: ServiceInput;
+};
+
+export type UpdateServiceMutation = {
+  __typename?: "Mutation";
+
+  updateService: Maybe<UpdateServiceUpdateService>;
+};
+
+export type UpdateServiceUpdateService = {
+  __typename?: "ServiceResponse";
+
+  errors: Maybe<UpdateServiceErrors[]>;
+};
+
+export type UpdateServiceErrors = {
+  __typename?: "ErrorResponse";
+
+  path: string;
+
+  message: string;
+};
+
+export type ServicesVariables = {};
+
+export type ServicesQuery = {
+  __typename?: "Query";
+
+  services: Maybe<ServicesServices[]>;
+};
+
+export type ServicesServices = ServiceInfoFragment;
+
 export type LoginVariables = {
   input: LoginInput;
 };
@@ -223,6 +309,26 @@ export type CategoryInfoFragment = {
   description: Maybe<string>;
 };
 
+export type ServiceInfoFragment = {
+  __typename?: "Service";
+
+  _id: ObjectId;
+
+  name: string;
+
+  description: Maybe<string>;
+
+  category: ServiceInfoCategory;
+};
+
+export type ServiceInfoCategory = {
+  __typename?: "Category";
+
+  _id: ObjectId;
+
+  name: string;
+};
+
 export type ErrorInfoFragment = {
   __typename?: "ErrorResponse";
 
@@ -253,6 +359,18 @@ export const CategoryInfoFragmentDoc = gql`
     _id
     name
     description
+  }
+`;
+
+export const ServiceInfoFragmentDoc = gql`
+  fragment ServiceInfo on Service {
+    _id
+    name
+    description
+    category {
+      _id
+      name
+    }
   }
 `;
 
@@ -462,6 +580,203 @@ export function CategoriesHOC<TProps, TChildProps = any>(
     CategoriesVariables,
     CategoriesProps<TChildProps>
   >(CategoriesDocument, operationOptions);
+}
+export const CreateServiceDocument = gql`
+  mutation CreateService($categoryId: ObjectId!, $input: ServiceInput!) {
+    createService(categoryId: $categoryId, input: $input) {
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;
+export class CreateServiceComponent extends React.Component<
+  Partial<
+    ReactApollo.MutationProps<CreateServiceMutation, CreateServiceVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<CreateServiceMutation, CreateServiceVariables>
+        mutation={CreateServiceDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type CreateServiceProps<TChildProps = any> = Partial<
+  ReactApollo.MutateProps<CreateServiceMutation, CreateServiceVariables>
+> &
+  TChildProps;
+export type CreateServiceMutationFn = ReactApollo.MutationFn<
+  CreateServiceMutation,
+  CreateServiceVariables
+>;
+export function CreateServiceHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        CreateServiceMutation,
+        CreateServiceVariables,
+        CreateServiceProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    CreateServiceMutation,
+    CreateServiceVariables,
+    CreateServiceProps<TChildProps>
+  >(CreateServiceDocument, operationOptions);
+}
+export const DeleteServiceDocument = gql`
+  mutation DeleteService($categoryId: ObjectId!, $serviceId: ObjectId!) {
+    deleteService(categoryId: $categoryId, serviceId: $serviceId) {
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;
+export class DeleteServiceComponent extends React.Component<
+  Partial<
+    ReactApollo.MutationProps<DeleteServiceMutation, DeleteServiceVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<DeleteServiceMutation, DeleteServiceVariables>
+        mutation={DeleteServiceDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type DeleteServiceProps<TChildProps = any> = Partial<
+  ReactApollo.MutateProps<DeleteServiceMutation, DeleteServiceVariables>
+> &
+  TChildProps;
+export type DeleteServiceMutationFn = ReactApollo.MutationFn<
+  DeleteServiceMutation,
+  DeleteServiceVariables
+>;
+export function DeleteServiceHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        DeleteServiceMutation,
+        DeleteServiceVariables,
+        DeleteServiceProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    DeleteServiceMutation,
+    DeleteServiceVariables,
+    DeleteServiceProps<TChildProps>
+  >(DeleteServiceDocument, operationOptions);
+}
+export const UpdateServiceDocument = gql`
+  mutation UpdateService(
+    $categoryId: ObjectId!
+    $serviceId: ObjectId!
+    $input: ServiceInput!
+  ) {
+    updateService(
+      categoryId: $categoryId
+      serviceId: $serviceId
+      input: $input
+    ) {
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;
+export class UpdateServiceComponent extends React.Component<
+  Partial<
+    ReactApollo.MutationProps<UpdateServiceMutation, UpdateServiceVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<UpdateServiceMutation, UpdateServiceVariables>
+        mutation={UpdateServiceDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type UpdateServiceProps<TChildProps = any> = Partial<
+  ReactApollo.MutateProps<UpdateServiceMutation, UpdateServiceVariables>
+> &
+  TChildProps;
+export type UpdateServiceMutationFn = ReactApollo.MutationFn<
+  UpdateServiceMutation,
+  UpdateServiceVariables
+>;
+export function UpdateServiceHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        UpdateServiceMutation,
+        UpdateServiceVariables,
+        UpdateServiceProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    UpdateServiceMutation,
+    UpdateServiceVariables,
+    UpdateServiceProps<TChildProps>
+  >(UpdateServiceDocument, operationOptions);
+}
+export const ServicesDocument = gql`
+  query Services {
+    services {
+      ...ServiceInfo
+    }
+  }
+
+  ${ServiceInfoFragmentDoc}
+`;
+export class ServicesComponent extends React.Component<
+  Partial<ReactApollo.QueryProps<ServicesQuery, ServicesVariables>>
+> {
+  render() {
+    return (
+      <ReactApollo.Query<ServicesQuery, ServicesVariables>
+        query={ServicesDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type ServicesProps<TChildProps = any> = Partial<
+  ReactApollo.DataProps<ServicesQuery, ServicesVariables>
+> &
+  TChildProps;
+export function ServicesHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        ServicesQuery,
+        ServicesVariables,
+        ServicesProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    ServicesQuery,
+    ServicesVariables,
+    ServicesProps<TChildProps>
+  >(ServicesDocument, operationOptions);
 }
 export const LoginDocument = gql`
   mutation Login($input: LoginInput!) {

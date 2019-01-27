@@ -68,7 +68,7 @@ export class ServiceResolver {
       { services: [...category!.services, service._id] }
     );
 
-    return null;
+    return { errors: [] };
   }
 
   @Authorized()
@@ -110,7 +110,7 @@ export class ServiceResolver {
 
     await ServiceModel.updateOne({ _id: serviceId }, { ...serviceInput });
 
-    return null;
+    return { errors: [] };
   }
 
   @Authorized()
