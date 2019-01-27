@@ -30,7 +30,9 @@ class Roles extends React.PureComponent<{}> {
                       <Table.Row>
                         <Table.HeaderCell>Name</Table.HeaderCell>
                         <Table.HeaderCell>Description</Table.HeaderCell>
-                        <Table.HeaderCell>Actions</Table.HeaderCell>
+                        <Table.HeaderCell textAlign="right">
+                          Actions
+                        </Table.HeaderCell>
                       </Table.Row>
                     </Table.Header>
 

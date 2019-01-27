@@ -18,6 +18,7 @@ const adminPages = [
   { push: "/admin/services", title: "Services" },
   { push: "/admin/subscriptions", title: "Subscriptions" },
   { push: "/admin/roles", title: "Roles" },
+  { push: "/admin/users", title: "Users" },
 ];
 
 const Layout: React.SFC<Props> = ({

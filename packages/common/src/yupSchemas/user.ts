@@ -18,12 +18,12 @@ const userInfo = {
     .string()
     .min(3, firstNameNotLongEnough)
     .max(255)
-    .required(),
+    .required("first name is required"),
   lastName: yup
     .string()
     .min(3, lastNameNotLongEnough)
     .max(255)
-    .required(),
+    .required("last name is required"),
   mobile: yup.string().required(),
 };
 
@@ -36,8 +36,7 @@ export const validUserSchema = yup.object().shape({
     .required(),
   ...userInfo,
   password: registerPasswordValidation,
-  subscriptionId: yup.string().required(),
-  roleId: yup.string().required(),
+  role: yup.string().required(),
 });
 
 export const validUpdateUserSchema = yup.object().shape({ ...userInfo });

@@ -10,8 +10,7 @@ import { LoginResponse } from "./login/createResponse";
 
 import { RegisterInput } from "./register/createInput";
 import { UserResponse } from "./createResponse";
-import { CreateUserInput } from "./createInput";
-import { UpdateUserInput } from "./updateInput";
+import { UserInput } from "./createInput";
 
 @Resolver(User)
 export class UserResolver {
@@ -62,28 +61,35 @@ export class UserResolver {
     return await UserRepository.me(userId);
   }
 
+  @Authorized()
   @Query(() => [User], { nullable: true })
-  async users(
+  async allAdminExceptMe(
     @Ctx()
     ctx: MyContext
   ): Promise<User[]> {
     const { userId } = ctx.req.session!;
 
-    return await UserRepository.allExceptMe(userId);
+    return await UserRepository.allAdminExceptMe(userId);
   }
 
+  @Authorized()
   @Mutation(() => UserResponse, { nullable: true })
-  async createUser(
-    @Arg("input") userInput: CreateUserInput
-  ): Promise<UserResponse> {
+  async createUser(@Arg("input") userInput: UserInput): Promise<UserResponse> {
     return await UserRepository.create(userInput);
   }
 
+  @Authorized()
   @Mutation(() => UserResponse, { nullable: true })
   async updateUser(
     @Arg("userId") userId: ObjectId,
-    @Arg("input") userInput: UpdateUserInput
+    @Arg("input") userInput: UserInput
   ): Promise<UserResponse> {
     return await UserRepository.update(userId, userInput);
+  }
+
+  @Authorized()
+  @Mutation(() => UserResponse, { nullable: true })
+  async deleteUser(@Arg("userId") userId: ObjectId): Promise<UserResponse> {
+    return await UserRepository.deleteUser(userId);
   }
 }

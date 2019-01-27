@@ -65,7 +65,9 @@ export default class Services extends React.PureComponent<{
                         <Table.HeaderCell>Name</Table.HeaderCell>
                         <Table.HeaderCell>Category</Table.HeaderCell>
                         <Table.HeaderCell>Description</Table.HeaderCell>
-                        <Table.HeaderCell>Actions</Table.HeaderCell>
+                        <Table.HeaderCell textAlign="right">
+                          Actions
+                        </Table.HeaderCell>
                       </Table.Row>
                     </Table.Header>
 

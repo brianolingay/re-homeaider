@@ -48,7 +48,7 @@ export interface LoginInput {
   password: string;
 }
 
-export interface CreateUserInput {
+export interface UserInput {
   email: string;
 
   firstName: string;
@@ -57,15 +57,7 @@ export interface CreateUserInput {
 
   mobile: string;
 
-  password: string;
-}
-
-export interface UpdateUserInput {
-  firstName: string;
-
-  lastName: string;
-
-  mobile: string;
+  password?: Maybe<string>;
 }
 /** Type of payment mode */
 export enum PaymentMode {
@@ -420,6 +412,54 @@ export type SubscriptionsQuery = {
 
 export type SubscriptionsSubscriptions = SubscriptionInfoFragment;
 
+export type CreateUserVariables = {
+  input: UserInput;
+};
+
+export type CreateUserMutation = {
+  __typename?: "Mutation";
+
+  createUser: Maybe<CreateUserCreateUser>;
+};
+
+export type CreateUserCreateUser = {
+  __typename?: "UserResponse";
+
+  errors: Maybe<CreateUserErrors[]>;
+};
+
+export type CreateUserErrors = {
+  __typename?: "ErrorResponse";
+
+  path: string;
+
+  message: string;
+};
+
+export type DeleteUserVariables = {
+  userId: ObjectId;
+};
+
+export type DeleteUserMutation = {
+  __typename?: "Mutation";
+
+  deleteUser: Maybe<DeleteUserDeleteUser>;
+};
+
+export type DeleteUserDeleteUser = {
+  __typename?: "UserResponse";
+
+  errors: Maybe<DeleteUserErrors[]>;
+};
+
+export type DeleteUserErrors = {
+  __typename?: "ErrorResponse";
+
+  path: string;
+
+  message: string;
+};
+
 export type LoginVariables = {
   isAdmin: boolean;
   input: LoginInput;
@@ -475,6 +515,41 @@ export type RegisterErrors = {
 
   message: string;
 };
+
+export type UpdateUserVariables = {
+  userId: ObjectId;
+  input: UserInput;
+};
+
+export type UpdateUserMutation = {
+  __typename?: "Mutation";
+
+  updateUser: Maybe<UpdateUserUpdateUser>;
+};
+
+export type UpdateUserUpdateUser = {
+  __typename?: "UserResponse";
+
+  errors: Maybe<UpdateUserErrors[]>;
+};
+
+export type UpdateUserErrors = {
+  __typename?: "ErrorResponse";
+
+  path: string;
+
+  message: string;
+};
+
+export type AllAdminExceptMeVariables = {};
+
+export type AllAdminExceptMeQuery = {
+  __typename?: "Query";
+
+  allAdminExceptMe: Maybe<AllAdminExceptMeAllAdminExceptMe[]>;
+};
+
+export type AllAdminExceptMeAllAdminExceptMe = UserInfoFragment;
 
 export type MeVariables = {};
 
@@ -557,6 +632,12 @@ export type UserInfoFragment = {
 
   email: string;
 
+  firstName: string;
+
+  lastName: string;
+
+  mobile: string;
+
   role: Maybe<UserInfoRole>;
 };
 
@@ -627,6 +708,9 @@ export const UserInfoFragmentDoc = gql`
   fragment UserInfo on User {
     _id
     email
+    firstName
+    lastName
+    mobile
     role {
       _id
       name
@@ -1426,6 +1510,100 @@ export function SubscriptionsHOC<TProps, TChildProps = any>(
     SubscriptionsProps<TChildProps>
   >(SubscriptionsDocument, operationOptions);
 }
+export const CreateUserDocument = gql`
+  mutation CreateUser($input: UserInput!) {
+    createUser(input: $input) {
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;
+export class CreateUserComponent extends React.Component<
+  Partial<ReactApollo.MutationProps<CreateUserMutation, CreateUserVariables>>
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<CreateUserMutation, CreateUserVariables>
+        mutation={CreateUserDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type CreateUserProps<TChildProps = any> = Partial<
+  ReactApollo.MutateProps<CreateUserMutation, CreateUserVariables>
+> &
+  TChildProps;
+export type CreateUserMutationFn = ReactApollo.MutationFn<
+  CreateUserMutation,
+  CreateUserVariables
+>;
+export function CreateUserHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        CreateUserMutation,
+        CreateUserVariables,
+        CreateUserProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    CreateUserMutation,
+    CreateUserVariables,
+    CreateUserProps<TChildProps>
+  >(CreateUserDocument, operationOptions);
+}
+export const DeleteUserDocument = gql`
+  mutation DeleteUser($userId: ObjectId!) {
+    deleteUser(userId: $userId) {
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;
+export class DeleteUserComponent extends React.Component<
+  Partial<ReactApollo.MutationProps<DeleteUserMutation, DeleteUserVariables>>
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<DeleteUserMutation, DeleteUserVariables>
+        mutation={DeleteUserDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type DeleteUserProps<TChildProps = any> = Partial<
+  ReactApollo.MutateProps<DeleteUserMutation, DeleteUserVariables>
+> &
+  TChildProps;
+export type DeleteUserMutationFn = ReactApollo.MutationFn<
+  DeleteUserMutation,
+  DeleteUserVariables
+>;
+export function DeleteUserHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        DeleteUserMutation,
+        DeleteUserVariables,
+        DeleteUserProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    DeleteUserMutation,
+    DeleteUserVariables,
+    DeleteUserProps<TChildProps>
+  >(DeleteUserDocument, operationOptions);
+}
 export const LoginDocument = gql`
   mutation Login($isAdmin: Boolean!, $input: LoginInput!) {
     login(isAdmin: $isAdmin, input: $input) {
@@ -1566,6 +1744,97 @@ export function RegisterHOC<TProps, TChildProps = any>(
     RegisterVariables,
     RegisterProps<TChildProps>
   >(RegisterDocument, operationOptions);
+}
+export const UpdateUserDocument = gql`
+  mutation UpdateUser($userId: ObjectId!, $input: UserInput!) {
+    updateUser(userId: $userId, input: $input) {
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;
+export class UpdateUserComponent extends React.Component<
+  Partial<ReactApollo.MutationProps<UpdateUserMutation, UpdateUserVariables>>
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<UpdateUserMutation, UpdateUserVariables>
+        mutation={UpdateUserDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type UpdateUserProps<TChildProps = any> = Partial<
+  ReactApollo.MutateProps<UpdateUserMutation, UpdateUserVariables>
+> &
+  TChildProps;
+export type UpdateUserMutationFn = ReactApollo.MutationFn<
+  UpdateUserMutation,
+  UpdateUserVariables
+>;
+export function UpdateUserHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        UpdateUserMutation,
+        UpdateUserVariables,
+        UpdateUserProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    UpdateUserMutation,
+    UpdateUserVariables,
+    UpdateUserProps<TChildProps>
+  >(UpdateUserDocument, operationOptions);
+}
+export const AllAdminExceptMeDocument = gql`
+  query AllAdminExceptMe {
+    allAdminExceptMe {
+      ...UserInfo
+    }
+  }
+
+  ${UserInfoFragmentDoc}
+`;
+export class AllAdminExceptMeComponent extends React.Component<
+  Partial<
+    ReactApollo.QueryProps<AllAdminExceptMeQuery, AllAdminExceptMeVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Query<AllAdminExceptMeQuery, AllAdminExceptMeVariables>
+        query={AllAdminExceptMeDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type AllAdminExceptMeProps<TChildProps = any> = Partial<
+  ReactApollo.DataProps<AllAdminExceptMeQuery, AllAdminExceptMeVariables>
+> &
+  TChildProps;
+export function AllAdminExceptMeHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        AllAdminExceptMeQuery,
+        AllAdminExceptMeVariables,
+        AllAdminExceptMeProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    AllAdminExceptMeQuery,
+    AllAdminExceptMeVariables,
+    AllAdminExceptMeProps<TChildProps>
+  >(AllAdminExceptMeDocument, operationOptions);
 }
 export const MeDocument = gql`
   query Me {

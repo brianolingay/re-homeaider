@@ -1,12 +1,14 @@
 import { create } from "./create";
+import { deleteUser } from "./delete";
 import { login } from "./login";
-import { me, allExceptMe } from "./read";
+import { me, allAdminExceptMe } from "./read";
 import { register } from "./register";
 import { update } from "./update";
 
 export const UserRepository = {
-  allExceptMe,
+  allAdminExceptMe,
   create,
+  deleteUser,
   login,
   me,
   register,

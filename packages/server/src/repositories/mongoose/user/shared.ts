@@ -8,7 +8,7 @@ import { duplicateEmail } from "./../../../modules/users/register/constants";
 
 export const createOrRegister = async (role: String, input: any) => {
   try {
-    await validUserSchema.validate(input, { abortEarly: false });
+    await validUserSchema.validate({ ...input, role }, { abortEarly: false });
   } catch (err) {
     return { errors: formatYupError(err) };
   }

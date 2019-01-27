@@ -1,6 +1,6 @@
-import { CreateUserInput } from "../../../modules/users/createInput";
+import { UserInput } from "../../../modules/users/createInput";
 import { createOrRegister } from "./shared";
 
-export const create = async (userInput: CreateUserInput) => {
+export const create = async (userInput: UserInput) => {
   return await createOrRegister("admin", userInput);
 };

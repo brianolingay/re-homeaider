@@ -2,41 +2,18 @@ import * as React from "react";
 import { Table, Grid } from "semantic-ui-react";
 import Layout from "../../components/Layout";
 import Loading from "../../components/Loader";
-import { NextContextWithApollo } from "../../types/NextContextWithApollo";
-import {
-  ServicesComponent,
-  CategoriesQuery,
-  CategoryInfoFragment,
-} from "../../components/apollo-components";
-import { categoriesQuery } from "../../graphql/category/queries/categories";
-import { CreateButton } from "../../components/service/CreateButton";
-import { UpdateButton } from "../../components/service/UpdateButton";
-import { DeleteButton } from "../../components/service/DeleteButton";
+import { AllAdminExceptMeComponent } from "../../components/apollo-components";
+import { CreateButton } from "../../components/user/CreateButton";
+import { UpdateButton } from "../../components/user/UpdateButton";
+import { DeleteButton } from "../../components/user/DeleteButton";
 import { withAuth } from "../../components/withAuth";
 
-class Users extends React.PureComponent<{
-  categories: CategoryInfoFragment[];
-}> {
-  static async getInitialProps({ apolloClient }: NextContextWithApollo) {
-    const {
-      data: { categories },
-    } = await apolloClient.query<CategoriesQuery>({
-      query: categoriesQuery,
-    });
-    return {
-      categories: categories.map(item => ({
-        key: item._id,
-        value: item._id,
-        text: item.name,
-      })),
-    };
-  }
-
+class Users extends React.PureComponent<{}> {
   render() {
     return (
-      <Layout title="Services" showMenu={true}>
+      <Layout title="Users" showMenu={true}>
         {/* @ts-ignore */}
-        <ServicesComponent>
+        <AllAdminExceptMeComponent>
           {({ data, loading, refetch }) => {
             if (loading) {
               return <Loading />;
@@ -45,37 +22,40 @@ class Users extends React.PureComponent<{
             return (
               <Grid columns={1} padded="vertically">
                 <Grid.Column>
-                  <CreateButton
-                    categories={this.props.categories}
-                    refetch={refetch}
-                  />
+                  <CreateButton refetch={refetch} />
                 </Grid.Column>
                 <Grid.Column>
                   <Table fixed>
                     <Table.Header>
                       <Table.Row>
-                        <Table.HeaderCell>Name</Table.HeaderCell>
-                        <Table.HeaderCell>Category</Table.HeaderCell>
-                        <Table.HeaderCell>Description</Table.HeaderCell>
-                        <Table.HeaderCell>Actions</Table.HeaderCell>
+                        <Table.HeaderCell>Full Name</Table.HeaderCell>
+                        <Table.HeaderCell>Email</Table.HeaderCell>
+                        <Table.HeaderCell>Mobile</Table.HeaderCell>
+                        <Table.HeaderCell>Role</Table.HeaderCell>
+                        <Table.HeaderCell textAlign="right">
+                          Actions
+                        </Table.HeaderCell>
                       </Table.Row>
                     </Table.Header>
 
                     <Table.Body>
                       {data ? (
-                        data.services.map(item => (
+                        data.allAdminExceptMe.map(item => (
                           <Table.Row key={item._id}>
-                            <Table.Cell>{item.name}</Table.Cell>
-                            <Table.Cell>{item.category.name}</Table.Cell>
-                            <Table.Cell>{item.description}</Table.Cell>
+                            <Table.Cell>
+                              {item.firstName} {item.lastName}
+                            </Table.Cell>
+                            <Table.Cell>{item.email}</Table.Cell>
+                            <Table.Cell>{item.mobile}</Table.Cell>
+                            <Table.Cell>{item.role.name}</Table.Cell>
                             <Table.Cell>
                               <DeleteButton
-                                serviceId={item._id}
-                                categoryId={item.category._id}
+                                key={`user-del-${item._id}`}
+                                userId={item._id}
                                 refetch={refetch}
                               />
                               <UpdateButton
-                                categories={this.props.categories}
+                                key={`user-update-${item._id}`}
                                 item={item}
                                 refetch={refetch}
                               />
@@ -85,7 +65,9 @@ class Users extends React.PureComponent<{
                       ) : (
                         <Table.Row>
                           <Table.HeaderCell />
+                          <Table.HeaderCell />
                           <Table.HeaderCell>No Data</Table.HeaderCell>
+                          <Table.HeaderCell />
                           <Table.HeaderCell />
                         </Table.Row>
                       )}
@@ -95,7 +77,7 @@ class Users extends React.PureComponent<{
               </Grid>
             );
           }}
-        </ServicesComponent>
+        </AllAdminExceptMeComponent>
       </Layout>
     );
   }
