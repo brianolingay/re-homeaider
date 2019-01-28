@@ -16,6 +16,11 @@ type Props = {
   me: UserInfoFragment;
 };
 
+/*
+ * [TODO]: Avatar & Certificate File Upload
+ *
+ */
+
 class Profile extends React.PureComponent<Props, State> {
   state = {
     isEditing: false,
@@ -30,8 +35,8 @@ class Profile extends React.PureComponent<Props, State> {
     return (
       <Layout title={`${me.firstName} ${me.lastName} Profile`} showMenu={true}>
         <Grid>
-          <Grid.Column width={4}>{/* Image should be here... */}</Grid.Column>
-          <Grid.Column width={9}>
+          <Grid.Column width={3}>{/* Image should be here... */}</Grid.Column>
+          <Grid.Column width={10}>
             <Grid columns={1}>
               <Grid.Column />
               <Grid.Column>
@@ -115,7 +120,7 @@ class Profile extends React.PureComponent<Props, State> {
 
                     <Card fluid color="red">
                       <Card.Content>
-                        <Card.Header content="Certificates" />
+                        <Card.Header content="Service w/ Certificates" />
                         <Card.Description content="No data available" />
                       </Card.Content>
                     </Card>
