@@ -1,6 +1,6 @@
 import * as React from "react";
 import Head from "next/head";
-import { Container, Menu, Segment } from "semantic-ui-react";
+import { Container, Menu, Segment, Dropdown } from "semantic-ui-react";
 import { Query, Mutation } from "react-apollo";
 
 import { meQuery } from "../graphql/user/queries/me";
@@ -58,34 +58,47 @@ const Layout: React.SFC<Props> = ({
                         </Menu.Item>
                       ))}
 
-                    <Menu.Menu position="right">
-                      {isLoggedIn ? (
-                        <>
-                          <Menu.Item>{data.me.email}</Menu.Item>
-                          <Menu.Item
-                            onClick={async () => {
-                              const goto =
-                                data.me.role.name === "admin" ? "/admin" : "/";
-                              await mutate({});
-                              (window as any).location = goto;
-                              // Router.push("/home");
-                              // await client.resetStore();
-                            }}
-                          >
-                            logout
-                          </Menu.Item>
-                        </>
-                      ) : (
-                        <>
-                          <Menu.Item onClick={() => Router.push("/register")}>
-                            register
-                          </Menu.Item>
-                          <Menu.Item onClick={() => Router.push("/login")}>
-                            login
-                          </Menu.Item>
-                        </>
-                      )}
-                    </Menu.Menu>
+                    {isLoggedIn ? (
+                      <Menu.Menu position="right">
+                        <Dropdown
+                          text={data.me.email}
+                          pointing
+                          className="link item"
+                        >
+                          <Dropdown.Menu>
+                            <Dropdown.Item
+                              onClick={() => Router.push("/profile")}
+                            >
+                              Profile
+                            </Dropdown.Item>
+                            <Dropdown.Divider />
+                            <Dropdown.Item
+                              onClick={async () => {
+                                const goto =
+                                  data.me.role.name === "admin"
+                                    ? "/admin"
+                                    : "/";
+                                await mutate({});
+                                (window as any).location = goto;
+                                // Router.push("/home");
+                                // await client.resetStore();
+                              }}
+                            >
+                              Logout
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </Menu.Menu>
+                    ) : (
+                      <Menu.Menu>
+                        <Menu.Item onClick={() => Router.push("/register")}>
+                          Register
+                        </Menu.Item>
+                        <Menu.Item onClick={() => Router.push("/login")}>
+                          Login
+                        </Menu.Item>
+                      </Menu.Menu>
+                    )}
                   </Menu>
                 </Segment>
               );

@@ -92,7 +92,7 @@ export const UserForm: React.SFC<Props> = ({
           <Field
             name="password"
             label="Password"
-            placeholder="Provider a strong generated password"
+            placeholder="Provide a strong generated password"
             component={InputField}
           />
           <Button disabled={isSubmitting} onClick={handleModal}>
