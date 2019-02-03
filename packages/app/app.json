@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "homeaider",
+    "slug": "app",
+    "privacy": "public",
+    "sdkVersion": "32.0.0",
+    "platforms": ["ios", "android"],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.student.homeaider"
+    },
+    "android": {
+      "package": "com.student.homeaider",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDD3T0PReSbzffYAnO9CxV49T3P5APXCno"
+        }
+      }
+    },
+    "ignoreNodeModulesValidation": true,
+    "packagerOpts": {
+      "config": "rn-cli.config.js",
+      "projectRoots": "",
+      "sourceExts": ["ts", "tsx"],
+      "transformer": "node_modules/react-native-typescript-transformer/index.js"
+    }
+  }
+}

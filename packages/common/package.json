@@ -15,5 +15,11 @@
   },
   "scripts": {
     "build": "rimraf dist && tsc"
+  },
+  "workspaces": {
+    "nohoist": [
+      "**/rimraf",
+      "**/rimraf/**"
+    ]
   }
 }

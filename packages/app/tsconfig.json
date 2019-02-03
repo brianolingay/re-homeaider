@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "jsx": "react-native",
+    "lib": ["es6", "esnext.asynciterable"],
+    "strict": true,
+    "esModuleInterop": true,
+    "rootDir": "src",
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedLocals": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "*.jpg": ["./app/src/types/jpg"],
+      "*.png": ["./app/src/types/png"],
+      "react-native-google-places-autocomplete": [
+        "./app/src/types/react-native-google-places-autocomplete"
+      ],
+      "apollo-link-context": ["./app/src/types/apollo-link-context"]
+      // "react-native-maps": ["./app/src/types/react-native-maps"]
+    }
+  },
+  "exclude": ["node_modules"],
+  "include": ["./src/**/*.tsx", "./src/**/*.ts"],
+  "references": [{ "path": "../common" }]
+}
