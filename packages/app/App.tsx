@@ -1,18 +1,36 @@
 import * as React from "react";
 import { Platform, StatusBar, StyleSheet, View, Text } from "react-native";
 import { AppLoading, Asset, Font, Icon } from "expo";
-import { AppNavigator } from "./src/navigation/AppNavigator";
+import { ApolloProvider } from "react-apollo";
+import { AppNavigator } from "./navigation/AppNavigator";
+import { ContextWithApollo } from "./types/ContextWithApollo";
+import withApolloClient from "./lib/with-apollo-client";
 
-export default class App extends React.Component<
-  { skipLoadingScreen: any },
+type Props = {
+  skipLoadingScreen: any;
+};
+
+export interface DefaultAppIProps {
+  pageProps: any;
+}
+
+class App extends React.Component<
+  Props & DefaultAppIProps & ContextWithApollo,
   { isLoadingComplete: boolean }
 > {
+  static getInitialProps(context: any) {
+    return { context };
+  }
+}
+
+class NativeApp extends App {
   state = {
     isLoadingComplete: false,
   };
 
   render() {
-    if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
+    const { skipLoadingScreen, pageProps, apolloClient } = this.props;
+    if (!this.state.isLoadingComplete && !skipLoadingScreen) {
       return (
         <AppLoading
           startAsync={this._loadResourcesAsync}
@@ -23,8 +41,10 @@ export default class App extends React.Component<
     } else {
       return (
         <View style={styles.container}>
-          {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-          <AppNavigator />
+          <ApolloProvider client={apolloClient}>
+            {Platform.OS === "ios" && <StatusBar barStyle="default" />}
+            <AppNavigator {...pageProps} />
+          </ApolloProvider>
         </View>
       );
     }
@@ -39,9 +59,8 @@ export default class App extends React.Component<
       Font.loadAsync({
         // This is the font that we are using for our tab bar
         ...Icon.Ionicons.font,
-        // We include SpaceMono because we use it in HomeScreen.js. Feel free
-        // to remove this if you are not using it in your app
-        "space-mono": require("./assets/fonts/SpaceMono-Regular.ttf"),
+        Roboto: require("native-base/Fonts/Roboto.ttf"),
+        Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
       }),
     ]);
   };
@@ -63,3 +82,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
 });
+
+export default withApolloClient(NativeApp);

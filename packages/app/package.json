@@ -7,13 +7,17 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "eject": "expo eject",
-    "test": "node ./node_modules/jest/bin/jest.js --watchAll"
+    "test": "node ./node_modules/jest/bin/jest.js --watchAll",
+    "generate": "gql-gen"
   },
   "dependencies": {
+    "@expo/vector-icons": "^9.0.0",
     "apollo-boost": "^0.1.27",
     "apollo-link-context": "^1.0.14",
+    "apollo-link-ws": "^1.0.14",
     "expo": "^32.0.0",
     "formik": "^1.4.3",
+    "native-base": "^2.11.0",
     "react": "16.5.0",
     "react-apollo": "^2.4.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
@@ -36,6 +40,8 @@
   "private": true,
   "workspaces": {
     "nohoist": [
+      "**/apollo-link-ws",
+      "**/apollo-link-ws/**",
       "**/expo",
       "**/expo/**",
       "**/metro-bundler-config-yarn-workspaces/**",
