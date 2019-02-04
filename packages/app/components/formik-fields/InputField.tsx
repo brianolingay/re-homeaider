@@ -24,7 +24,6 @@ export class InputField extends React.Component<any & FieldProps<any>> {
     return (
       <FormItem error={hasError}>
         {label && <Label>{label}</Label>}
-        // @ts-ignore
         <Input
           {...props}
           onChangeText={this.onChangeText}

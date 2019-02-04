@@ -12,13 +12,14 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^9.0.0",
+    "@types/react-navigation": "^3.0.1",
     "apollo-boost": "^0.1.27",
     "apollo-link-context": "^1.0.14",
     "apollo-link-ws": "^1.0.14",
     "expo": "^32.0.0",
     "formik": "^1.4.3",
     "native-base": "^2.11.0",
-    "react": "16.5.0",
+    "react": "^16.7.0",
     "react-apollo": "^2.4.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
     "react-navigation": "^3.0.9"
@@ -44,7 +45,8 @@
       "**/apollo-link-ws/**",
       "**/expo",
       "**/expo/**",
-      "**/metro-bundler-config-yarn-workspaces/**",
+      "**/native-base",
+      "**/native-base/**",
       "**/react-native",
       "**/react-native/**",
       "**/react-native-elements",
@@ -57,7 +59,10 @@
       "**/react-native-picker-select/**",
       "**/react-native-typescript-transformer",
       "**/react-native-typescript-transformer/**",
-      "**/metro-bundler-config-yarn-workspaces"
+      "**/react-navigation",
+      "**/react-navigation/**",
+      "**/metro-bundler-config-yarn-workspaces",
+      "**/metro-bundler-config-yarn-workspaces/**"
     ]
   }
 }
