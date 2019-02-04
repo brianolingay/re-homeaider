@@ -5,7 +5,14 @@
       "packages/*"
     ]
   },
+  "scripts": {
+    "build:server": "lerna run build --scope={@homeaider/common,@homeaider/server}",
+    "build:web": "lerna run build --scope={@homeaider/common,@homeaider/controller,@homeaider/web}"
+  },
   "resolutions": {
     "graphql": "14.0.2"
+  },
+  "devDependencies": {
+    "lerna": "^3.10.7"
   }
 }

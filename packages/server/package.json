@@ -1,6 +1,6 @@
 {
   "name": "@homeaider/server",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Awesome project developed with TypeORM.",
   "private": true,
   "devDependencies": {
@@ -16,13 +16,14 @@
     "@types/uuid": "^3.4.4",
     "cross-env": "^5.2.0",
     "nodemon": "^1.18.9",
+    "rimraf": "^2.6.3",
     "ts-node": "3.3.0",
     "tslint": "^5.12.0",
     "typescript": "2.5.2",
     "yup": "^0.26.7"
   },
   "dependencies": {
-    "@homeaider/common": "0.0.1",
+    "@homeaider/common": "1.0.0",
     "apollo-server-express": "^2.3.1",
     "argon2": "^0.20.0",
     "connect-redis": "^3.4.0",
@@ -42,7 +43,8 @@
   },
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon --exec ts-node src/index.ts",
-    "generate": "gql-gen"
+    "build": "rimraf dist && tsc",
+    "serve": "NODE_ENV=production node dist/index.js"
   },
   "workspaces": {
     "nohoist": [
