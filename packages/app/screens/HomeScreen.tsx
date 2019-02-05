@@ -12,7 +12,7 @@ import { WebBrowser } from "expo";
 
 import { MonoText } from "../components/StyledText";
 
-class ScreenComponent extends React.Component {
+export class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
@@ -207,4 +207,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export const HomeScreen = ScreenComponent;

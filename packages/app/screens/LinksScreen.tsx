@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ScrollView, StyleSheet, Text } from "react-native";
 
-class ScreenComponent extends React.Component {
+export class LinksScreen extends React.Component {
   static navigationOptions = {
     title: "Links",
   };
@@ -27,4 +27,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export const LinksScreen = ScreenComponent;

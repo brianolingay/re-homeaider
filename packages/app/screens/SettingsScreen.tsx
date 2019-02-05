@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Text } from "react-native";
 
-class ScreenComponent extends React.Component {
+export class SettingsScreen extends React.Component {
   static navigationOptions = {
     title: "app.json",
   };
@@ -12,5 +12,3 @@ class ScreenComponent extends React.Component {
     return <Text>Settings</Text>;
   }
 }
-
-export const SettingsScreen = ScreenComponent;
