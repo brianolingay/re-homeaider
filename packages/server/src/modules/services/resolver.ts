@@ -161,4 +161,36 @@ export class ServiceResolver {
 
     return services;
   }
+
+  @Authorized()
+  @Query(() => [Service], { nullable: true })
+  async findServicesByCategory(
+    @Arg("categoryId") categoryId: ObjectId
+  ): Promise<Service[]> {
+    const services = await ServiceModel.aggregate([
+      {
+        $match: { category: categoryId },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "services",
+          as: "users_doc",
+        },
+      },
+      { $match: { users_doc: { $ne: [] } } },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          totalUsers: {
+            $size: "$users_doc",
+          },
+        },
+      },
+    ]);
+
+    return services;
+  }
 }
