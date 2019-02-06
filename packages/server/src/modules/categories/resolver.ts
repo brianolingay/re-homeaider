@@ -18,7 +18,7 @@ export class CategoryResolver {
   @Mutation(() => CategoryResponse, { nullable: true })
   async createCategory(
     @Arg("input") categoryInput: CategoryInput
-  ): Promise<CategoryResponse | null> {
+  ): Promise<CategoryResponse> {
     try {
       await validCategorySchema.validate(categoryInput, { abortEarly: false });
     } catch (err) {
@@ -54,7 +54,7 @@ export class CategoryResolver {
   async updateCategory(
     @Arg("categoryId") categoryId: ObjectId,
     @Arg("input") categoryInput: CategoryInput
-  ): Promise<CategoryResponse | null> {
+  ): Promise<CategoryResponse> {
     try {
       await validCategorySchema.validate(categoryInput, { abortEarly: false });
     } catch (err) {
@@ -117,6 +117,60 @@ export class CategoryResolver {
 
     console.log(categories);
 
+    return categories;
+  }
+
+  @Authorized()
+  @Query(() => [Category], { nullable: true })
+  async availableCategories(): Promise<Category[]> {
+    const categories = await CategoryModel.aggregate([
+      {
+        $lookup: {
+          from: "services",
+          localField: "_id",
+          foreignField: "category",
+          as: "services_doc",
+        },
+      },
+      {
+        $unwind: {
+          path: "$services_doc",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "services_doc._id",
+          foreignField: "services",
+          as: "services_doc.users_doc",
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          name: { $first: "$name" },
+          services: {
+            $push: "$services_doc",
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          totalServices: {
+            $size: {
+              $filter: {
+                input: "$services",
+                as: "sd",
+                cond: { $ne: ["$$sd.users_doc", []] },
+              },
+            },
+          },
+        },
+      },
+    ]);
     return categories;
   }
 }
