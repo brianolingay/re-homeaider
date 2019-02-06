@@ -1,5 +1,7 @@
+import { UserModel } from "./../../models/User";
+import { MyContext } from "./../../types/Context";
 import { ServiceRequestModel } from "./../../models/ServiceRequest";
-import { Resolver, Query, Mutation, Authorized, Arg } from "type-graphql";
+import { Resolver, Query, Mutation, Authorized, Arg, Ctx } from "type-graphql";
 import { ObjectId } from "mongodb";
 import { ServiceRequest } from "../../types/objects/ServiceRequest";
 import { ServiceRequestInput } from "./input";
@@ -12,23 +14,14 @@ export class ServiceRequestResolver {
   @Authorized()
   @Mutation(() => ServiceRequestResponse, { nullable: true })
   async createServiceRequest(
-    @Arg("serviceSeekerId") serviceSeekerId: ObjectId,
-    @Arg("serviceId") serviceId: ObjectId,
-    @Arg("providerId") providerId: ObjectId | null,
-    @Arg("input") serviceRequestInput: ServiceRequestInput
+    @Arg("input") serviceRequestInput: ServiceRequestInput,
+    @Ctx() ctx: MyContext
   ): Promise<ServiceRequestResponse> {
-    let query = {
-      ...serviceRequestInput,
-      serviceSeeker: serviceSeekerId,
-      service: serviceId,
-    };
-
-    if (providerId) {
-      query = { provider: providerId, ...query };
-    }
-
     try {
-      await ServiceRequestModel.create(query);
+      await ServiceRequestModel.create({
+        ...serviceRequestInput,
+        serviceSeeker: ctx.req.session!.userId,
+      });
     } catch (err) {
       return {
         errors: [
@@ -66,5 +59,61 @@ export class ServiceRequestResolver {
     }
 
     return { errors: [] };
+  }
+
+  @Authorized()
+  @Query(() => [ServiceRequest], { nullable: true })
+  async availableBookingRequest(
+    @Ctx() ctx: MyContext
+  ): Promise<ServiceRequest[]> {
+    const newUser = await UserModel.findOne({ _id: ctx.req.session!.userId });
+    if (newUser) {
+      const serviceRequest = await ServiceRequestModel.find({
+        service: { $in: newUser.services },
+        provider: null,
+        canceledAt: null,
+        accepted: false,
+        startedAt: null,
+        ignoredAt: null,
+        completedAt: null,
+      })
+        .sort({ createdAt: -1 })
+        .populate("serviceSeeker")
+        .populate("provider")
+        .populate({
+          path: "service",
+          populate: { path: "category" },
+        })
+        .lean()
+        .exec();
+
+      return serviceRequest;
+    }
+
+    return [];
+  }
+
+  @Authorized()
+  @Query(() => [ServiceRequest], { nullable: true })
+  async availableHiringRequest(
+    @Ctx() ctx: MyContext
+  ): Promise<ServiceRequest[]> {
+    const serviceRequest = await ServiceRequestModel.find({
+      provider: ctx.req.session!.userId,
+      canceledAt: null,
+      accepted: false,
+      startedAt: null,
+      ignoredAt: null,
+    })
+      .populate("aidee")
+      .populate("provider")
+      .populate({
+        path: "service",
+        populate: { path: "category" },
+      })
+      .lean()
+      .exec();
+
+    return serviceRequest;
   }
 }

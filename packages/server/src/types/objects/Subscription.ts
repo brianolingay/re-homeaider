@@ -22,7 +22,7 @@ export class Subscription {
   amount: number;
 
   @Field(() => [String], { nullable: true })
-  benefits: string[];
+  benefits: string[] | null;
 
   @Field(() => PaymentMode)
   paymentMode: PaymentMode;

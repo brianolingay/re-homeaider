@@ -5,8 +5,8 @@ export interface CateogryInterface extends Document {
   name: string;
   description: string | null;
   services: ServiceInterface[] | null;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | null;
+  updatedAt: Date | null;
 }
 
 export const categorySchema: Schema = new Schema(

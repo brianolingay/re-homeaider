@@ -1,12 +1,12 @@
 import { Document, Schema, model } from "mongoose";
+import { PaymentMode } from "../types/paymentModeEnum";
 
 export interface SubscriptionInterface extends Document {
-  _id: string;
   name: string;
   description: string | null;
   amount: number;
   benefits: string[] | null;
-  paymentMode: string;
+  paymentMode: PaymentMode;
 }
 
 export const subscriptionSchema: Schema = new Schema(

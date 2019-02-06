@@ -1,8 +1,11 @@
-import { ObjectId } from 'mongodb';
+import { ObjectId } from "mongodb";
 import { InputType, Field } from "type-graphql";
 
 @InputType()
 export class ServiceRequestInput {
+  @Field()
+  service: ObjectId;
+
   @Field({ nullable: true })
   provider: ObjectId | null;
 

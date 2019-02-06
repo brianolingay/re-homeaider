@@ -15,4 +15,10 @@ export class Category {
 
   @Field(() => [Service], { nullable: true })
   services: Service[] | null;
+
+  @Field(() => Date, { nullable: true })
+  createdAt: Date | null;
+
+  @Field(() => Date, { nullable: true })
+  updatedAt: Date | null;
 }
