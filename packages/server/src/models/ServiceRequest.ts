@@ -3,7 +3,7 @@ import { UserInterface } from "./User";
 import { Document, Schema, Types, model } from "mongoose";
 
 export interface ServiceRequestInterface extends Document {
-  aidee: UserInterface;
+  serviceSeeker: UserInterface;
   provider: UserInterface | null;
   service: ServiceInterface;
   amount: number;
@@ -21,7 +21,7 @@ export interface ServiceRequestInterface extends Document {
 
 export const serviceRequestSchema: Schema = new Schema(
   {
-    aidee: { type: Types.ObjectId, ref: "User" },
+    serviceSeeker: { type: Types.ObjectId, ref: "User" },
     provider: { type: Types.ObjectId, ref: "User", default: null },
     service: { type: Types.ObjectId, ref: "Service" },
     amount: { type: Number, default: 0.0 },

@@ -1,32 +1,21 @@
-import { User } from "./User";
-import { ObjectType, Field } from "type-graphql";
-import { ObjectId } from "mongodb";
-import { Service } from "protobufjs";
+import { ObjectId } from 'mongodb';
+import { InputType, Field } from "type-graphql";
 
-@ObjectType()
-export class ServiceRequest {
-  @Field()
-  readonly _id: ObjectId;
+@InputType()
+export class ServiceRequestInput {
+  @Field({ nullable: true })
+  provider: ObjectId | null;
 
-  @Field(() => User)
-  serviceSeeker: User;
-
-  @Field(() => User, { nullable: true })
-  provider: User | null;
-
-  @Field(() => Service)
-  service: Service;
-
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   amount: number;
 
-  @Field()
+  @Field({ nullable: true })
   address: string;
 
-  @Field(() => [Number])
+  @Field(() => [Number], { nullable: true })
   coordinates: number[];
 
-  @Field(() => Boolean)
+  @Field(() => Boolean, { nullable: true })
   accepted: boolean;
 
   @Field(() => Date, { nullable: true })
@@ -47,6 +36,6 @@ export class ServiceRequest {
   @Field({ nullable: true })
   feedBack: string;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   rating: number;
 }
