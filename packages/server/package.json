@@ -33,6 +33,8 @@
     "express": "^4.16.4",
     "express-session": "^1.15.6",
     "graphql": "^14.0.2",
+    "graphql-redis-subscriptions": "^2.0.0",
+    "graphql-subscriptions": "^1.0.0",
     "ioredis": "^4.3.0",
     "mongodb": "^3.0.8",
     "mongoose": "^5.4.3",

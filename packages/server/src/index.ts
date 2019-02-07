@@ -9,11 +9,14 @@ import * as express from "express";
 import { buildSchema } from "type-graphql";
 import { ObjectId } from "mongodb";
 import * as cors from "cors";
+import { RedisPubSub } from "graphql-redis-subscriptions";
 
 import { redis } from "./redis";
 
 import { createMongooseConn } from "./utils/createMongooseConn";
 import { ObjectIdScalar } from "./scalars/ObjectIDScalar";
+import { userLoader } from "./loaders/userLoader";
+import { UserRepository } from "./repositories/mongoose/user/index";
 
 const RedisStore = connectRedis(session as any);
 
@@ -22,17 +25,42 @@ const startServer = async () => {
 
   const app = express();
 
+  const pubSub = new RedisPubSub(
+    process.env.NODE_ENV === "production"
+      ? {
+          connection: process.env.REDIS_URL as any,
+        }
+      : {}
+  );
+
   const server = new ApolloServer({
     schema: await buildSchema({
       resolvers: [__dirname + "/modules/**/resolver.*"],
+      pubSub,
       scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }],
       authChecker: ({ context }) => {
-        return context.req.session && context.req.session.userId; // or false if access denied
+        return (
+          (context.req.session && context.req.session.userId) || context.user
+        ); // or false if access denied
       },
     }),
-    context: ({ req }: any) => ({
+    context: ({ req, connection }: any) => ({
       req,
+      userLoader: userLoader(),
+      user: connection ? connection.context.user : null,
     }),
+    subscriptions: {
+      path: "/subscriptions",
+      onConnect: async ({ userId }: any) => {
+        if (userId) {
+          const user = await UserRepository.me(userId);
+
+          return { user };
+        }
+
+        return { user: null };
+      },
+    },
     formatError: (error: GraphQLError) => {
       if (error.originalError instanceof ApolloError) {
         return error;
