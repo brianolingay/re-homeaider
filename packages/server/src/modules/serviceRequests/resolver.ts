@@ -1,11 +1,26 @@
+import { ServiceRequestProgressPayload } from "./interfaces";
 import { UserModel } from "./../../models/User";
 import { MyContext } from "./../../types/Context";
 import { ServiceRequestModel } from "./../../models/ServiceRequest";
-import { Resolver, Query, Mutation, Authorized, Arg, Ctx } from "type-graphql";
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Authorized,
+  Arg,
+  Ctx,
+  Subscription,
+  ResolverFilterData,
+  Root,
+  Args,
+  PubSub,
+  Publisher,
+} from "type-graphql";
 import { ObjectId } from "mongodb";
 import { ServiceRequest } from "../../types/objects/ServiceRequest";
 import { ServiceRequestInput } from "./input";
 import { ServiceRequestResponse } from "./response";
+import { ServiceRequestProgressArgs } from "./args";
 
 @Resolver(ServiceRequest)
 export class ServiceRequestResolver {
@@ -40,7 +55,9 @@ export class ServiceRequestResolver {
   @Mutation(() => ServiceRequestResponse, { nullable: true })
   async updateServiceRequest(
     @Arg("serviceRequestId") serviceRequestId: ObjectId,
-    @Arg("input") serviceRequestInput: ServiceRequestInput
+    @Arg("input") serviceRequestInput: ServiceRequestInput,
+    @PubSub("SERVICE_REQUEST_PROGRESS")
+    publish: Publisher<ServiceRequestProgressPayload>
   ): Promise<ServiceRequestResponse> {
     try {
       await ServiceRequestModel.updateOne(
@@ -56,6 +73,16 @@ export class ServiceRequestResolver {
           },
         ],
       };
+    }
+
+    const serviceRequest = await ServiceRequestModel.findOne({
+      _id: serviceRequestId,
+    })
+      .lean()
+      .exec();
+
+    if (serviceRequest) {
+      await publish({ serviceRequestId, serviceRequest });
     }
 
     return { errors: [] };
@@ -113,6 +140,28 @@ export class ServiceRequestResolver {
       })
       .lean()
       .exec();
+
+    return serviceRequest;
+  }
+
+  @Authorized()
+  @Subscription(() => ServiceRequest, {
+    topics: "SERVICE_REQUEST_PROGRESS",
+    filter: ({
+      payload,
+      args,
+    }: ResolverFilterData<
+      ServiceRequestProgressPayload,
+      ServiceRequestProgressArgs
+    >) => {
+      return payload.serviceRequestId === args.serviceRequestId;
+    },
+  })
+  serviceRequestProgress(
+    @Root() newServiceRequest: ServiceRequestProgressPayload,
+    @Args() args: ServiceRequestProgressArgs
+  ): ServiceRequest {
+    const { serviceRequest } = newServiceRequest;
 
     return serviceRequest;
   }
