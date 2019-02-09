@@ -5,7 +5,7 @@ import { validCategorySchema } from "@homeaider/common";
 import { CategoryModel } from "./../../models/Category";
 import { Category } from "../../types/objects/Category";
 
-import { CategoryResponse } from "./response";
+import { CategoryResponse, AvailableCategorieResponse } from "./response";
 import { CategoryInput } from "./input";
 
 import { formatYupError } from "../../utils/formatYupError";
@@ -121,8 +121,8 @@ export class CategoryResolver {
   }
 
   @Authorized()
-  @Query(() => [Category], { nullable: true })
-  async availableCategories(): Promise<Category[]> {
+  @Query(() => [AvailableCategorieResponse], { nullable: true })
+  async availableCategories(): Promise<AvailableCategorieResponse[]> {
     const categories = await CategoryModel.aggregate([
       {
         $lookup: {
@@ -171,6 +171,7 @@ export class CategoryResolver {
         },
       },
     ]);
+
     return categories;
   }
 }
