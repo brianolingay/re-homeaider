@@ -1,22 +1,28 @@
 import * as React from "react";
 import { ApolloQueryResult } from "apollo-boost";
 import { Button, Icon } from "semantic-ui-react";
-import { SubscriptionsQuery, DeleteSubscriptionComponent } from "../apollo-components";
+import {
+  UserSubscriptionsQuery,
+  DeleteUserSubscriptionComponent,
+} from "../apollo-components";
 
 type Props = {
-  subscriptionId: string;
-  refetch: () => Promise<ApolloQueryResult<SubscriptionsQuery>>;
+  userSubscriptionId: string;
+  refetch: () => Promise<ApolloQueryResult<UserSubscriptionsQuery>>;
 };
 
-export const DeleteButton: React.SFC<Props> = ({ subscriptionId, refetch }) => (
-  <DeleteSubscriptionComponent>
+export const DeleteButton: React.SFC<Props> = ({
+  userSubscriptionId,
+  refetch,
+}) => (
+  <DeleteUserSubscriptionComponent>
     {mutate => {
       return (
         <Button
           animated="vertical"
           onClick={async () => {
             await mutate({
-              variables: { subscriptionId },
+              variables: { userSubscriptionId },
             });
             await refetch();
           }}
@@ -31,5 +37,5 @@ export const DeleteButton: React.SFC<Props> = ({ subscriptionId, refetch }) => (
         </Button>
       );
     }}
-  </DeleteSubscriptionComponent>
+  </DeleteUserSubscriptionComponent>
 );

@@ -3,15 +3,15 @@ import { ApolloQueryResult } from "apollo-boost";
 import { Button, Icon } from "semantic-ui-react";
 import { ModalFormContainer } from "../ModelFormContainer";
 import {
-  SubscriptionInfoFragment,
-  SubscriptionsQuery,
-  UpdateSubscriptionComponent,
+  UserSubscriptionInfoFragment,
+  UserSubscriptionsQuery,
+  UpdateUserSubscriptionComponent,
 } from "../apollo-components";
 import { SubscriptionFormValues, SubscriptionForm } from "./SubscriptionForm";
 
 type Props = {
-  item: SubscriptionInfoFragment;
-  refetch: () => Promise<ApolloQueryResult<SubscriptionsQuery>>;
+  item: UserSubscriptionInfoFragment;
+  refetch: () => Promise<ApolloQueryResult<UserSubscriptionsQuery>>;
 };
 
 interface State {
@@ -49,11 +49,11 @@ class UpdateButtonComponent extends React.PureComponent<Props, State> {
         open={this.state.modalOpen}
         header="Edit Subscription"
       >
-        <UpdateSubscriptionComponent>
+        <UpdateUserSubscriptionComponent>
           {mutate => (
             <SubscriptionForm
-              subscription={{
-                subscriptionId: item._id,
+              userSubscription={{
+                userSubscriptionId: item._id,
                 name: item.name,
                 description: item.description,
                 benefits: item.benefits.join("\n"),
@@ -62,21 +62,21 @@ class UpdateButtonComponent extends React.PureComponent<Props, State> {
               }}
               handleModal={this.handleModalFormContainer}
               submit={async ({
-                subscriptionId,
+                userSubscriptionId,
                 benefits,
                 ...input
               }: SubscriptionFormValues) => {
                 const newBenefits = { benefits: benefits.split(/\r\n|\n|\r/) };
                 const newInput = { ...input, ...newBenefits };
                 return await mutate({
-                  variables: { subscriptionId, input: newInput },
+                  variables: { userSubscriptionId, input: newInput },
                 });
               }}
               method="updateSubscription"
               refetch={refetch}
             />
           )}
-        </UpdateSubscriptionComponent>
+        </UpdateUserSubscriptionComponent>
       </ModalFormContainer>
     );
   }

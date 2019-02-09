@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Table, Grid, List } from "semantic-ui-react";
 import Layout from "../../components/Layout";
-import { SubscriptionsComponent } from "../../components/apollo-components";
+import { UserSubscriptionsComponent } from "../../components/apollo-components";
 import Loading from "../../components/Loader";
 import { CreateButton } from "../../components/subscriptions/CreateButton";
 import { UpdateButton } from "../../components/subscriptions/UpdateButton";
@@ -13,7 +13,7 @@ class Subscriptions extends React.PureComponent<{}> {
     return (
       <Layout title="Subscriptions" showMenu={true}>
         {/* @ts-ignore */}
-        <SubscriptionsComponent>
+        <UserSubscriptionsComponent>
           {({ data, loading, refetch }) => {
             if (loading) {
               return <Loading />;
@@ -43,7 +43,7 @@ class Subscriptions extends React.PureComponent<{}> {
 
                     <Table.Body>
                       {data ? (
-                        data.subscriptions.map(item => (
+                        data.userSubscriptions.map(item => (
                           <Table.Row key={`tr-subscription-${item._id}`}>
                             <Table.Cell verticalAlign="top">
                               {item.name}
@@ -67,7 +67,7 @@ class Subscriptions extends React.PureComponent<{}> {
                             <Table.Cell verticalAlign="top">
                               <DeleteButton
                                 key={`subscription-del-${item._id}`}
-                                subscriptionId={item._id}
+                                userSubscriptionId={item._id}
                                 refetch={refetch}
                               />
                               <UpdateButton
@@ -94,7 +94,7 @@ class Subscriptions extends React.PureComponent<{}> {
               </Grid>
             );
           }}
-        </SubscriptionsComponent>
+        </UserSubscriptionsComponent>
       </Layout>
     );
   }

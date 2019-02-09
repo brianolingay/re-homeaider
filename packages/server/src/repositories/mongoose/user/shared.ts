@@ -3,7 +3,7 @@ import { validUserSchema } from "@homeaider/common";
 import { formatYupError } from "./../../../utils/formatYupError";
 import { UserModel } from "./../../../models/User";
 import { RoleModel } from "./../../../models/Role";
-import { SubscriptionModel } from "./../../../models/Subscription";
+import { UserSubscriptionModel } from "./../../../models/UserSubscription";
 import { duplicateEmail } from "./../../../modules/users/register/constants";
 
 export const createOrRegister = async (role: String, input: any) => {
@@ -13,7 +13,9 @@ export const createOrRegister = async (role: String, input: any) => {
     return { errors: formatYupError(err) };
   }
 
-  const subscription = await SubscriptionModel.findOne({ amount: 0 }).exec();
+  const subscription = await UserSubscriptionModel.findOne({
+    amount: 0,
+  }).exec();
   // const services = Service.find();
 
   const { email, password } = input;

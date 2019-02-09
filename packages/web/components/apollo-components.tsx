@@ -12,13 +12,41 @@ export interface RoleInput {
   description?: Maybe<string>;
 }
 
+export interface ServiceRequestInput {
+  service: ObjectId;
+
+  provider?: Maybe<ObjectId>;
+
+  amount?: Maybe<number>;
+
+  address?: Maybe<string>;
+
+  coordinates?: Maybe<number[]>;
+
+  accepted?: Maybe<boolean>;
+
+  arrivedAt?: Maybe<DateTime>;
+
+  startedAt?: Maybe<DateTime>;
+
+  canceledAt?: Maybe<DateTime>;
+
+  completedAt?: Maybe<DateTime>;
+
+  ignoredAt?: Maybe<DateTime>;
+
+  feedBack?: Maybe<string>;
+
+  rating?: Maybe<number>;
+}
+
 export interface ServiceInput {
   name: string;
 
   description?: Maybe<string>;
 }
 
-export interface SubscriptionInput {
+export interface UserSubscriptionInput {
   name: string;
 
   description?: Maybe<string>;
@@ -329,89 +357,6 @@ export type ServicesQuery = {
 
 export type ServicesServices = ServiceInfoFragment;
 
-export type CreateSubscriptionVariables = {
-  input: SubscriptionInput;
-};
-
-export type CreateSubscriptionMutation = {
-  __typename?: "Mutation";
-
-  createSubscription: Maybe<CreateSubscriptionCreateSubscription>;
-};
-
-export type CreateSubscriptionCreateSubscription = {
-  __typename?: "SubscriptionResponse";
-
-  errors: Maybe<CreateSubscriptionErrors[]>;
-};
-
-export type CreateSubscriptionErrors = {
-  __typename?: "ErrorResponse";
-
-  path: string;
-
-  message: string;
-};
-
-export type DeleteSubscriptionVariables = {
-  subscriptionId: ObjectId;
-};
-
-export type DeleteSubscriptionMutation = {
-  __typename?: "Mutation";
-
-  deleteSubscription: Maybe<DeleteSubscriptionDeleteSubscription>;
-};
-
-export type DeleteSubscriptionDeleteSubscription = {
-  __typename?: "SubscriptionResponse";
-
-  errors: Maybe<DeleteSubscriptionErrors[]>;
-};
-
-export type DeleteSubscriptionErrors = {
-  __typename?: "ErrorResponse";
-
-  path: string;
-
-  message: string;
-};
-
-export type UpdateSubscriptionVariables = {
-  subscriptionId: ObjectId;
-  input: SubscriptionInput;
-};
-
-export type UpdateSubscriptionMutation = {
-  __typename?: "Mutation";
-
-  updateSubscription: Maybe<UpdateSubscriptionUpdateSubscription>;
-};
-
-export type UpdateSubscriptionUpdateSubscription = {
-  __typename?: "SubscriptionResponse";
-
-  errors: Maybe<UpdateSubscriptionErrors[]>;
-};
-
-export type UpdateSubscriptionErrors = {
-  __typename?: "ErrorResponse";
-
-  path: string;
-
-  message: string;
-};
-
-export type SubscriptionsVariables = {};
-
-export type SubscriptionsQuery = {
-  __typename?: "Query";
-
-  subscriptions: Maybe<SubscriptionsSubscriptions[]>;
-};
-
-export type SubscriptionsSubscriptions = SubscriptionInfoFragment;
-
 export type CreateUserVariables = {
   input: UserInput;
 };
@@ -561,6 +506,89 @@ export type MeQuery = {
 
 export type MeMe = UserInfoFragment;
 
+export type CreateUserSubscriptionVariables = {
+  input: UserSubscriptionInput;
+};
+
+export type CreateUserSubscriptionMutation = {
+  __typename?: "Mutation";
+
+  createUserSubscription: Maybe<CreateUserSubscriptionCreateUserSubscription>;
+};
+
+export type CreateUserSubscriptionCreateUserSubscription = {
+  __typename?: "UserSubscriptionResponse";
+
+  errors: Maybe<CreateUserSubscriptionErrors[]>;
+};
+
+export type CreateUserSubscriptionErrors = {
+  __typename?: "ErrorResponse";
+
+  path: string;
+
+  message: string;
+};
+
+export type DeleteUserSubscriptionVariables = {
+  userSubscriptionId: ObjectId;
+};
+
+export type DeleteUserSubscriptionMutation = {
+  __typename?: "Mutation";
+
+  deleteUserSubscription: Maybe<DeleteUserSubscriptionDeleteUserSubscription>;
+};
+
+export type DeleteUserSubscriptionDeleteUserSubscription = {
+  __typename?: "UserSubscriptionResponse";
+
+  errors: Maybe<DeleteUserSubscriptionErrors[]>;
+};
+
+export type DeleteUserSubscriptionErrors = {
+  __typename?: "ErrorResponse";
+
+  path: string;
+
+  message: string;
+};
+
+export type UpdateUserSubscriptionVariables = {
+  userSubscriptionId: ObjectId;
+  input: UserSubscriptionInput;
+};
+
+export type UpdateUserSubscriptionMutation = {
+  __typename?: "Mutation";
+
+  updateUserSubscription: Maybe<UpdateUserSubscriptionUpdateUserSubscription>;
+};
+
+export type UpdateUserSubscriptionUpdateUserSubscription = {
+  __typename?: "UserSubscriptionResponse";
+
+  errors: Maybe<UpdateUserSubscriptionErrors[]>;
+};
+
+export type UpdateUserSubscriptionErrors = {
+  __typename?: "ErrorResponse";
+
+  path: string;
+
+  message: string;
+};
+
+export type UserSubscriptionsVariables = {};
+
+export type UserSubscriptionsQuery = {
+  __typename?: "Query";
+
+  userSubscriptions: Maybe<UserSubscriptionsUserSubscriptions[]>;
+};
+
+export type UserSubscriptionsUserSubscriptions = UserSubscriptionInfoFragment;
+
 export type CategoryInfoFragment = {
   __typename?: "Category";
 
@@ -609,22 +637,6 @@ export type ErrorInfoFragment = {
   message: string;
 };
 
-export type SubscriptionInfoFragment = {
-  __typename?: "Subscription";
-
-  _id: ObjectId;
-
-  name: string;
-
-  description: Maybe<string>;
-
-  amount: number;
-
-  benefits: Maybe<string[]>;
-
-  paymentMode: PaymentMode;
-};
-
 export type UserInfoFragment = {
   __typename?: "User";
 
@@ -647,6 +659,22 @@ export type UserInfoRole = {
   _id: ObjectId;
 
   name: string;
+};
+
+export type UserSubscriptionInfoFragment = {
+  __typename?: "UserSubscription";
+
+  _id: ObjectId;
+
+  name: string;
+
+  description: Maybe<string>;
+
+  amount: number;
+
+  benefits: Maybe<string[]>;
+
+  paymentMode: PaymentMode;
 };
 
 import * as ReactApollo from "react-apollo";
@@ -693,17 +721,6 @@ export const ErrorInfoFragmentDoc = gql`
   }
 `;
 
-export const SubscriptionInfoFragmentDoc = gql`
-  fragment SubscriptionInfo on Subscription {
-    _id
-    name
-    description
-    amount
-    benefits
-    paymentMode
-  }
-`;
-
 export const UserInfoFragmentDoc = gql`
   fragment UserInfo on User {
     _id
@@ -715,6 +732,17 @@ export const UserInfoFragmentDoc = gql`
       _id
       name
     }
+  }
+`;
+
+export const UserSubscriptionInfoFragmentDoc = gql`
+  fragment UserSubscriptionInfo on UserSubscription {
+    _id
+    name
+    description
+    amount
+    benefits
+    paymentMode
   }
 `;
 
@@ -1291,225 +1319,6 @@ export function ServicesHOC<TProps, TChildProps = any>(
     ServicesProps<TChildProps>
   >(ServicesDocument, operationOptions);
 }
-export const CreateSubscriptionDocument = gql`
-  mutation CreateSubscription($input: SubscriptionInput!) {
-    createSubscription(input: $input) {
-      errors {
-        path
-        message
-      }
-    }
-  }
-`;
-export class CreateSubscriptionComponent extends React.Component<
-  Partial<
-    ReactApollo.MutationProps<
-      CreateSubscriptionMutation,
-      CreateSubscriptionVariables
-    >
-  >
-> {
-  render() {
-    return (
-      <ReactApollo.Mutation<
-        CreateSubscriptionMutation,
-        CreateSubscriptionVariables
-      >
-        mutation={CreateSubscriptionDocument}
-        {...(this as any)["props"] as any}
-      />
-    );
-  }
-}
-export type CreateSubscriptionProps<TChildProps = any> = Partial<
-  ReactApollo.MutateProps<
-    CreateSubscriptionMutation,
-    CreateSubscriptionVariables
-  >
-> &
-  TChildProps;
-export type CreateSubscriptionMutationFn = ReactApollo.MutationFn<
-  CreateSubscriptionMutation,
-  CreateSubscriptionVariables
->;
-export function CreateSubscriptionHOC<TProps, TChildProps = any>(
-  operationOptions:
-    | ReactApollo.OperationOption<
-        TProps,
-        CreateSubscriptionMutation,
-        CreateSubscriptionVariables,
-        CreateSubscriptionProps<TChildProps>
-      >
-    | undefined
-) {
-  return ReactApollo.graphql<
-    TProps,
-    CreateSubscriptionMutation,
-    CreateSubscriptionVariables,
-    CreateSubscriptionProps<TChildProps>
-  >(CreateSubscriptionDocument, operationOptions);
-}
-export const DeleteSubscriptionDocument = gql`
-  mutation DeleteSubscription($subscriptionId: ObjectId!) {
-    deleteSubscription(subscriptionId: $subscriptionId) {
-      errors {
-        path
-        message
-      }
-    }
-  }
-`;
-export class DeleteSubscriptionComponent extends React.Component<
-  Partial<
-    ReactApollo.MutationProps<
-      DeleteSubscriptionMutation,
-      DeleteSubscriptionVariables
-    >
-  >
-> {
-  render() {
-    return (
-      <ReactApollo.Mutation<
-        DeleteSubscriptionMutation,
-        DeleteSubscriptionVariables
-      >
-        mutation={DeleteSubscriptionDocument}
-        {...(this as any)["props"] as any}
-      />
-    );
-  }
-}
-export type DeleteSubscriptionProps<TChildProps = any> = Partial<
-  ReactApollo.MutateProps<
-    DeleteSubscriptionMutation,
-    DeleteSubscriptionVariables
-  >
-> &
-  TChildProps;
-export type DeleteSubscriptionMutationFn = ReactApollo.MutationFn<
-  DeleteSubscriptionMutation,
-  DeleteSubscriptionVariables
->;
-export function DeleteSubscriptionHOC<TProps, TChildProps = any>(
-  operationOptions:
-    | ReactApollo.OperationOption<
-        TProps,
-        DeleteSubscriptionMutation,
-        DeleteSubscriptionVariables,
-        DeleteSubscriptionProps<TChildProps>
-      >
-    | undefined
-) {
-  return ReactApollo.graphql<
-    TProps,
-    DeleteSubscriptionMutation,
-    DeleteSubscriptionVariables,
-    DeleteSubscriptionProps<TChildProps>
-  >(DeleteSubscriptionDocument, operationOptions);
-}
-export const UpdateSubscriptionDocument = gql`
-  mutation UpdateSubscription(
-    $subscriptionId: ObjectId!
-    $input: SubscriptionInput!
-  ) {
-    updateSubscription(subscriptionId: $subscriptionId, input: $input) {
-      errors {
-        path
-        message
-      }
-    }
-  }
-`;
-export class UpdateSubscriptionComponent extends React.Component<
-  Partial<
-    ReactApollo.MutationProps<
-      UpdateSubscriptionMutation,
-      UpdateSubscriptionVariables
-    >
-  >
-> {
-  render() {
-    return (
-      <ReactApollo.Mutation<
-        UpdateSubscriptionMutation,
-        UpdateSubscriptionVariables
-      >
-        mutation={UpdateSubscriptionDocument}
-        {...(this as any)["props"] as any}
-      />
-    );
-  }
-}
-export type UpdateSubscriptionProps<TChildProps = any> = Partial<
-  ReactApollo.MutateProps<
-    UpdateSubscriptionMutation,
-    UpdateSubscriptionVariables
-  >
-> &
-  TChildProps;
-export type UpdateSubscriptionMutationFn = ReactApollo.MutationFn<
-  UpdateSubscriptionMutation,
-  UpdateSubscriptionVariables
->;
-export function UpdateSubscriptionHOC<TProps, TChildProps = any>(
-  operationOptions:
-    | ReactApollo.OperationOption<
-        TProps,
-        UpdateSubscriptionMutation,
-        UpdateSubscriptionVariables,
-        UpdateSubscriptionProps<TChildProps>
-      >
-    | undefined
-) {
-  return ReactApollo.graphql<
-    TProps,
-    UpdateSubscriptionMutation,
-    UpdateSubscriptionVariables,
-    UpdateSubscriptionProps<TChildProps>
-  >(UpdateSubscriptionDocument, operationOptions);
-}
-export const SubscriptionsDocument = gql`
-  query Subscriptions {
-    subscriptions {
-      ...SubscriptionInfo
-    }
-  }
-
-  ${SubscriptionInfoFragmentDoc}
-`;
-export class SubscriptionsComponent extends React.Component<
-  Partial<ReactApollo.QueryProps<SubscriptionsQuery, SubscriptionsVariables>>
-> {
-  render() {
-    return (
-      <ReactApollo.Query<SubscriptionsQuery, SubscriptionsVariables>
-        query={SubscriptionsDocument}
-        {...(this as any)["props"] as any}
-      />
-    );
-  }
-}
-export type SubscriptionsProps<TChildProps = any> = Partial<
-  ReactApollo.DataProps<SubscriptionsQuery, SubscriptionsVariables>
-> &
-  TChildProps;
-export function SubscriptionsHOC<TProps, TChildProps = any>(
-  operationOptions:
-    | ReactApollo.OperationOption<
-        TProps,
-        SubscriptionsQuery,
-        SubscriptionsVariables,
-        SubscriptionsProps<TChildProps>
-      >
-    | undefined
-) {
-  return ReactApollo.graphql<
-    TProps,
-    SubscriptionsQuery,
-    SubscriptionsVariables,
-    SubscriptionsProps<TChildProps>
-  >(SubscriptionsDocument, operationOptions);
-}
 export const CreateUserDocument = gql`
   mutation CreateUser($input: UserInput!) {
     createUser(input: $input) {
@@ -1877,4 +1686,228 @@ export function MeHOC<TProps, TChildProps = any>(
     MeVariables,
     MeProps<TChildProps>
   >(MeDocument, operationOptions);
+}
+export const CreateUserSubscriptionDocument = gql`
+  mutation CreateUserSubscription($input: UserSubscriptionInput!) {
+    createUserSubscription(input: $input) {
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;
+export class CreateUserSubscriptionComponent extends React.Component<
+  Partial<
+    ReactApollo.MutationProps<
+      CreateUserSubscriptionMutation,
+      CreateUserSubscriptionVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<
+        CreateUserSubscriptionMutation,
+        CreateUserSubscriptionVariables
+      >
+        mutation={CreateUserSubscriptionDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type CreateUserSubscriptionProps<TChildProps = any> = Partial<
+  ReactApollo.MutateProps<
+    CreateUserSubscriptionMutation,
+    CreateUserSubscriptionVariables
+  >
+> &
+  TChildProps;
+export type CreateUserSubscriptionMutationFn = ReactApollo.MutationFn<
+  CreateUserSubscriptionMutation,
+  CreateUserSubscriptionVariables
+>;
+export function CreateUserSubscriptionHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        CreateUserSubscriptionMutation,
+        CreateUserSubscriptionVariables,
+        CreateUserSubscriptionProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    CreateUserSubscriptionMutation,
+    CreateUserSubscriptionVariables,
+    CreateUserSubscriptionProps<TChildProps>
+  >(CreateUserSubscriptionDocument, operationOptions);
+}
+export const DeleteUserSubscriptionDocument = gql`
+  mutation DeleteUserSubscription($userSubscriptionId: ObjectId!) {
+    deleteUserSubscription(userSubscriptionId: $userSubscriptionId) {
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;
+export class DeleteUserSubscriptionComponent extends React.Component<
+  Partial<
+    ReactApollo.MutationProps<
+      DeleteUserSubscriptionMutation,
+      DeleteUserSubscriptionVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<
+        DeleteUserSubscriptionMutation,
+        DeleteUserSubscriptionVariables
+      >
+        mutation={DeleteUserSubscriptionDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type DeleteUserSubscriptionProps<TChildProps = any> = Partial<
+  ReactApollo.MutateProps<
+    DeleteUserSubscriptionMutation,
+    DeleteUserSubscriptionVariables
+  >
+> &
+  TChildProps;
+export type DeleteUserSubscriptionMutationFn = ReactApollo.MutationFn<
+  DeleteUserSubscriptionMutation,
+  DeleteUserSubscriptionVariables
+>;
+export function DeleteUserSubscriptionHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        DeleteUserSubscriptionMutation,
+        DeleteUserSubscriptionVariables,
+        DeleteUserSubscriptionProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    DeleteUserSubscriptionMutation,
+    DeleteUserSubscriptionVariables,
+    DeleteUserSubscriptionProps<TChildProps>
+  >(DeleteUserSubscriptionDocument, operationOptions);
+}
+export const UpdateUserSubscriptionDocument = gql`
+  mutation UpdateUserSubscription(
+    $userSubscriptionId: ObjectId!
+    $input: UserSubscriptionInput!
+  ) {
+    updateUserSubscription(
+      userSubscriptionId: $userSubscriptionId
+      input: $input
+    ) {
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;
+export class UpdateUserSubscriptionComponent extends React.Component<
+  Partial<
+    ReactApollo.MutationProps<
+      UpdateUserSubscriptionMutation,
+      UpdateUserSubscriptionVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<
+        UpdateUserSubscriptionMutation,
+        UpdateUserSubscriptionVariables
+      >
+        mutation={UpdateUserSubscriptionDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type UpdateUserSubscriptionProps<TChildProps = any> = Partial<
+  ReactApollo.MutateProps<
+    UpdateUserSubscriptionMutation,
+    UpdateUserSubscriptionVariables
+  >
+> &
+  TChildProps;
+export type UpdateUserSubscriptionMutationFn = ReactApollo.MutationFn<
+  UpdateUserSubscriptionMutation,
+  UpdateUserSubscriptionVariables
+>;
+export function UpdateUserSubscriptionHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        UpdateUserSubscriptionMutation,
+        UpdateUserSubscriptionVariables,
+        UpdateUserSubscriptionProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    UpdateUserSubscriptionMutation,
+    UpdateUserSubscriptionVariables,
+    UpdateUserSubscriptionProps<TChildProps>
+  >(UpdateUserSubscriptionDocument, operationOptions);
+}
+export const UserSubscriptionsDocument = gql`
+  query UserSubscriptions {
+    userSubscriptions {
+      ...UserSubscriptionInfo
+    }
+  }
+
+  ${UserSubscriptionInfoFragmentDoc}
+`;
+export class UserSubscriptionsComponent extends React.Component<
+  Partial<
+    ReactApollo.QueryProps<UserSubscriptionsQuery, UserSubscriptionsVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Query<UserSubscriptionsQuery, UserSubscriptionsVariables>
+        query={UserSubscriptionsDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type UserSubscriptionsProps<TChildProps = any> = Partial<
+  ReactApollo.DataProps<UserSubscriptionsQuery, UserSubscriptionsVariables>
+> &
+  TChildProps;
+export function UserSubscriptionsHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        UserSubscriptionsQuery,
+        UserSubscriptionsVariables,
+        UserSubscriptionsProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    UserSubscriptionsQuery,
+    UserSubscriptionsVariables,
+    UserSubscriptionsProps<TChildProps>
+  >(UserSubscriptionsDocument, operationOptions);
 }

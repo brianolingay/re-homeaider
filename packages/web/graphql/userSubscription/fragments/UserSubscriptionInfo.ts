@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
-export const subscriptionInfoFragment = gql`
-  fragment SubscriptionInfo on Subscription {
+export const userSubscriptionInfoFragment = gql`
+  fragment UserSubscriptionInfo on UserSubscription {
     _id
     name
     description

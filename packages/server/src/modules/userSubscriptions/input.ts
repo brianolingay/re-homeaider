@@ -1,9 +1,9 @@
 import { InputType, Field } from "type-graphql";
-import { Subscription } from "../../types/objects/Subscription";
+import { UserSubscription } from "../../types/objects/UserSubscription";
 import { PaymentMode } from "./../../types/paymentModeEnum";
 
 @InputType()
-export class SubscriptionInput implements Partial<Subscription> {
+export class UserSubscriptionInput implements Partial<UserSubscription> {
   @Field()
   name: string;
 

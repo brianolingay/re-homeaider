@@ -9,10 +9,10 @@ import { TextAreaField } from "../formik-fields/TextAreaField";
 import { SelectField } from "../formik-fields/SelectField";
 import { ErrorMessage } from "../ErrorMessage";
 import { normalizeErrors } from "../../utils/normalizeErrors";
-import { SubscriptionsQuery, PaymentMode } from "../apollo-components";
+import { UserSubscriptionsQuery, PaymentMode } from "../apollo-components";
 
 export interface SubscriptionFormValues {
-  subscriptionId: string;
+  userSubscriptionId: string;
   name: string;
   description: string;
   amount: number;
@@ -21,15 +21,15 @@ export interface SubscriptionFormValues {
 }
 
 type Props = {
-  subscription: any | null;
+  userSubscription: any | null;
   submit: any;
   handleModal: any;
   method: string;
-  refetch: () => Promise<ApolloQueryResult<SubscriptionsQuery>>;
+  refetch: () => Promise<ApolloQueryResult<UserSubscriptionsQuery>>;
 };
 
 const defaultInitialValue = {
-  subscriptionId: "",
+  userSubscriptionId: "",
   name: "",
   description: "",
   amount: 0.0,
@@ -38,13 +38,15 @@ const defaultInitialValue = {
 };
 
 export const SubscriptionForm: React.SFC<Props> = ({
-  subscription = null,
+  userSubscription = null,
   submit,
   handleModal,
   method,
   refetch,
 }) => {
-  const initialValues = subscription ? subscription : defaultInitialValue;
+  const initialValues = userSubscription
+    ? userSubscription
+    : defaultInitialValue;
   return (
     <Formik<SubscriptionFormValues>
       initialValues={initialValues}

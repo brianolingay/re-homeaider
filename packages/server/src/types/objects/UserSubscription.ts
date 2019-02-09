@@ -8,7 +8,7 @@ registerEnumType(PaymentMode, {
 });
 
 @ObjectType()
-export class Subscription {
+export class UserSubscription {
   @Field()
   readonly _id: ObjectId;
 

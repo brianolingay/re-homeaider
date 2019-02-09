@@ -3,13 +3,13 @@ import { ApolloQueryResult } from "apollo-boost";
 import { Button, Icon } from "semantic-ui-react";
 import { ModalFormContainer } from "../ModelFormContainer";
 import {
-  SubscriptionsQuery,
-  CreateSubscriptionComponent,
+  UserSubscriptionsQuery,
+  CreateUserSubscriptionComponent,
 } from "../apollo-components";
 import { SubscriptionFormValues, SubscriptionForm } from "./SubscriptionForm";
 
 type Props = {
-  refetch: () => Promise<ApolloQueryResult<SubscriptionsQuery>>;
+  refetch: () => Promise<ApolloQueryResult<UserSubscriptionsQuery>>;
 };
 
 interface State {
@@ -44,13 +44,13 @@ class CreateButtonComponent extends React.PureComponent<Props, State> {
         open={this.state.modalOpen}
         header="New Subscription"
       >
-        <CreateSubscriptionComponent>
+        <CreateUserSubscriptionComponent>
           {mutate => (
             <SubscriptionForm
-              subscription={null}
+              userSubscription={null}
               handleModal={this.handleModalFormContainer}
               submit={async ({
-                subscriptionId,
+                userSubscriptionId,
                 benefits,
                 ...input
               }: SubscriptionFormValues) => {
@@ -65,7 +65,7 @@ class CreateButtonComponent extends React.PureComponent<Props, State> {
               refetch={refetch}
             />
           )}
-        </CreateSubscriptionComponent>
+        </CreateUserSubscriptionComponent>
       </ModalFormContainer>
     );
   }

@@ -1,7 +1,7 @@
 import { Document, Schema, Types, model } from "mongoose";
 import { ImageInterface, imageSchema } from "./Image";
 import { CertificateInterface, certificateSchema } from "./Certificate";
-import { SubscriptionInterface } from "./Subscription";
+import { UserSubscriptionInterface } from "./UserSubscription";
 import { ServiceInterface } from "./Service";
 import { RoleInterface } from "./Role";
 
@@ -16,7 +16,7 @@ export interface UserInterface extends Document {
   country: string | null;
   coordinates: number[] | null;
   password: string;
-  subscription: SubscriptionInterface | null;
+  userSubscription: UserSubscriptionInterface | null;
   subscribedAt: Date | null;
   services: [ServiceInterface] | null;
   cetertificates: [CertificateInterface] | null;
@@ -59,7 +59,7 @@ const userSchema: Schema = new Schema(
       required: true,
       minlength: 5,
     },
-    subscription: { type: Types.ObjectId, ref: "Subscription" },
+    userSubscription: { type: Types.ObjectId, ref: "UserSubscription" },
     subscribedAt: Date,
     services: [{ type: Schema.Types.ObjectId, ref: "Service" }],
     role: { type: Types.ObjectId, ref: "Role" },

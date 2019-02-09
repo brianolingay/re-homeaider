@@ -1,6 +1,6 @@
 import { ObjectType, Field } from "type-graphql";
 import { ObjectId } from "mongodb";
-import { Subscription } from "./Subscription";
+import { UserSubscription } from "./UserSubscription";
 import { Role } from "./Role";
 
 @ObjectType()
@@ -35,8 +35,8 @@ export class User {
   @Field(() => [Number], { nullable: true })
   coordinates: number[] | null;
 
-  @Field(() => Subscription, { nullable: true })
-  subscription: Subscription | null;
+  @Field(() => UserSubscription, { nullable: true })
+  userSubscription: UserSubscription | null;
 
   @Field(() => Date, { nullable: true })
   subscribedAt: Date | null;

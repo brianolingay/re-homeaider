@@ -1,7 +1,7 @@
 import { Document, Schema, model } from "mongoose";
 import { PaymentMode } from "../types/paymentModeEnum";
 
-export interface SubscriptionInterface extends Document {
+export interface UserSubscriptionInterface extends Document {
   name: string;
   description: string | null;
   amount: number;
@@ -9,7 +9,7 @@ export interface SubscriptionInterface extends Document {
   paymentMode: PaymentMode;
 }
 
-export const subscriptionSchema: Schema = new Schema(
+export const userSubscriptionSchema: Schema = new Schema(
   {
     name: {
       type: String,
@@ -32,7 +32,7 @@ export const subscriptionSchema: Schema = new Schema(
   { autoIndex: false }
 );
 
-export const SubscriptionModel = model<SubscriptionInterface>(
-  "Subscription",
-  subscriptionSchema
+export const UserSubscriptionModel = model<UserSubscriptionInterface>(
+  "UserSubscription",
+  userSubscriptionSchema
 );
