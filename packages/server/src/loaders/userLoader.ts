@@ -1,6 +1,6 @@
 import * as DataLoader from "dataloader";
 import { User } from "../types/objects/User";
-import { UserModel } from "src/models/User";
+import { UserModel } from "../models/User";
 
 export const userLoader = () =>
   new DataLoader(async (keys: string[]) => {
