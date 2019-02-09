@@ -21,6 +21,7 @@ import { ServiceRequest } from "../../types/objects/ServiceRequest";
 import { ServiceRequestInput } from "./input";
 import { ServiceRequestResponse } from "./response";
 import { ServiceRequestProgressArgs } from "./args";
+import { Topics } from "./topics";
 
 @Resolver(ServiceRequest)
 export class ServiceRequestResolver {
@@ -56,7 +57,7 @@ export class ServiceRequestResolver {
   async updateServiceRequest(
     @Arg("serviceRequestId") serviceRequestId: ObjectId,
     @Arg("input") serviceRequestInput: ServiceRequestInput,
-    @PubSub("SERVICE_REQUEST_PROGRESS")
+    @PubSub(Topics.ServiceRequestProgress)
     publish: Publisher<ServiceRequestProgressPayload>
   ): Promise<ServiceRequestResponse> {
     try {
@@ -132,7 +133,7 @@ export class ServiceRequestResolver {
       startedAt: null,
       ignoredAt: null,
     })
-      .populate("aidee")
+      .populate("serviceSeeker")
       .populate("provider")
       .populate({
         path: "service",
@@ -146,7 +147,7 @@ export class ServiceRequestResolver {
 
   @Authorized()
   @Subscription(() => ServiceRequest, {
-    topics: "SERVICE_REQUEST_PROGRESS",
+    topics: Topics.ServiceRequestProgress,
     filter: ({
       payload,
       args,
@@ -161,6 +162,7 @@ export class ServiceRequestResolver {
     @Root() newServiceRequest: ServiceRequestProgressPayload,
     @Args() args: ServiceRequestProgressArgs
   ): ServiceRequest {
+    console.log(args);
     const { serviceRequest } = newServiceRequest;
 
     return serviceRequest;

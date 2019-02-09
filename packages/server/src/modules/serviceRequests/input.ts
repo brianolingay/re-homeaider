@@ -6,7 +6,7 @@ export class ServiceRequestInput {
   @Field()
   service: ObjectId;
 
-  @Field({ nullable: true })
+  @Field(() => ObjectId, { nullable: true })
   provider: ObjectId | null;
 
   @Field(() => Number, { nullable: true })

@@ -1,7 +1,7 @@
 import { User } from "./User";
 import { ObjectType, Field } from "type-graphql";
 import { ObjectId } from "mongodb";
-import { Service } from "protobufjs";
+import { Service } from "./Service";
 
 @ObjectType()
 export class ServiceRequest {
