@@ -10,7 +10,7 @@ export class ServiceResponse {
 }
 
 @ObjectType()
-export class FindServiceByCategoryResponse implements Partial<Service> {
+export class FindServicesByCategoryResponse implements Partial<Service> {
   @Field()
   readonly _id: ObjectId;
 

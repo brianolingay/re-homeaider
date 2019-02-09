@@ -7,7 +7,7 @@ import { CategoryModel } from "./../../models/Category";
 import { ServiceModel } from "./../../models/Service";
 import { Service } from "../../types/objects/Service";
 
-import { ServiceResponse, FindServiceByCategoryResponse } from "./response";
+import { ServiceResponse, FindServicesByCategoryResponse } from "./response";
 import { ServiceInput } from "./input";
 
 import { formatYupError } from "../../utils/formatYupError";
@@ -163,10 +163,10 @@ export class ServiceResolver {
   }
 
   @Authorized()
-  @Query(() => [FindServiceByCategoryResponse], { nullable: true })
+  @Query(() => [FindServicesByCategoryResponse], { nullable: true })
   async findServicesByCategory(
     @Arg("categoryId") categoryId: ObjectId
-  ): Promise<FindServiceByCategoryResponse[]> {
+  ): Promise<FindServicesByCategoryResponse[]> {
     const services = await ServiceModel.aggregate([
       {
         $match: { category: categoryId },

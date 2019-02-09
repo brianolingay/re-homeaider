@@ -12,22 +12,38 @@ export interface RoleInput {
   description?: Maybe<string>;
 }
 
+export interface ServiceRequestInput {
+  service: ObjectId;
+
+  provider?: Maybe<ObjectId>;
+
+  amount?: Maybe<number>;
+
+  address?: Maybe<string>;
+
+  coordinates?: Maybe<number[]>;
+
+  accepted?: Maybe<boolean>;
+
+  arrivedAt?: Maybe<DateTime>;
+
+  startedAt?: Maybe<DateTime>;
+
+  canceledAt?: Maybe<DateTime>;
+
+  completedAt?: Maybe<DateTime>;
+
+  ignoredAt?: Maybe<DateTime>;
+
+  feedBack?: Maybe<string>;
+
+  rating?: Maybe<number>;
+}
+
 export interface ServiceInput {
   name: string;
 
   description?: Maybe<string>;
-}
-
-export interface SubscriptionInput {
-  name: string;
-
-  description?: Maybe<string>;
-
-  amount: number;
-
-  benefits?: Maybe<string[]>;
-
-  paymentMode: PaymentMode;
 }
 
 export interface RegisterInput {
@@ -59,6 +75,18 @@ export interface UserInput {
 
   password?: Maybe<string>;
 }
+
+export interface UserSubscriptionInput {
+  name: string;
+
+  description?: Maybe<string>;
+
+  amount: number;
+
+  benefits?: Maybe<string[]>;
+
+  paymentMode: PaymentMode;
+}
 /** Type of payment mode */
 export enum PaymentMode {
   Free = "Free",
@@ -76,6 +104,28 @@ export type DateTime = any;
 // ====================================================
 // Documents
 // ====================================================
+
+export type AvailableCategoriesVariables = {};
+
+export type AvailableCategoriesQuery = {
+  __typename?: "Query";
+
+  availableCategories: Maybe<AvailableCategoriesAvailableCategories[]>;
+};
+
+export type AvailableCategoriesAvailableCategories = AvailableCategoryInfoFragment;
+
+export type FindServicesByCategoryVariables = {
+  categoryId: ObjectId;
+};
+
+export type FindServicesByCategoryQuery = {
+  __typename?: "Query";
+
+  findServicesByCategory: Maybe<FindServicesByCategoryFindServicesByCategory[]>;
+};
+
+export type FindServicesByCategoryFindServicesByCategory = FindServicesByCategoryInfoFragment;
 
 export type LoginVariables = {
   isAdmin: boolean;
@@ -168,6 +218,26 @@ export type MeQuery = {
 
 export type MeMe = UserInfoFragment;
 
+export type AvailableCategoryInfoFragment = {
+  __typename?: "AvailableCategorieResponse";
+
+  _id: ObjectId;
+
+  name: string;
+
+  totalServices: number;
+};
+
+export type FindServicesByCategoryInfoFragment = {
+  __typename?: "FindServicesByCategoryResponse";
+
+  _id: ObjectId;
+
+  name: string;
+
+  totalUsers: number;
+};
+
 export type ErrorInfoFragment = {
   __typename?: "ErrorResponse";
 
@@ -209,6 +279,22 @@ import gql from "graphql-tag";
 // Fragments
 // ====================================================
 
+export const AvailableCategoryInfoFragmentDoc = gql`
+  fragment AvailableCategoryInfo on AvailableCategorieResponse {
+    _id
+    name
+    totalServices
+  }
+`;
+
+export const FindServicesByCategoryInfoFragmentDoc = gql`
+  fragment FindServicesByCategoryInfo on FindServicesByCategoryResponse {
+    _id
+    name
+    totalUsers
+  }
+`;
+
 export const ErrorInfoFragmentDoc = gql`
   fragment ErrorInfo on ErrorResponse {
     path
@@ -234,6 +320,106 @@ export const UserInfoFragmentDoc = gql`
 // Components
 // ====================================================
 
+export const AvailableCategoriesDocument = gql`
+  query AvailableCategories {
+    availableCategories {
+      ...AvailableCategoryInfo
+    }
+  }
+
+  ${AvailableCategoryInfoFragmentDoc}
+`;
+export class AvailableCategoriesComponent extends React.Component<
+  Partial<
+    ReactApollo.QueryProps<
+      AvailableCategoriesQuery,
+      AvailableCategoriesVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Query<AvailableCategoriesQuery, AvailableCategoriesVariables>
+        query={AvailableCategoriesDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type AvailableCategoriesProps<TChildProps = any> = Partial<
+  ReactApollo.DataProps<AvailableCategoriesQuery, AvailableCategoriesVariables>
+> &
+  TChildProps;
+export function AvailableCategoriesHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        AvailableCategoriesQuery,
+        AvailableCategoriesVariables,
+        AvailableCategoriesProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    AvailableCategoriesQuery,
+    AvailableCategoriesVariables,
+    AvailableCategoriesProps<TChildProps>
+  >(AvailableCategoriesDocument, operationOptions);
+}
+export const FindServicesByCategoryDocument = gql`
+  query FindServicesByCategory($categoryId: ObjectId!) {
+    findServicesByCategory(categoryId: $categoryId) {
+      ...FindServicesByCategoryInfo
+    }
+  }
+
+  ${FindServicesByCategoryInfoFragmentDoc}
+`;
+export class FindServicesByCategoryComponent extends React.Component<
+  Partial<
+    ReactApollo.QueryProps<
+      FindServicesByCategoryQuery,
+      FindServicesByCategoryVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Query<
+        FindServicesByCategoryQuery,
+        FindServicesByCategoryVariables
+      >
+        query={FindServicesByCategoryDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type FindServicesByCategoryProps<TChildProps = any> = Partial<
+  ReactApollo.DataProps<
+    FindServicesByCategoryQuery,
+    FindServicesByCategoryVariables
+  >
+> &
+  TChildProps;
+export function FindServicesByCategoryHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        FindServicesByCategoryQuery,
+        FindServicesByCategoryVariables,
+        FindServicesByCategoryProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    FindServicesByCategoryQuery,
+    FindServicesByCategoryVariables,
+    FindServicesByCategoryProps<TChildProps>
+  >(FindServicesByCategoryDocument, operationOptions);
+}
 export const LoginDocument = gql`
   mutation Login($isAdmin: Boolean!, $input: LoginInput!) {
     login(isAdmin: $isAdmin, input: $input) {
