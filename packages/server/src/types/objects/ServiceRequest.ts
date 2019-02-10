@@ -44,7 +44,7 @@ export class ServiceRequest {
   @Field(() => Date, { nullable: true })
   ignoredAt: Date | null;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   feedBack: string | null;
 
   @Field(() => Number)
