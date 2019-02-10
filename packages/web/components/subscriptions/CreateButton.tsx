@@ -61,7 +61,7 @@ class CreateButtonComponent extends React.PureComponent<Props, State> {
                   variables: { input: newInput },
                 });
               }}
-              method="createSubscription"
+              method="createUserSubscription"
               refetch={refetch}
             />
           )}

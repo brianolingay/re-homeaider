@@ -72,7 +72,7 @@ class UpdateButtonComponent extends React.PureComponent<Props, State> {
                   variables: { userSubscriptionId, input: newInput },
                 });
               }}
-              method="updateSubscription"
+              method="updateUserSubscription"
               refetch={refetch}
             />
           )}
