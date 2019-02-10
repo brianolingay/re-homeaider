@@ -115,6 +115,16 @@ export type AvailableCategoriesQuery = {
 
 export type AvailableCategoriesAvailableCategories = AvailableCategoryInfoFragment;
 
+export type CurrentLocationVariables = {};
+
+export type CurrentLocationQuery = {
+  __typename?: "Query";
+
+  currentLocation: Maybe<CurrentLocationCurrentLocation>;
+};
+
+export type CurrentLocationCurrentLocation = LocationInfoFragment;
+
 export type FindServicesByCategoryVariables = {
   categoryId: ObjectId;
 };
@@ -319,6 +329,12 @@ export type CategoryInfoFragment = {
   description: Maybe<string>;
 };
 
+export type LocationInfoFragment = {
+  __typename?: "LocationResponse";
+
+  coordinates: Maybe<number[]>;
+};
+
 export type RoleInfoFragment = {
   __typename?: "Role";
 
@@ -465,6 +481,12 @@ export const AvailableCategoryInfoFragmentDoc = gql`
     _id
     name
     totalServices
+  }
+`;
+
+export const LocationInfoFragmentDoc = gql`
+  fragment LocationInfo on LocationResponse {
+    coordinates
   }
 `;
 
@@ -627,6 +649,50 @@ export function AvailableCategoriesHOC<TProps, TChildProps = any>(
     AvailableCategoriesVariables,
     AvailableCategoriesProps<TChildProps>
   >(AvailableCategoriesDocument, operationOptions);
+}
+export const CurrentLocationDocument = gql`
+  query CurrentLocation {
+    currentLocation {
+      ...LocationInfo
+    }
+  }
+
+  ${LocationInfoFragmentDoc}
+`;
+export class CurrentLocationComponent extends React.Component<
+  Partial<
+    ReactApollo.QueryProps<CurrentLocationQuery, CurrentLocationVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Query<CurrentLocationQuery, CurrentLocationVariables>
+        query={CurrentLocationDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type CurrentLocationProps<TChildProps = any> = Partial<
+  ReactApollo.DataProps<CurrentLocationQuery, CurrentLocationVariables>
+> &
+  TChildProps;
+export function CurrentLocationHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        CurrentLocationQuery,
+        CurrentLocationVariables,
+        CurrentLocationProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    CurrentLocationQuery,
+    CurrentLocationVariables,
+    CurrentLocationProps<TChildProps>
+  >(CurrentLocationDocument, operationOptions);
 }
 export const FindServicesByCategoryDocument = gql`
   query FindServicesByCategory($categoryId: ObjectId!) {
