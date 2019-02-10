@@ -3,7 +3,7 @@ import {
   CurrentLocationComponent,
   CreateServiceRequestComponent,
   ObjectId,
-} from "../components/apollo-components";
+} from "../../components/apollo-components";
 import {
   Container,
   Content,
@@ -17,7 +17,7 @@ import {
 } from "native-base";
 import { View } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { MapViewContainer } from "../components/MapViewContainer";
+import { MapViewContainer } from "../../components/MapViewContainer";
 
 type Props = {
   navigation: any;

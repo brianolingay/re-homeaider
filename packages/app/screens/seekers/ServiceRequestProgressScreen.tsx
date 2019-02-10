@@ -12,9 +12,9 @@ import {
 import {
   ServiceRequestProgressComponent,
   UserInfoFragment,
-} from "../components/apollo-components";
-import { MapViewContainer } from "../components/MapViewContainer";
-import { UpdateServiceRequestProcessContainer } from "../components/UpdateServiceResquestContainer";
+} from "../../components/apollo-components";
+import { MapViewContainer } from "../../components/MapViewContainer";
+import { UpdateServiceRequestProcessContainer } from "../../components/seekers/UpdateServiceResquestContainer";
 
 type Props = {
   me: UserInfoFragment;

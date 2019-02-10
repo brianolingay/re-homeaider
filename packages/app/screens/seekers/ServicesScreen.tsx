@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FindServicesByCategoryComponent } from "../components/apollo-components";
+import { FindServicesByCategoryComponent } from "../../components/apollo-components";
 import {
   Header,
   Left,

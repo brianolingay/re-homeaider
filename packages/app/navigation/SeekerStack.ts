@@ -1,10 +1,10 @@
-import { ProvidersScreen } from "./../screens/ProvidersScreen";
-import { HiringScreen } from "./../screens/HiringScreen";
-import { CreateRequestScreen } from "../screens/CreateRequestScreen";
+import { ProvidersScreen } from "../screens/seekers/ProvidersScreen";
+import { HiringScreen } from "../screens/seekers/HiringScreen";
+import { CreateRequestScreen } from "../screens/seekers/CreateRequestScreen";
 import { createStackNavigator } from "react-navigation";
-import { BookingScreen } from "./../screens/BookingScreen";
-import { ServicesScreen } from "./../screens/ServicesScreen";
-import { ServiceRequestProcessScreen } from "../screens/ServiceRequestProgressScreen";
+import { BookingScreen } from "../screens/seekers/BookingScreen";
+import { ServicesScreen } from "../screens/seekers/ServicesScreen";
+import { ServiceRequestProcessScreen } from "../screens/seekers/ServiceRequestProgressScreen";
 
 export const SeekersStack = createStackNavigator(
   {

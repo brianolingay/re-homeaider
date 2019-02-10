@@ -2,7 +2,7 @@ import * as React from "react";
 import {
   ProvidersByServiceComponent,
   UserInfoFragment,
-} from "../components/apollo-components";
+} from "../../components/apollo-components";
 import {
   Header,
   Left,

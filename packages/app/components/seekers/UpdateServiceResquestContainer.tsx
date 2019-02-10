@@ -7,7 +7,7 @@ import {
   UpdateServiceRequestComponent,
   ServiceRequestInfoFragment,
   UserInfoFragment,
-} from "./apollo-components";
+} from "../apollo-components";
 
 type Props = {
   serviceRequestProgress: ServiceRequestInfoFragment;
