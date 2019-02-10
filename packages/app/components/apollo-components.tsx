@@ -13,7 +13,7 @@ export interface RoleInput {
 }
 
 export interface ServiceRequestInput {
-  service: ObjectId;
+  service?: Maybe<ObjectId>;
 
   provider?: Maybe<ObjectId>;
 
@@ -150,6 +150,8 @@ export type CreateServiceRequestMutation = {
 export type CreateServiceRequestCreateServiceRequest = {
   __typename?: "ServiceRequestResponse";
 
+  serviceRequestId: Maybe<ObjectId>;
+
   errors: Maybe<CreateServiceRequestErrors[]>;
 };
 
@@ -174,6 +176,8 @@ export type UpdateServiceRequestMutation = {
 
 export type UpdateServiceRequestUpdateServiceRequest = {
   __typename?: "ServiceRequestResponse";
+
+  serviceRequestId: Maybe<ObjectId>;
 
   errors: Maybe<UpdateServiceRequestErrors[]>;
 };
@@ -207,6 +211,30 @@ export type AvailableHiringRequestQuery = {
 };
 
 export type AvailableHiringRequestAvailableHiringRequest = ServiceRequestInfoFragment;
+
+export type ViewServiceRequestVariables = {
+  serviceRequestId: ObjectId;
+};
+
+export type ViewServiceRequestQuery = {
+  __typename?: "Query";
+
+  viewServiceRequest: ViewServiceRequestViewServiceRequest;
+};
+
+export type ViewServiceRequestViewServiceRequest = ServiceRequestInfoFragment;
+
+export type ServiceRequestProgressVariables = {
+  serviceRequestId: ObjectId;
+};
+
+export type ServiceRequestProgressSubscription = {
+  __typename?: "Subscription";
+
+  serviceRequestProgress: ServiceRequestProgressServiceRequestProgress;
+};
+
+export type ServiceRequestProgressServiceRequestProgress = ServiceRequestInfoFragment;
 
 export type LoginVariables = {
   isAdmin: boolean;
@@ -298,6 +326,18 @@ export type MeQuery = {
 };
 
 export type MeMe = UserInfoFragment;
+
+export type ProvidersByServiceVariables = {
+  serviceId: ObjectId;
+};
+
+export type ProvidersByServiceQuery = {
+  __typename?: "Query";
+
+  providersByService: Maybe<ProvidersByServiceProvidersByService[]>;
+};
+
+export type ProvidersByServiceProvidersByService = UserInfoFragment;
 
 export type UserSubscriptionsVariables = {};
 
@@ -750,6 +790,7 @@ export function FindServicesByCategoryHOC<TProps, TChildProps = any>(
 export const CreateServiceRequestDocument = gql`
   mutation CreateServiceRequest($input: ServiceRequestInput!) {
     createServiceRequest(input: $input) {
+      serviceRequestId
       errors {
         path
         message
@@ -811,6 +852,7 @@ export const UpdateServiceRequestDocument = gql`
     $input: ServiceRequestInput!
   ) {
     updateServiceRequest(serviceRequestId: $serviceRequestId, input: $input) {
+      serviceRequestId
       errors {
         path
         message
@@ -971,6 +1013,103 @@ export function AvailableHiringRequestHOC<TProps, TChildProps = any>(
     AvailableHiringRequestVariables,
     AvailableHiringRequestProps<TChildProps>
   >(AvailableHiringRequestDocument, operationOptions);
+}
+export const ViewServiceRequestDocument = gql`
+  query ViewServiceRequest($serviceRequestId: ObjectId!) {
+    viewServiceRequest(serviceRequestId: $serviceRequestId) {
+      ...ServiceRequestInfo
+    }
+  }
+
+  ${ServiceRequestInfoFragmentDoc}
+`;
+export class ViewServiceRequestComponent extends React.Component<
+  Partial<
+    ReactApollo.QueryProps<ViewServiceRequestQuery, ViewServiceRequestVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Query<ViewServiceRequestQuery, ViewServiceRequestVariables>
+        query={ViewServiceRequestDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type ViewServiceRequestProps<TChildProps = any> = Partial<
+  ReactApollo.DataProps<ViewServiceRequestQuery, ViewServiceRequestVariables>
+> &
+  TChildProps;
+export function ViewServiceRequestHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        ViewServiceRequestQuery,
+        ViewServiceRequestVariables,
+        ViewServiceRequestProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    ViewServiceRequestQuery,
+    ViewServiceRequestVariables,
+    ViewServiceRequestProps<TChildProps>
+  >(ViewServiceRequestDocument, operationOptions);
+}
+export const ServiceRequestProgressDocument = gql`
+  subscription ServiceRequestProgress($serviceRequestId: ObjectId!) {
+    serviceRequestProgress(serviceRequestId: $serviceRequestId) {
+      ...ServiceRequestInfo
+    }
+  }
+
+  ${ServiceRequestInfoFragmentDoc}
+`;
+export class ServiceRequestProgressComponent extends React.Component<
+  Partial<
+    ReactApollo.SubscriptionProps<
+      ServiceRequestProgressSubscription,
+      ServiceRequestProgressVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Subscription<
+        ServiceRequestProgressSubscription,
+        ServiceRequestProgressVariables
+      >
+        subscription={ServiceRequestProgressDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type ServiceRequestProgressProps<TChildProps = any> = Partial<
+  ReactApollo.DataProps<
+    ServiceRequestProgressSubscription,
+    ServiceRequestProgressVariables
+  >
+> &
+  TChildProps;
+export function ServiceRequestProgressHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        ServiceRequestProgressSubscription,
+        ServiceRequestProgressVariables,
+        ServiceRequestProgressProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    ServiceRequestProgressSubscription,
+    ServiceRequestProgressVariables,
+    ServiceRequestProgressProps<TChildProps>
+  >(ServiceRequestProgressDocument, operationOptions);
 }
 export const LoginDocument = gql`
   mutation Login($isAdmin: Boolean!, $input: LoginInput!) {
@@ -1201,6 +1340,50 @@ export function MeHOC<TProps, TChildProps = any>(
     MeVariables,
     MeProps<TChildProps>
   >(MeDocument, operationOptions);
+}
+export const ProvidersByServiceDocument = gql`
+  query ProvidersByService($serviceId: ObjectId!) {
+    providersByService(serviceId: $serviceId) {
+      ...UserInfo
+    }
+  }
+
+  ${UserInfoFragmentDoc}
+`;
+export class ProvidersByServiceComponent extends React.Component<
+  Partial<
+    ReactApollo.QueryProps<ProvidersByServiceQuery, ProvidersByServiceVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Query<ProvidersByServiceQuery, ProvidersByServiceVariables>
+        query={ProvidersByServiceDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type ProvidersByServiceProps<TChildProps = any> = Partial<
+  ReactApollo.DataProps<ProvidersByServiceQuery, ProvidersByServiceVariables>
+> &
+  TChildProps;
+export function ProvidersByServiceHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        ProvidersByServiceQuery,
+        ProvidersByServiceVariables,
+        ProvidersByServiceProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    ProvidersByServiceQuery,
+    ProvidersByServiceVariables,
+    ProvidersByServiceProps<TChildProps>
+  >(ProvidersByServiceDocument, operationOptions);
 }
 export const UserSubscriptionsDocument = gql`
   query UserSubscriptions {

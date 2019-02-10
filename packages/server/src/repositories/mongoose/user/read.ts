@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { RoleModel } from "./../../../models/Role";
 import { UserModel } from "../../../models/User";
 
@@ -17,6 +18,15 @@ export const allAdminExceptMe = async (userId: string) => {
 
   const users = await UserModel.find({ _id: { $ne: userId }, role: role._id })
     .populate("role")
+    .lean()
+    .exec();
+
+  return users;
+};
+
+export const providersByService = async (serviceId: ObjectId) => {
+  const users = await UserModel.find({ services: serviceId })
+    .populate("services")
     .lean()
     .exec();
 

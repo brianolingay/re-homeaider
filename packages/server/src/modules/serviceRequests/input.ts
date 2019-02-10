@@ -3,7 +3,7 @@ import { InputType, Field } from "type-graphql";
 
 @InputType()
 export class ServiceRequestInput {
-  @Field()
+  @Field(() => ObjectId, { nullable: true })
   service: ObjectId;
 
   @Field(() => ObjectId, { nullable: true })

@@ -73,6 +73,15 @@ export class UserResolver {
   }
 
   @Authorized()
+  @Query(() => [User], { nullable: true })
+  async providersByService(
+    @Arg("serviceId") serviceId: ObjectId
+  ): Promise<User[]> {
+    const users = await UserRepository.providersByService(serviceId);
+    return users;
+  }
+
+  @Authorized()
   @Mutation(() => UserResponse, { nullable: true })
   async createUser(@Arg("input") userInput: UserInput): Promise<UserResponse> {
     return await UserRepository.create(userInput);

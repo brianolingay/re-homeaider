@@ -168,7 +168,12 @@ export class CreateRequestScreen extends React.PureComponent<Props, State> {
                               !response.data.createServiceRequest.errors &&
                               !response.data.createServiceRequest.errors.length
                             ) {
-                              navigation.navigation("ServiceRequestProcess");
+                              navigation.navigation("ServiceRequestProcess", {
+                                type,
+                                serviceRequestId:
+                                  response.data.createServiceRequest
+                                    .serviceRequestId,
+                              });
                             }
                           }}
                         >

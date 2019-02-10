@@ -44,6 +44,7 @@ export class ServiceRequestResolver {
 
     if (serviceRequest) {
       return {
+        serviceRequestId: null,
         errors: [
           {
             path: "create",
@@ -68,7 +69,7 @@ export class ServiceRequestResolver {
       });
     }
 
-    return { errors: [] };
+    return { serviceRequestId: newServiceRequest._id, errors: [] };
   }
 
   @Authorized()
@@ -86,6 +87,7 @@ export class ServiceRequestResolver {
       );
     } catch (err) {
       return {
+        serviceRequestId,
         errors: [
           {
             path: "update",
@@ -111,7 +113,7 @@ export class ServiceRequestResolver {
       await publish({ serviceRequestId, serviceRequest });
     }
 
-    return { errors: [] };
+    return { serviceRequestId, errors: [] };
   }
 
   @Authorized()
@@ -121,7 +123,7 @@ export class ServiceRequestResolver {
   ): Promise<ServiceRequest[]> {
     const newUser = await UserModel.findOne({ _id: ctx.req.session!.userId });
     if (newUser) {
-      const serviceRequest = await ServiceRequestModel.find({
+      const serviceRequests = await ServiceRequestModel.find({
         service: { $in: newUser.services },
         provider: null,
         canceledAt: null,
@@ -140,7 +142,7 @@ export class ServiceRequestResolver {
         .lean()
         .exec();
 
-      return serviceRequest;
+      return serviceRequests;
     }
 
     return [];
@@ -151,12 +153,32 @@ export class ServiceRequestResolver {
   async availableHiringRequest(
     @Ctx() ctx: MyContext
   ): Promise<ServiceRequest[]> {
-    const serviceRequest = await ServiceRequestModel.find({
+    const serviceRequests = await ServiceRequestModel.find({
       provider: ctx.req.session!.userId,
       canceledAt: null,
       accepted: false,
       startedAt: null,
       ignoredAt: null,
+    })
+      .populate("serviceSeeker")
+      .populate("provider")
+      .populate({
+        path: "service",
+        populate: { path: "category" },
+      })
+      .lean()
+      .exec();
+
+    return serviceRequests;
+  }
+
+  @Authorized()
+  @Query(() => ServiceRequest)
+  async viewServiceRequest(
+    @Arg("serviceRequestId") serviceRequestId: ObjectId
+  ): Promise<ServiceRequest> {
+    const serviceRequest = await ServiceRequestModel.findOne({
+      _id: serviceRequestId,
     })
       .populate("serviceSeeker")
       .populate("provider")

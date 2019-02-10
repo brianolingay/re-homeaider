@@ -6,6 +6,7 @@ export const updateServiceRequestMutation = gql`
     $input: ServiceRequestInput!
   ) {
     updateServiceRequest(serviceRequestId: $serviceRequestId, input: $input) {
+      serviceRequestId
       errors {
         path
         message

@@ -49,19 +49,25 @@ export class ServicesScreen extends React.PureComponent<Props> {
                 <List>
                   {findServicesByCategory.map(item => (
                     <ListItem
+                      key={`service-${item._id}`}
                       onPress={() => {
                         const screen =
-                          type === "Booking" ? "ServiceRequest" : "Users";
+                          type === "Booking" ? "CreateRequest" : "Providers";
                         navigation.navigate(screen, {
                           type,
                           serviceId: item._id,
                         });
                       }}
                     >
-                      <Text>{item.name}</Text>
-                      <Text note>
-                        Total Available Services: {item.totalUsers}
-                      </Text>
+                      <Body>
+                        <Text>{item.name}</Text>
+                        <Text note>
+                          Total Available Services: {item.totalUsers}
+                        </Text>
+                      </Body>
+                      <Right>
+                        <Text>Proceed</Text>
+                      </Right>
                     </ListItem>
                   ))}
                 </List>
