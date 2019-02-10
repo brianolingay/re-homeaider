@@ -16,7 +16,7 @@ type Props = {
   navigation: any;
 };
 
-export class HiringScreen extends React.PureComponent<Props> {
+export class BookScreen extends React.PureComponent<Props> {
   render() {
     return (
       <Container>
@@ -30,13 +30,13 @@ export class HiringScreen extends React.PureComponent<Props> {
             </Button>
           </Left>
           <Body>
-            <Title>Hiring</Title>
+            <Title>Booking</Title>
           </Body>
           <Right />
         </Header>
         <Content padder>
           <AvailableCategories
-            type="Hiring"
+            type="Book"
             navigation={this.props.navigation}
           />
         </Content>

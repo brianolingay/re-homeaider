@@ -1,4 +1,8 @@
-import { ServiceRequestProgressPayload } from "./interfaces";
+import {
+  ServiceRequestProgressPayload,
+  NewBookingServiceRequestPayload,
+  NewHiringServiceRequestPayload,
+} from "./interfaces";
 import { UserModel } from "./../../models/User";
 import { MyContext } from "./../../types/Context";
 import { ServiceRequestModel } from "./../../models/ServiceRequest";
@@ -15,12 +19,17 @@ import {
   Args,
   PubSub,
   Publisher,
+  PubSubEngine,
 } from "type-graphql";
 import { ObjectId } from "mongodb";
 import { ServiceRequest } from "../../types/objects/ServiceRequest";
 import { ServiceRequestInput } from "./input";
 import { ServiceRequestResponse } from "./response";
-import { ServiceRequestProgressArgs } from "./args";
+import {
+  ServiceRequestProgressArgs,
+  NewBookingServiceRequestArgs,
+  NewHiringServiceRequestArgs,
+} from "./args";
 import { Topics } from "./topics";
 
 @Resolver(ServiceRequest)
@@ -32,8 +41,7 @@ export class ServiceRequestResolver {
   async createServiceRequest(
     @Arg("input") serviceRequestInput: ServiceRequestInput,
     @Ctx() ctx: MyContext,
-    @PubSub(Topics.ServiceRequestProgress)
-    publish: Publisher<ServiceRequestProgressPayload>
+    @PubSub() pubSub: PubSubEngine
   ): Promise<ServiceRequestResponse> {
     const serviceRequest = new ServiceRequestModel({
       ...serviceRequestInput,
@@ -63,10 +71,18 @@ export class ServiceRequestResolver {
       });
 
     if (newServiceRequest) {
-      await publish({
-        serviceRequestId: newServiceRequest._id,
-        serviceRequest: newServiceRequest,
-      });
+      if (serviceRequestInput.provider) {
+        const payload: NewHiringServiceRequestPayload = {
+          providerId: serviceRequestInput.provider,
+          serviceRequest: newServiceRequest,
+        };
+        await pubSub.publish(Topics.NewHiringServiceRequest, payload);
+      } else {
+        const payload: NewBookingServiceRequestPayload = {
+          serviceRequest: newServiceRequest,
+        };
+        await pubSub.publish(Topics.NewBookingServiceRequest, payload);
+      }
     }
 
     return { serviceRequestId: newServiceRequest._id, errors: [] };
@@ -208,6 +224,63 @@ export class ServiceRequestResolver {
   serviceRequestProgress(
     @Root() newServiceRequest: ServiceRequestProgressPayload,
     @Args() args: ServiceRequestProgressArgs
+  ): ServiceRequest {
+    console.log(args);
+    const { serviceRequest } = newServiceRequest;
+
+    return serviceRequest;
+  }
+
+  @Authorized()
+  @Subscription(() => ServiceRequest, {
+    topics: Topics.NewBookingServiceRequest,
+    filter: ({
+      payload,
+      args,
+    }: ResolverFilterData<
+      NewBookingServiceRequestPayload,
+      NewBookingServiceRequestArgs
+    >) => {
+      return Boolean(
+        args.serviceIds.filter(
+          item =>
+            item === payload.serviceRequest.service._id &&
+            !payload.serviceRequest.accepted &&
+            !payload.serviceRequest.canceledAt
+        ).length
+      );
+    },
+  })
+  newBookingServiceRequest(
+    @Root() newServiceRequest: NewBookingServiceRequestPayload,
+    @Args() args: NewBookingServiceRequestArgs
+  ): ServiceRequest {
+    console.log(args);
+    const { serviceRequest } = newServiceRequest;
+
+    return serviceRequest;
+  }
+
+  @Authorized()
+  @Subscription(() => ServiceRequest, {
+    topics: Topics.NewBookingServiceRequest,
+    filter: ({
+      payload,
+      args,
+    }: ResolverFilterData<
+      NewHiringServiceRequestPayload,
+      NewHiringServiceRequestArgs
+    >) => {
+      return (
+        args.providerId === payload.providerId &&
+        !payload.serviceRequest.accepted &&
+        !payload.serviceRequest.canceledAt
+      );
+    },
+  })
+  newHiringServiceRequest(
+    @Root() newServiceRequest: NewHiringServiceRequestPayload,
+    @Args() args: NewHiringServiceRequestArgs
   ): ServiceRequest {
     console.log(args);
     const { serviceRequest } = newServiceRequest;

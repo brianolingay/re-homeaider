@@ -1,6 +1,7 @@
 import gql from "graphql-tag";
 import { userSubscriptionInfoFragment } from "./../../userSubscription/fragments/UserSubscriptionInfo";
 import { roleInfoFragment } from "./../../role/fragments/RoleInfo";
+import { serviceInfoFragment } from "../../service/fragments/ServiceInfo";
 
 export const userInfoFragment = gql`
   fragment UserInfo on User {
@@ -18,11 +19,15 @@ export const userInfoFragment = gql`
       ...UserSubscriptionInfo
     }
     subscribedAt
+    services {
+      ...ServiceInfo
+    }
     role {
       ...RoleInfo
     }
   }
 
   ${userSubscriptionInfoFragment}
+  ${serviceInfoFragment}
   ${roleInfoFragment}
 `;

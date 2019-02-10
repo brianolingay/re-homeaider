@@ -7,7 +7,7 @@ import {
   UpdateServiceRequestComponent,
   ServiceRequestInfoFragment,
   UserInfoFragment,
-} from "../apollo-components";
+} from "./apollo-components";
 
 type Props = {
   serviceRequestProgress: ServiceRequestInfoFragment;
@@ -39,23 +39,51 @@ export class UpdateServiceRequestProcessContainer extends React.PureComponent<
             {mutate => (
               <View>
                 {!serviceRequestProgress.accepted && (
-                  <Button
-                    iconLeft
-                    primary
-                    onPress={async () => {
-                      await mutate({
-                        variables: {
-                          input: {
-                            accepted: true,
-                          },
-                          serviceRequestId: serviceRequestProgress._id,
-                        },
-                      });
+                  <View
+                    style={{
+                      justifyContent: "space-between",
+                      alignItems: "center",
                     }}
                   >
-                    <Icon type="FontAwesome" name="check" color="#ffffff" />
-                    <Text>Accept</Text>
-                  </Button>
+                    <Button
+                      iconLeft
+                      primary
+                      onPress={async () => {
+                        await mutate({
+                          variables: {
+                            input: {
+                              accepted: true,
+                            },
+                            serviceRequestId: serviceRequestProgress._id,
+                          },
+                        });
+                      }}
+                    >
+                      <Icon type="FontAwesome" name="check" color="#ffffff" />
+                      <Text>Accept</Text>
+                    </Button>
+                    <Button
+                      iconLeft
+                      danger
+                      onPress={async () => {
+                        if (type === "Hiring") {
+                          await mutate({
+                            variables: {
+                              input: {
+                                canceledAt: dayjs().format("YYYY-MM-DD"),
+                              },
+                              serviceRequestId: serviceRequestProgress._id,
+                            },
+                          });
+                        }
+
+                        navigation.goBack();
+                      }}
+                    >
+                      <Icon type="Entypo" name="block" color="#ffffff" />
+                      <Text>Cancel</Text>
+                    </Button>
+                  </View>
                 )}
                 {!serviceRequestProgress.arrivedAt &&
                   serviceRequestProgress.accepted && (

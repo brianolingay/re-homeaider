@@ -39,5 +39,11 @@
     "typescript": "3.2.4",
     "url-loader": "1.1.2"
   },
-  "license": "ISC"
+  "license": "ISC",
+  "workspaces": {
+    "nohoist": [
+      "**/@types/react",
+      "**/@types/react/**"
+    ]
+  }
 }

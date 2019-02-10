@@ -7,7 +7,7 @@ import { NormalizedCacheObject, ApolloClient } from "apollo-boost";
 import { meQuery } from "../graphql/user/queries/me";
 import { MeQuery } from "../components/apollo-components";
 
-const host = "192.168.254.107:4000/graphql";
+const host = "192.168.254.102:4000/graphql";
 
 const SERVER_LINK_OPTIONS = {
   uri: `http://${host}`,

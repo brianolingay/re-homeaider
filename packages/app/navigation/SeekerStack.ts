@@ -1,19 +1,28 @@
 import { ProvidersScreen } from "../screens/seekers/ProvidersScreen";
-import { HiringScreen } from "../screens/seekers/HiringScreen";
+import { HireScreen } from "../screens/seekers/HireScreen";
 import { CreateRequestScreen } from "../screens/seekers/CreateRequestScreen";
 import { createStackNavigator } from "react-navigation";
-import { BookingScreen } from "../screens/seekers/BookingScreen";
+import { BookScreen } from "../screens/seekers/BookScreen";
 import { ServicesScreen } from "../screens/seekers/ServicesScreen";
-import { ServiceRequestProcessScreen } from "../screens/seekers/ServiceRequestProgressScreen";
+import { ServiceRequestProcessScreen } from "../screens/ServiceRequestProgressScreen";
 
-export const SeekersStack = createStackNavigator(
+export const BookStack = createStackNavigator(
   {
-    Booking: BookingScreen,
-    Hiring: HiringScreen,
+    Book: BookScreen,
+    Services: ServicesScreen,
+    CreateRequest: CreateRequestScreen,
+    ServiceRequestProcess: ServiceRequestProcessScreen,
+  },
+  { initialRouteName: "Book" }
+);
+
+export const HireStock = createStackNavigator(
+  {
+    Hire: HireScreen,
     Services: ServicesScreen,
     Providers: ProvidersScreen,
     CreateRequest: CreateRequestScreen,
     ServiceRequestProcess: ServiceRequestProcessScreen,
   },
-  { initialRouteName: "Booking" }
+  { initialRouteName: "Hire" }
 );

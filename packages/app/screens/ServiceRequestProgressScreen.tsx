@@ -12,9 +12,9 @@ import {
 import {
   ServiceRequestProgressComponent,
   UserInfoFragment,
-} from "../../components/apollo-components";
-import { MapViewContainer } from "../../components/MapViewContainer";
-import { UpdateServiceRequestProcessContainer } from "../../components/seekers/UpdateServiceResquestContainer";
+} from "../components/apollo-components";
+import { MapViewContainer } from "../components/MapViewContainer";
+import { UpdateServiceRequestProcessContainer } from "../components/UpdateServiceResquestContainer";
 
 type Props = {
   me: UserInfoFragment;
@@ -24,6 +24,7 @@ type Props = {
 interface State {
   amount: number;
   rating: number;
+  shouldReSubscribe: boolean;
 }
 
 export class ServiceRequestProcessScreen extends React.PureComponent<
@@ -40,15 +41,31 @@ export class ServiceRequestProcessScreen extends React.PureComponent<
   static state = {
     amount: 0,
     rating: 0,
+    shouldReSubscribe: true,
   };
+
+  componentWillUnmount() {
+    this.setState({ shouldReSubscribe: false });
+  }
 
   render() {
     const { navigation, me } = this.props;
     const serviceRequestId = navigation.getParam("serviceRequestId");
 
     return (
-      <ServiceRequestProgressComponent variables={serviceRequestId}>
+      <ServiceRequestProgressComponent
+        variables={serviceRequestId}
+        shouldResubscribe={this.state.shouldReSubscribe}
+      >
         {({ data: { serviceRequestProgress }, loading }) => {
+          if (loading) {
+            return <Text>Loading...</Text>;
+          }
+
+          if (serviceRequestProgress.canceledAt) {
+            return navigation.goBack();
+          }
+
           return (
             <Container>
               <Content>
@@ -174,8 +191,10 @@ export class ServiceRequestProcessScreen extends React.PureComponent<
                         <CardItem>
                           <Body>
                             <Text>
-                              {serviceRequestProgress.provider.address}{", "}
-                              {serviceRequestProgress.provider.city}{", "}
+                              {serviceRequestProgress.provider.address}
+                              {", "}
+                              {serviceRequestProgress.provider.city}
+                              {", "}
                               {serviceRequestProgress.provider.country}
                             </Text>
                             <Text note>Address</Text>

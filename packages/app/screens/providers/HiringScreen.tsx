@@ -10,13 +10,15 @@ import {
   Right,
   Content,
 } from "native-base";
-import { AvailableCategories } from "../../components/seekers/AvaialbleCategories";
+import { UserInfoFragment } from "../../components/apollo-components";
+import { AvailableHiring } from "../../components/providers/AvailableHiring";
 
 type Props = {
+  me: UserInfoFragment;
   navigation: any;
 };
 
-export class BookingScreen extends React.PureComponent<Props> {
+export class HiringScreen extends React.PureComponent<Props> {
   render() {
     return (
       <Container>
@@ -30,15 +32,12 @@ export class BookingScreen extends React.PureComponent<Props> {
             </Button>
           </Left>
           <Body>
-            <Title>Booking</Title>
+            <Title>Hiring</Title>
           </Body>
           <Right />
         </Header>
         <Content padder>
-          <AvailableCategories
-            type="Booking"
-            navigation={this.props.navigation}
-          />
+          <AvailableHiring {...this.props} type="Hiring" />
         </Content>
       </Container>
     );

@@ -45,6 +45,8 @@
   "private": true,
   "workspaces": {
     "nohoist": [
+      "**/@types/react",
+      "**/@types/react/**",
       "**/apollo-link-ws",
       "**/apollo-link-ws/**",
       "**/expo",

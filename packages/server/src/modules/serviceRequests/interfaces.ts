@@ -5,3 +5,12 @@ export interface ServiceRequestProgressPayload {
   serviceRequestId: ObjectId;
   serviceRequest: ServiceRequest;
 }
+
+export interface NewBookingServiceRequestPayload {
+  serviceRequest: ServiceRequest;
+}
+
+export interface NewHiringServiceRequestPayload {
+  providerId: ObjectId;
+  serviceRequest: ServiceRequest;
+}

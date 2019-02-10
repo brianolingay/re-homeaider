@@ -1,3 +1,4 @@
+import { Service } from "./Service";
 import { ObjectType, Field } from "type-graphql";
 import { ObjectId } from "mongodb";
 import { UserSubscription } from "./UserSubscription";
@@ -40,6 +41,9 @@ export class User {
 
   @Field(() => Date, { nullable: true })
   subscribedAt: Date | null;
+
+  @Field(() => [Service], { nullable: true })
+  services: Service[];
 
   @Field(() => Role, { nullable: true })
   role: Role | null;

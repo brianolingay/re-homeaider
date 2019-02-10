@@ -18,7 +18,7 @@ export interface UserInterface extends Document {
   password: string;
   userSubscription: UserSubscriptionInterface | null;
   subscribedAt: Date | null;
-  services: [ServiceInterface] | null;
+  services: ServiceInterface[];
   cetertificates: [CertificateInterface] | null;
   avatar: ImageInterface | null;
   role: RoleInterface;

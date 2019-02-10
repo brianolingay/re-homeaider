@@ -52,7 +52,7 @@ export class ServicesScreen extends React.PureComponent<Props> {
                       key={`service-${item._id}`}
                       onPress={() => {
                         const screen =
-                          type === "Booking" ? "CreateRequest" : "Providers";
+                          type === "Book" ? "CreateRequest" : "Providers";
                         navigation.navigate(screen, {
                           type,
                           serviceId: item._id,

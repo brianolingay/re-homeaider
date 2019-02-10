@@ -224,6 +224,30 @@ export type ViewServiceRequestQuery = {
 
 export type ViewServiceRequestViewServiceRequest = ServiceRequestInfoFragment;
 
+export type NewBookingServiceRequestVariables = {
+  serviceIds: ObjectId[];
+};
+
+export type NewBookingServiceRequestSubscription = {
+  __typename?: "Subscription";
+
+  newBookingServiceRequest: NewBookingServiceRequestNewBookingServiceRequest;
+};
+
+export type NewBookingServiceRequestNewBookingServiceRequest = ServiceRequestInfoFragment;
+
+export type NewHiringServiceRequestVariables = {
+  providerId: ObjectId;
+};
+
+export type NewHiringServiceRequestSubscription = {
+  __typename?: "Subscription";
+
+  newHiringServiceRequest: NewHiringServiceRequestNewHiringServiceRequest;
+};
+
+export type NewHiringServiceRequestNewHiringServiceRequest = ServiceRequestInfoFragment;
+
 export type ServiceRequestProgressVariables = {
   serviceRequestId: ObjectId;
 };
@@ -484,10 +508,14 @@ export type UserInfoFragment = {
 
   subscribedAt: Maybe<DateTime>;
 
+  services: Maybe<UserInfoServices[]>;
+
   role: Maybe<UserInfoRole>;
 };
 
 export type UserInfoUserSubscription = UserSubscriptionInfoFragment;
+
+export type UserInfoServices = ServiceInfoFragment;
 
 export type UserInfoRole = RoleInfoFragment;
 
@@ -549,6 +577,27 @@ export const UserSubscriptionInfoFragmentDoc = gql`
   }
 `;
 
+export const CategoryInfoFragmentDoc = gql`
+  fragment CategoryInfo on Category {
+    _id
+    name
+    description
+  }
+`;
+
+export const ServiceInfoFragmentDoc = gql`
+  fragment ServiceInfo on Service {
+    _id
+    name
+    description
+    category {
+      ...CategoryInfo
+    }
+  }
+
+  ${CategoryInfoFragmentDoc}
+`;
+
 export const RoleInfoFragmentDoc = gql`
   fragment RoleInfo on Role {
     _id
@@ -573,34 +622,17 @@ export const UserInfoFragmentDoc = gql`
       ...UserSubscriptionInfo
     }
     subscribedAt
+    services {
+      ...ServiceInfo
+    }
     role {
       ...RoleInfo
     }
   }
 
   ${UserSubscriptionInfoFragmentDoc}
+  ${ServiceInfoFragmentDoc}
   ${RoleInfoFragmentDoc}
-`;
-
-export const CategoryInfoFragmentDoc = gql`
-  fragment CategoryInfo on Category {
-    _id
-    name
-    description
-  }
-`;
-
-export const ServiceInfoFragmentDoc = gql`
-  fragment ServiceInfo on Service {
-    _id
-    name
-    description
-    category {
-      ...CategoryInfo
-    }
-  }
-
-  ${CategoryInfoFragmentDoc}
 `;
 
 export const ServiceRequestInfoFragmentDoc = gql`
@@ -1057,6 +1089,112 @@ export function ViewServiceRequestHOC<TProps, TChildProps = any>(
     ViewServiceRequestVariables,
     ViewServiceRequestProps<TChildProps>
   >(ViewServiceRequestDocument, operationOptions);
+}
+export const NewBookingServiceRequestDocument = gql`
+  subscription NewBookingServiceRequest($serviceIds: [ObjectId!]!) {
+    newBookingServiceRequest(serviceIds: $serviceIds) {
+      ...ServiceRequestInfo
+    }
+  }
+
+  ${ServiceRequestInfoFragmentDoc}
+`;
+export class NewBookingServiceRequestComponent extends React.Component<
+  Partial<
+    ReactApollo.SubscriptionProps<
+      NewBookingServiceRequestSubscription,
+      NewBookingServiceRequestVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Subscription<
+        NewBookingServiceRequestSubscription,
+        NewBookingServiceRequestVariables
+      >
+        subscription={NewBookingServiceRequestDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type NewBookingServiceRequestProps<TChildProps = any> = Partial<
+  ReactApollo.DataProps<
+    NewBookingServiceRequestSubscription,
+    NewBookingServiceRequestVariables
+  >
+> &
+  TChildProps;
+export function NewBookingServiceRequestHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        NewBookingServiceRequestSubscription,
+        NewBookingServiceRequestVariables,
+        NewBookingServiceRequestProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    NewBookingServiceRequestSubscription,
+    NewBookingServiceRequestVariables,
+    NewBookingServiceRequestProps<TChildProps>
+  >(NewBookingServiceRequestDocument, operationOptions);
+}
+export const NewHiringServiceRequestDocument = gql`
+  subscription NewHiringServiceRequest($providerId: ObjectId!) {
+    newHiringServiceRequest(providerId: $providerId) {
+      ...ServiceRequestInfo
+    }
+  }
+
+  ${ServiceRequestInfoFragmentDoc}
+`;
+export class NewHiringServiceRequestComponent extends React.Component<
+  Partial<
+    ReactApollo.SubscriptionProps<
+      NewHiringServiceRequestSubscription,
+      NewHiringServiceRequestVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Subscription<
+        NewHiringServiceRequestSubscription,
+        NewHiringServiceRequestVariables
+      >
+        subscription={NewHiringServiceRequestDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type NewHiringServiceRequestProps<TChildProps = any> = Partial<
+  ReactApollo.DataProps<
+    NewHiringServiceRequestSubscription,
+    NewHiringServiceRequestVariables
+  >
+> &
+  TChildProps;
+export function NewHiringServiceRequestHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        NewHiringServiceRequestSubscription,
+        NewHiringServiceRequestVariables,
+        NewHiringServiceRequestProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    NewHiringServiceRequestSubscription,
+    NewHiringServiceRequestVariables,
+    NewHiringServiceRequestProps<TChildProps>
+  >(NewHiringServiceRequestDocument, operationOptions);
 }
 export const ServiceRequestProgressDocument = gql`
   subscription ServiceRequestProgress($serviceRequestId: ObjectId!) {
