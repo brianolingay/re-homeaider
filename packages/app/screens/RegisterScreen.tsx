@@ -1,5 +1,17 @@
 import * as React from "react";
-import { Button, Container, Content, Form, Text } from "native-base";
+import {
+  Button,
+  Container,
+  Content,
+  Form,
+  Text,
+  Header,
+  Left,
+  Icon,
+  Body,
+  Title,
+  Right,
+} from "native-base";
 import { Formik, Field } from "formik";
 import { validUserSchema } from "@homeaider/common";
 
@@ -21,9 +33,21 @@ type Props = {
 };
 
 export class RegisterScreen extends React.PureComponent<Props> {
-  static navigationOptions = {
-    header: "Register",
-  };
+  static navigationOptions = ({ navigation }) => ({
+    header: (
+      <Header>
+        <Left>
+          <Button transparent onPress={() => navigation.goBack()}>
+            <Icon name="arrow-back" />
+          </Button>
+        </Left>
+        <Body>
+          <Title>Register</Title>
+        </Body>
+        <Right />
+      </Header>
+    ),
+  });
 
   render() {
     const role = this.props.navigation.getParam("role");

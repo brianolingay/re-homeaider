@@ -1,5 +1,17 @@
 import * as React from "react";
-import { Button, Container, Content, Form, Text } from "native-base";
+import {
+  Button,
+  Container,
+  Content,
+  Form,
+  Text,
+  Header,
+  Left,
+  Body,
+  Title,
+  Right,
+  Icon,
+} from "native-base";
 import { Formik, Field } from "formik";
 
 import { InputField } from "../components/formik-fields/InputField";
@@ -17,9 +29,21 @@ type Props = {
 };
 
 export class LoginScreen extends React.PureComponent<Props> {
-  static navigationOptions = {
-    header: "Login",
-  };
+  static navigationOptions = ({ navigation }) => ({
+    header: (
+      <Header>
+        <Left>
+          <Button transparent onPress={() => navigation.goBack()}>
+            <Icon name="arrow-back" />
+          </Button>
+        </Left>
+        <Body>
+          <Title>Login</Title>
+        </Body>
+        <Right />
+      </Header>
+    ),
+  });
 
   render() {
     return (
