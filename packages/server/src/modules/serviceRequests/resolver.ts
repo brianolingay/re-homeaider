@@ -31,14 +31,18 @@ export class ServiceRequestResolver {
   @Mutation(() => ServiceRequestResponse, { nullable: true })
   async createServiceRequest(
     @Arg("input") serviceRequestInput: ServiceRequestInput,
-    @Ctx() ctx: MyContext
+    @Ctx() ctx: MyContext,
+    @PubSub(Topics.ServiceRequestProgress)
+    publish: Publisher<ServiceRequestProgressPayload>
   ): Promise<ServiceRequestResponse> {
-    try {
-      await ServiceRequestModel.create({
-        ...serviceRequestInput,
-        serviceSeeker: ctx.req.session!.userId,
-      });
-    } catch (err) {
+    const serviceRequest = new ServiceRequestModel({
+      ...serviceRequestInput,
+      serviceSeeker: ctx.req.session!.userId,
+    });
+
+    await serviceRequest.save();
+
+    if (serviceRequest) {
       return {
         errors: [
           {
@@ -47,6 +51,21 @@ export class ServiceRequestResolver {
           },
         ],
       };
+    }
+
+    const newServiceRequest = serviceRequest!
+      .populate("serviceSeeker")
+      .populate("provider")
+      .populate({
+        path: "service",
+        populate: { path: "category" },
+      });
+
+    if (newServiceRequest) {
+      await publish({
+        serviceRequestId: newServiceRequest._id,
+        serviceRequest: newServiceRequest,
+      });
     }
 
     return { errors: [] };
@@ -79,6 +98,12 @@ export class ServiceRequestResolver {
     const serviceRequest = await ServiceRequestModel.findOne({
       _id: serviceRequestId,
     })
+      .populate("serviceSeeker")
+      .populate("provider")
+      .populate({
+        path: "service",
+        populate: { path: "category" },
+      })
       .lean()
       .exec();
 

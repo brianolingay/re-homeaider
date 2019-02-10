@@ -45,7 +45,7 @@ export class ServiceRequest {
   ignoredAt: Date | null;
 
   @Field({ nullable: true })
-  feedBack: string;
+  feedBack: string | null;
 
   @Field(() => Number)
   rating: number;

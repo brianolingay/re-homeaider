@@ -16,7 +16,7 @@ export interface ServiceRequestInterface extends Document {
   completedAt: Date | null;
   ignoredAt: Date | null;
   feedBack: string | null;
-  rating: number | null;
+  rating: number;
 }
 
 export const serviceRequestSchema: Schema = new Schema(
