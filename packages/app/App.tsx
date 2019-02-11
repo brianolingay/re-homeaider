@@ -1,35 +1,82 @@
 import * as React from "react";
-import { Platform, StatusBar, StyleSheet, View, Text } from "react-native";
+import {
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View,
+  AsyncStorage,
+} from "react-native";
+// @ts-ignore
 import { AppLoading, Asset, Font, Icon } from "expo";
 import { ApolloProvider } from "react-apollo";
 import { AppNavigator } from "./navigation/AppNavigator";
-import { ContextWithApollo } from "./types/ContextWithApollo";
-import withApolloClient from "./lib/with-apollo-client";
 
-type Props = {
-  skipLoadingScreen: any;
+import initApollo from "./lib/init-apollo";
+import { NormalizedCacheObject, ApolloClient } from "apollo-boost";
+import { meQuery } from "./graphql/user/queries/me";
+import { MeQuery } from "./components/apollo-components";
+
+const host =
+  Platform.OS === "ios" ? "http://localhost:4000" : "192.168.254.102:4000";
+
+const SERVER_LINK_OPTIONS = {
+  uri: `http://${host}/graphql`,
+  credentials: "include",
 };
 
-export interface DefaultAppIProps {
-  pageProps: any;
-}
+const wsUrl = `ws://${host}/subscriptions`;
 
-class App extends React.Component<
-  Props & DefaultAppIProps & ContextWithApollo,
-  { isLoadingComplete: boolean }
-> {
-  static getInitialProps(context: any) {
-    return { context };
+export default class App extends React.Component<any> {
+  static async getInitialProps(ctx: any) {
+    const apollo = initApollo(
+      SERVER_LINK_OPTIONS,
+      wsUrl,
+      {},
+      {
+        getToken: async () => await AsyncStorage.getItem("userId"),
+      }
+    );
+
+    const {
+      data: { me },
+    } = await apollo.query<MeQuery>({
+      query: meQuery,
+    });
+
+    ctx.ctx.apolloClient = apollo;
+
+    // Extract query data from the Apollo's store
+    const apolloState = apollo.cache.extract();
+
+    return {
+      ...ctx,
+      me,
+      apolloState,
+    };
   }
-}
 
-class NativeApp extends App {
+  apolloClient: ApolloClient<NormalizedCacheObject>;
+
   state = {
     isLoadingComplete: false,
   };
 
+  constructor(props: any) {
+    super(props);
+    // `getDataFromTree` renders the component first, the client is passed off as a property.
+    // After that rendering is done using Next's normal rendering pipeline
+    this.apolloClient = initApollo(
+      SERVER_LINK_OPTIONS,
+      wsUrl,
+      props.apolloState,
+      {
+        getToken: async () => await AsyncStorage.getItem("userId"),
+      }
+    );
+  }
+
   render() {
-    const { skipLoadingScreen, pageProps, apolloClient } = this.props;
+    const { skipLoadingScreen, ...otherProps } = this.props;
     if (!this.state.isLoadingComplete && !skipLoadingScreen) {
       return (
         <AppLoading
@@ -41,9 +88,9 @@ class NativeApp extends App {
     } else {
       return (
         <View style={styles.container}>
-          <ApolloProvider client={apolloClient}>
+          <ApolloProvider client={this.apolloClient}>
             {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-            <AppNavigator {...pageProps} />
+            <AppNavigator {...otherProps} />
           </ApolloProvider>
         </View>
       );
@@ -82,5 +129,3 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
 });
-
-export default withApolloClient(NativeApp);

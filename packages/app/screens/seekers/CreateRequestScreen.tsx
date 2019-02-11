@@ -16,6 +16,7 @@ import {
   Right,
 } from "native-base";
 import { View } from "react-native";
+// @ts-ignore
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { MapViewContainer } from "../../components/MapViewContainer";
 

@@ -46,7 +46,11 @@ const Layout: React.SFC<Props> = ({
               return (
                 <Segment inverted>
                   <Menu inverted pointing secondary>
-                    <Menu.Item onClick={() => Router.push("/")}>Home</Menu.Item>
+                    {isLoggedIn && data.me.role.name === "admin" && (
+                      <Menu.Item onClick={() => Router.push("/")}>
+                        Home
+                      </Menu.Item>
+                    )}
                     {isLoggedIn &&
                       data.me.role.name === "admin" &&
                       adminPages.map(page => (

@@ -79,10 +79,21 @@ const startServer = async () => {
 
   app.set("trust proxy", 1);
 
+  const whitelist = [
+    "http://localhost:3000",
+    "https://homeaider.herokuapp.com",
+  ];
+
   app.use(
     cors({
       credentials: true,
-      origin: process.env.FRONTEND_HOST,
+      origin: function(origin, callback) {
+        if (whitelist.indexOf(origin) !== -1 || !origin) {
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
     })
   );
 
@@ -110,7 +121,7 @@ const startServer = async () => {
       saveUninitialized: false,
       cookie: {
         httpOnly: true,
-        // secure: process.env.NODE_ENV === "production",
+        secure: process.env.NODE_ENV === "production",
         maxAge: 1000 * 60 * 60 * 24 * 7 * 365, // 7 years
       },
     } as any)

@@ -9,7 +9,6 @@ COPY ./packages/common/ ./packages/common/
 
 RUN npm i -g yarn
 RUN yarn install
-
 RUN yarn build:web
 
 WORKDIR ./packages/web

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { FieldProps } from "formik";
-import { Icon, Input, Item as FormItem, Label } from "native-base";
+import { Input, Item as FormItem, Label } from "native-base";
+import { Icon } from "react-native-elements";
 
 export class InputField extends React.Component<any & FieldProps<any>> {
   onChangeText = (text: string) => {
@@ -29,7 +30,7 @@ export class InputField extends React.Component<any & FieldProps<any>> {
           onChangeText={this.onChangeText}
           value={field.value}
         />
-        {hasError && <Icon name="close-circle" />}
+        {hasError && <Icon type="font-awesome" name="times-circle" />}
       </FormItem>
     );
   }

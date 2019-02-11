@@ -18,6 +18,7 @@ import { InputField } from "../components/formik-fields/InputField";
 import { normalizeErrors } from "../utils/normalizeErrors";
 import { LoginComponent } from "../components/apollo-components";
 import { meQuery } from "../graphql/user/queries/me";
+import { AsyncStorage } from "react-native";
 
 interface FormValues {
   email: string;
@@ -84,10 +85,12 @@ export class LoginScreen extends React.PureComponent<Props> {
                     );
                   } else {
                     const {
+                      _id,
                       role: { name },
                     } = (response as any).data.login.user;
+                    await AsyncStorage.setItem("userId", _id);
                     navigation.navigate(
-                      name === "service_seeker" ? "Seeker" : "Provider"
+                      name === "service_seeker" ? "Seekers" : "Providers"
                     );
                   }
                 }}

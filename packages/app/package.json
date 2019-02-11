@@ -3,16 +3,16 @@
   "version": "1.0.0",
   "main": "crna-entry.js",
   "scripts": {
-    "start": "expo start",
+    "start": "expo start --lan",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "eject": "expo eject",
     "test": "node ./node_modules/jest/bin/jest.js --watchAll",
-    "generate": "gql-gen"
+    "generate": "gql-gen",
+    "reset-cache": "react-native start --reset-cache"
   },
   "dependencies": {
     "@expo/vector-icons": "^9.0.0",
-    "@types/react-navigation": "^3.0.1",
     "apollo-boost": "^0.1.27",
     "apollo-link-context": "^1.0.14",
     "apollo-link-ws": "^1.0.14",
@@ -29,8 +29,10 @@
     "react-navigation": "^3.0.9"
   },
   "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/runtime": "7.0.0",
     "@types/expo": "^31.0.9",
-    "@types/react": "^16.8.1",
+    "@types/react": "16.7.20",
     "@types/react-native": "^0.57.32",
     "@types/react-navigation": "^3.0.1",
     "babel-preset-expo": "^5.0.0",
@@ -38,19 +40,19 @@
     "graphql-codegen-typescript-client": "^0.16.0",
     "graphql-codegen-typescript-common": "^0.16.0",
     "graphql-codegen-typescript-react-apollo": "^0.16.0",
-    "metro-bundler-config-yarn-workspaces": "^1.0.3",
     "react-native-typescript-transformer": "^1.2.11",
-    "typescript": "^3.3.1"
+    "schedule": "0.4.0",
+    "typescript": "^3.3.3"
   },
   "private": true,
   "workspaces": {
     "nohoist": [
-      "**/@types/react",
-      "**/@types/react/**",
       "**/apollo-link-ws",
       "**/apollo-link-ws/**",
       "**/expo",
       "**/expo/**",
+      "**/@expo/vector-icons",
+      "**/@expo/vector-icons/**",
       "**/native-base",
       "**/native-base/**",
       "**/react-native",
@@ -67,8 +69,8 @@
       "**/react-native-typescript-transformer/**",
       "**/react-navigation",
       "**/react-navigation/**",
-      "**/metro-bundler-config-yarn-workspaces",
-      "**/metro-bundler-config-yarn-workspaces/**"
+      "**/schedule",
+      "**/schedule/**"
     ]
   }
 }

@@ -47,6 +47,6 @@ export const ProvidersDrawer = createDrawerNavigator(
         </LogoutComponent>
       </SafeAreaView>
     ),
-    initialRouteName: "Book",
+    initialRouteName: "Booking",
   }
 );

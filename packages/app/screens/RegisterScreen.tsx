@@ -85,7 +85,7 @@ export class RegisterScreen extends React.PureComponent<Props> {
                       normalizeErrors(response.data.register.errors)
                     );
                   } else {
-                    navigation.navigate.push("/login");
+                    navigation.navigate.push("Login");
                   }
                 }}
                 validationSchema={validUserSchema}

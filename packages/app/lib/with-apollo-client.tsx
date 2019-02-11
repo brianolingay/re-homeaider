@@ -7,14 +7,14 @@ import { NormalizedCacheObject, ApolloClient } from "apollo-boost";
 import { meQuery } from "../graphql/user/queries/me";
 import { MeQuery } from "../components/apollo-components";
 
-const host = "192.168.254.102:4000/graphql";
+const host = "https://homeaider-server.herokuapp.com";
 
 const SERVER_LINK_OPTIONS = {
-  uri: `http://${host}`,
+  uri: `http://${host}/graphql`,
   credentials: "include",
 };
 
-const wsUrl = `ws://${host}`;
+const wsUrl = `ws://${host}/subscriptions`;
 
 export default (App: any) => {
   return class WithData extends React.Component {

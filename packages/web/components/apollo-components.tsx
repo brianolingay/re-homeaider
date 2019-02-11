@@ -13,7 +13,7 @@ export interface RoleInput {
 }
 
 export interface ServiceRequestInput {
-  service: ObjectId;
+  service?: Maybe<ObjectId>;
 
   provider?: Maybe<ObjectId>;
 
@@ -46,18 +46,6 @@ export interface ServiceInput {
   description?: Maybe<string>;
 }
 
-export interface UserSubscriptionInput {
-  name: string;
-
-  description?: Maybe<string>;
-
-  amount: number;
-
-  benefits?: Maybe<string[]>;
-
-  paymentMode: PaymentMode;
-}
-
 export interface RegisterInput {
   email: string;
 
@@ -86,6 +74,18 @@ export interface UserInput {
   mobile: string;
 
   password?: Maybe<string>;
+}
+
+export interface UserSubscriptionInput {
+  name: string;
+
+  description?: Maybe<string>;
+
+  amount: number;
+
+  benefits?: Maybe<string[]>;
+
+  paymentMode: PaymentMode;
 }
 /** Type of payment mode */
 export enum PaymentMode {

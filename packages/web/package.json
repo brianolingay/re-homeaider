@@ -5,6 +5,7 @@
     "dev": "nodemon server/index.ts",
     "build": "next build",
     "start": "next start -p $PORT",
+    "heroku-postbuild": "next build",
     "type-check": "tsc",
     "generate": "gql-gen"
   },

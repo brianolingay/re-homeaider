@@ -1,6 +1,20 @@
 import * as React from "react";
-import { StyleSheet } from "react-native";
-import { Button, Container, Content, H1, H2, Text, H3 } from "native-base";
+import { StyleSheet, AsyncStorage } from "react-native";
+import {
+  Button,
+  Container,
+  Content,
+  H1,
+  H2,
+  Text,
+  H3,
+  Header,
+  Left,
+  Body,
+  Title,
+  Right,
+} from "native-base";
+import { UserInfoFragment } from "../components/apollo-components";
 
 const styles = StyleSheet.create({
   listHows: {
@@ -8,18 +22,28 @@ const styles = StyleSheet.create({
   },
 });
 
-export class LandingScreen extends React.PureComponent<{ navigation: any }> {
+export class LandingScreen extends React.PureComponent<{
+  navigation: any;
+}> {
   static navigationOptions = {
-    header: null,
+    header: (
+      <Header>
+        <Left />
+        <Body />
+        <Right />
+      </Header>
+    ),
   };
 
   render() {
     return (
       <Container>
         <Content padder>
-          <H1>HomeAider</H1>
-          <H2>{`Marketplace For Home Services & Freelancers`}</H2>
-          <H1>How it works</H1>
+          <H1 style={{ textAlign: "center" }}>Homeaider</H1>
+          <H2
+            style={{ textAlign: "center" }}
+          >{`Marketplace For Home Services & Freelancers`}</H2>
+          <H1 style={{ marginTop: 5 }}>How it works</H1>
           <Text style={styles.listHows}>
             1. Seekers request(Book) any services available.
           </Text>
@@ -36,32 +60,35 @@ export class LandingScreen extends React.PureComponent<{ navigation: any }> {
           <Button
             block
             primary
+            style={{ marginTop: 5 }}
             onPress={() => this.props.navigation.navigate("Login")}
           >
-            Login
+            <Text>Login</Text>
           </Button>
-          <H3 style={{ textAlign: "center" }}>OR</H3>
+          <H3 style={{ textAlign: "center", marginTop: 5 }}>OR</H3>
           <Button
             block
             primary
+            style={{ marginTop: 5 }}
             onPress={() =>
               this.props.navigation.navigate("Register", {
                 role: "service_seeker",
               })
             }
           >
-            Register as Seeker
+            <Text>Register as Seeker</Text>
           </Button>
           <Button
             block
             primary
+            style={{ marginTop: 5 }}
             onPress={() =>
               this.props.navigation.navigate("Register", {
                 role: "provider",
               })
             }
           >
-            Register as Provider
+            <Text>Register as Provider</Text>
           </Button>
         </Content>
       </Container>
