@@ -17,11 +17,14 @@ import { createMongooseConn } from "./utils/createMongooseConn";
 import { ObjectIdScalar } from "./scalars/ObjectIDScalar";
 import { userLoader } from "./loaders/userLoader";
 import { UserRepository } from "./repositories/mongoose/user/index";
+import { defaultUserAndRole } from "./utils/defaultUserAndRole";
 
 const RedisStore = connectRedis(session as any);
 
 const startServer = async () => {
   await createMongooseConn();
+
+  await defaultUserAndRole();
 
   const app = express();
 
@@ -79,10 +82,7 @@ const startServer = async () => {
   app.use(
     cors({
       credentials: true,
-      origin:
-        process.env.NODE_ENV === "production"
-          ? "https://www.codeponder.com"
-          : "http://localhost:3000",
+      origin: process.env.FRONTEND_HOST,
     })
   );
 
@@ -110,16 +110,18 @@ const startServer = async () => {
       saveUninitialized: false,
       cookie: {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        // secure: process.env.NODE_ENV === "production",
         maxAge: 1000 * 60 * 60 * 24 * 7 * 365, // 7 years
       },
     } as any)
   );
 
   server.applyMiddleware({ app, cors: false }); // app is from an existing express app
-
-  app.listen({ port: 4000 }, () =>
-    console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+  const port = process.env.PORT || 4000;
+  app.listen({ port }, () =>
+    console.log(
+      `🚀 Server ready at http://localhost:${port}${server.graphqlPath}`
+    )
   );
 };
 

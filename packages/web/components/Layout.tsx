@@ -90,10 +90,7 @@ const Layout: React.SFC<Props> = ({
                         </Dropdown>
                       </Menu.Menu>
                     ) : (
-                      <Menu.Menu>
-                        <Menu.Item onClick={() => Router.push("/register")}>
-                          Register
-                        </Menu.Item>
+                      <Menu.Menu position="right">
                         <Menu.Item onClick={() => Router.push("/login")}>
                           Login
                         </Menu.Item>

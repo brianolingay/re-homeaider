@@ -18,7 +18,7 @@ function parseCookies(req?: any, options = {}) {
 }
 
 const SERVER_LINK_OPTIONS = {
-  uri: "http://localhost:4000/graphql",
+  uri: "https://homeaider-server.herokuapp.com/graphql",
   credentials: "include",
 };
 

@@ -1,4 +1,4 @@
-import * as argon from "argon2";
+import * as bcrypt from "bcryptjs";
 import { validUserSchema } from "@homeaider/common";
 import { formatYupError } from "./../../../utils/formatYupError";
 import { UserModel } from "./../../../models/User";
@@ -41,7 +41,7 @@ export const createOrRegister = async (role: String, input: any) => {
 
   const user = new UserModel({
     ...input,
-    password: await argon.hash(password),
+    password: await bcrypt.hash(password, bcrypt.genSaltSync(10)),
     subscription,
     role: roleData._id,
   });

@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import * as argon from "argon2";
+import * as bcrypt from "bcryptjs";
 import { validUpdateUserSchema } from "@homeaider/common";
 import { formatYupError } from "./../../../utils/formatYupError";
 import { UserModel } from "./../../../models/User";
@@ -19,7 +19,7 @@ export const update = async (userId: ObjectId, userInput: UserInput) => {
   if (password) {
     newUserInput2 = {
       ...newUserInput,
-      password: await argon.hash(password),
+      password: await bcrypt.hash(password, bcrypt.genSaltSync(10)),
     } as any;
   }
 

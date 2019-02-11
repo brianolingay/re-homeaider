@@ -1,5 +1,5 @@
 import { MyContext } from "./../../../types/Context";
-import * as argon from "argon2";
+import * as bcrypt from "bcryptjs";
 import { loginSchema } from "@homeaider/common";
 
 import { formatYupError } from "./../../../utils/formatYupError";
@@ -35,7 +35,7 @@ export const login = async (
     return { errors: errorResponse, user: null };
   }
 
-  const valid = await argon.verify(user.password, password);
+  const valid = await bcrypt.compare(password, user.password);
 
   if (!valid) {
     return { errors: errorResponse, user: null };

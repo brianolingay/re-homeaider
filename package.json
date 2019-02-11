@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build:server": "lerna run build --scope={@homeaider/common,@homeaider/server}",
-    "build:web": "lerna run build --scope={@homeaider/common,@homeaider/controller,@homeaider/web}"
+    "build:web": "lerna run build --scope={@homeaider/common,@homeaider/web}"
   },
   "resolutions": {
     "graphql": "14.0.2"
