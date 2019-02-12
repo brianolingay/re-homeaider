@@ -1,19 +1,19 @@
 import * as React from "react";
 import { Table, Grid } from "semantic-ui-react";
-import Layout from "../../components/Layout";
-import Loading from "../../components/Loader";
-import { NextContextWithApollo } from "../../types/NextContextWithApollo";
+import Layout from "../components/Layout";
+import Loading from "../components/Loader";
+import { NextContextWithApollo } from "../types/NextContextWithApollo";
 import {
   ServicesComponent,
   CategoriesQuery,
-} from "../../components/apollo-components";
-import { categoriesQuery } from "../../graphql/category/queries/categories";
-import { CreateButton } from "../../components/service/CreateButton";
-import { UpdateButton } from "../../components/service/UpdateButton";
-import { DeleteButton } from "../../components/service/DeleteButton";
-import { CategoriesOptions } from "../../components/service/ServiceForm";
-import redirect from "../../lib/redirect";
-import checkLoggedIn from "../../lib/checkLoggedIn";
+} from "../components/apollo-components";
+import { categoriesQuery } from "../graphql/category/queries/categories";
+import { CreateButton } from "../components/service/CreateButton";
+import { UpdateButton } from "../components/service/UpdateButton";
+import { DeleteButton } from "../components/service/DeleteButton";
+import { CategoriesOptions } from "../components/service/ServiceForm";
+import redirect from "../lib/redirect";
+import checkLoggedIn from "../lib/checkLoggedIn";
 
 export default class Services extends React.PureComponent<{
   categories: CategoriesOptions[];
@@ -22,7 +22,7 @@ export default class Services extends React.PureComponent<{
     const { loggedInUser } = await checkLoggedIn(context);
 
     if (!loggedInUser.me) {
-      redirect(context, "/admin/login");
+      redirect(context, "/login");
     }
 
     const {

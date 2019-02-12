@@ -3,23 +3,25 @@ require("dotenv-safe").config();
 import { ApolloServer, ApolloError } from "apollo-server-express";
 import { v4 } from "uuid";
 import { GraphQLError } from "graphql";
-import * as session from "express-session";
-import * as connectRedis from "connect-redis";
+// import * as session from "express-session";
+// import * as connectRedis from "connect-redis";
 import * as express from "express";
 import { buildSchema } from "type-graphql";
 import { ObjectId } from "mongodb";
 import * as cors from "cors";
 import { RedisPubSub } from "graphql-redis-subscriptions";
 
-import { redis } from "./redis";
+// import { redis } from "./redis";
 
 import { createMongooseConn } from "./utils/createMongooseConn";
 import { ObjectIdScalar } from "./scalars/ObjectIDScalar";
 import { userLoader } from "./loaders/userLoader";
-import { UserRepository } from "./repositories/mongoose/user/index";
+// import { UserRepository } from "./repositories/mongoose/user/index";
 import { defaultUserAndRole } from "./utils/defaultUserAndRole";
+import { verifyToken, refreshTokens } from "./utils/jwtAuth";
+import { UserInfoInRequest } from "./types/Context";
 
-const RedisStore = connectRedis(session as any);
+// const RedisStore = connectRedis(session as any);
 
 const startServer = async () => {
   await createMongooseConn();
@@ -42,23 +44,25 @@ const startServer = async () => {
       pubSub,
       scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }],
       authChecker: ({ context }) => {
-        return (
-          (context.req.session && context.req.session.userId) || context.user
-        ); // or false if access denied
+        return Boolean(context.user); // or false if access denied
       },
     }),
     context: ({ req, connection }: any) => ({
       req,
       userLoader: userLoader(),
-      user: connection ? connection.context.user : null,
+      user: connection ? connection.context.user : req.user,
     }),
     subscriptions: {
       path: "/subscriptions",
-      onConnect: async ({ userId }: any) => {
-        if (userId) {
-          const user = await UserRepository.me(userId);
-
-          return { user };
+      onConnect: async ({ token, refreshToken }: any) => {
+        if (token && refreshToken) {
+          try {
+            const { user } = await verifyToken(token);
+            return { user };
+          } catch (err) {
+            const newTokens = await refreshTokens(refreshToken);
+            return { user: newTokens.user };
+          }
         }
 
         return { user: null };
@@ -97,35 +101,43 @@ const startServer = async () => {
     })
   );
 
-  app.use((req, _, next) => {
-    const authorization = req.headers.authorization;
-
-    if (authorization) {
+  app.use(async (req: UserInfoInRequest, res, next) => {
+    const token = req.headers["x-token"] as string;
+    if (token) {
       try {
-        const qid = authorization.split(" ")[1];
-        req.headers.cookie = `qid=${qid}`;
-      } catch (_) {}
+        const { user } = await verifyToken(token);
+        req.user = user;
+      } catch (err) {
+        const refreshToken = req.headers["x-refresh-token"] as any;
+        const newTokens = await refreshTokens(refreshToken);
+        if (newTokens && newTokens.token && newTokens.refreshToken) {
+          res.set("Access-Control-Expose-Headers", "x-token, x-refresh-token");
+          res.set("x-token", newTokens.token);
+          res.set("x-refresh-token", newTokens.refreshToken);
+          req.user = newTokens.user;
+        }
+      }
     }
 
     return next();
   });
 
-  app.use(
-    session({
-      store: new RedisStore({
-        client: redis as any,
-      }),
-      name: "qid",
-      secret: process.env.SESSION_SECRET,
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 1000 * 60 * 60 * 24 * 7 * 365, // 7 years
-      },
-    } as any)
-  );
+  // app.use(
+  //   session({
+  //     store: new RedisStore({
+  //       client: redis as any,
+  //     }),
+  //     name: "qid",
+  //     secret: process.env.SESSION_SECRET,
+  //     resave: false,
+  //     saveUninitialized: false,
+  //     cookie: {
+  //       httpOnly: true,
+  //       secure: process.env.NODE_ENV === "production",
+  //       maxAge: 1000 * 60 * 60 * 24 * 7 * 365, // 7 years
+  //     },
+  //   } as any)
+  // );
 
   server.applyMiddleware({ app, cors: false }); // app is from an existing express app
   const port = process.env.PORT || 4000;

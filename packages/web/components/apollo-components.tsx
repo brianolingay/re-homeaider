@@ -422,11 +422,21 @@ export type LoginLogin = {
   errors: Maybe<LoginErrors[]>;
 
   user: Maybe<LoginUser>;
+
+  tokens: Maybe<LoginTokens>;
 };
 
 export type LoginErrors = ErrorInfoFragment;
 
 export type LoginUser = UserInfoFragment;
+
+export type LoginTokens = {
+  __typename?: "TokensResponse";
+
+  token: Maybe<string>;
+
+  refreshToken: Maybe<string>;
+};
 
 export type LogoutVariables = {};
 
@@ -1421,6 +1431,10 @@ export const LoginDocument = gql`
       }
       user {
         ...UserInfo
+      }
+      tokens {
+        token
+        refreshToken
       }
     }
   }

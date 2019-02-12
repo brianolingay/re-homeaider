@@ -1,5 +1,4 @@
 import React from "react";
-import cookie from "cookie";
 import PropTypes from "prop-types";
 import { getDataFromTree } from "react-apollo";
 import Head from "next/head";
@@ -9,16 +8,13 @@ import { isBrowser } from "./isBrowser";
 import { NormalizedCacheObject, ApolloClient } from "apollo-boost";
 import { meQuery } from "../graphql/user/queries/me";
 import { MeQuery } from "../components/apollo-components";
+import { authTokenStore } from "./authTokenStore";
 
-function parseCookies(req?: any, options = {}) {
-  return cookie.parse(
-    req ? req.headers.cookie || "" : document.cookie,
-    options
-  );
-}
+//const url = "https://homeaider-server.herokuapp.com"
+const url = "http://localhost:4000";
 
 const SERVER_LINK_OPTIONS = {
-  uri: "https://homeaider-server.herokuapp.com/graphql",
+  uri: `${url}/graphql`,
   credentials: "include",
 };
 
@@ -39,7 +35,11 @@ export default (App: any) => {
         SERVER_LINK_OPTIONS,
         {},
         {
-          getToken: () => parseCookies(req).qid,
+          getTokens: async () => {
+            const token = req.headers["x-token"];
+            const refreshToken = req.headers["x-refresh-token"];
+            return { token, refreshToken };
+          },
         }
       );
 
@@ -104,9 +104,7 @@ export default (App: any) => {
       // `getDataFromTree` renders the component first, the client is passed off as a property.
       // After that rendering is done using Next's normal rendering pipeline
       this.apolloClient = initApollo(SERVER_LINK_OPTIONS, props.apolloState, {
-        getToken: () => {
-          return parseCookies().qid;
-        },
+        getTokens: authTokenStore.getTokens,
       });
     }
 

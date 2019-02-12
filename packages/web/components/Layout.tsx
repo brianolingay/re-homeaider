@@ -2,11 +2,13 @@ import * as React from "react";
 import Head from "next/head";
 import { Container, Menu, Segment, Dropdown } from "semantic-ui-react";
 import { Query, Mutation } from "react-apollo";
+import axios from "axios";
 
 import { meQuery } from "../graphql/user/queries/me";
 import { MeQuery, LogoutMutation } from "./apollo-components";
 import Router from "next/router";
 import { logoutMutation } from "../graphql/user/mutations/logout";
+import { authTokenStore } from "../lib/authTokenStore";
 
 type Props = {
   title: string;
@@ -14,11 +16,11 @@ type Props = {
 };
 
 const adminPages = [
-  { push: "/admin", title: "Categories" },
-  { push: "/admin/services", title: "Services" },
-  { push: "/admin/subscriptions", title: "Subscriptions" },
-  { push: "/admin/roles", title: "Roles" },
-  { push: "/admin/users", title: "Users" },
+  { push: "/", title: "Categories" },
+  { push: "/services", title: "Services" },
+  { push: "/subscriptions", title: "Subscriptions" },
+  { push: "/roles", title: "Roles" },
+  { push: "/users", title: "Users" },
 ];
 
 const Layout: React.SFC<Props> = ({
@@ -46,11 +48,6 @@ const Layout: React.SFC<Props> = ({
               return (
                 <Segment inverted>
                   <Menu inverted pointing secondary>
-                    {isLoggedIn && data.me.role.name === "admin" && (
-                      <Menu.Item onClick={() => Router.push("/")}>
-                        Home
-                      </Menu.Item>
-                    )}
                     {isLoggedIn &&
                       data.me.role.name === "admin" &&
                       adminPages.map(page => (
@@ -78,12 +75,9 @@ const Layout: React.SFC<Props> = ({
                             <Dropdown.Divider />
                             <Dropdown.Item
                               onClick={async () => {
-                                const goto =
-                                  data.me.role.name === "admin"
-                                    ? "/admin"
-                                    : "/";
-                                await mutate({});
-                                (window as any).location = goto;
+                                await authTokenStore.removeTokens();
+                                await axios.delete("/remove");
+                                (window as any).location = "/login";
                                 // Router.push("/home");
                                 // await client.resetStore();
                               }}

@@ -27,11 +27,9 @@ export class UserResolver {
   @Mutation(() => LoginResponse, { nullable: true })
   async login(
     @Arg("isAdmin") isAdmin: Boolean,
-    @Arg("input") loginInput: LoginInput,
-    @Ctx()
-    ctx: MyContext
+    @Arg("input") loginInput: LoginInput
   ): Promise<LoginResponse> {
-    return await UserRepository.login(ctx, isAdmin, loginInput);
+    return await UserRepository.login(isAdmin, loginInput);
   }
 
   @Authorized()
@@ -53,12 +51,11 @@ export class UserResolver {
     @Ctx()
     ctx: MyContext
   ): Promise<User | null> {
-    const { userId } = ctx.req.session!;
-    if (!userId) {
+    if (!ctx.user) {
       return null;
     }
 
-    return await UserRepository.me(userId);
+    return await UserRepository.me(ctx.user._id);
   }
 
   @Authorized()
@@ -67,9 +64,9 @@ export class UserResolver {
     @Ctx()
     ctx: MyContext
   ): Promise<User[]> {
-    const { userId } = ctx.req.session!;
+    const { _id } = ctx.user;
 
-    return await UserRepository.allAdminExceptMe(userId);
+    return await UserRepository.allAdminExceptMe(_id);
   }
 
   @Authorized()

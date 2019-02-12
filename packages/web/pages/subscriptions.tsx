@@ -1,12 +1,12 @@
 import * as React from "react";
 import { Table, Grid, List } from "semantic-ui-react";
-import Layout from "../../components/Layout";
-import { UserSubscriptionsComponent } from "../../components/apollo-components";
-import Loading from "../../components/Loader";
-import { CreateButton } from "../../components/subscriptions/CreateButton";
-import { UpdateButton } from "../../components/subscriptions/UpdateButton";
-import { DeleteButton } from "../../components/subscriptions/DeleteButton";
-import { withAuth } from "../../components/withAuth";
+import Layout from "../components/Layout";
+import { UserSubscriptionsComponent } from "../components/apollo-components";
+import Loading from "../components/Loader";
+import { CreateButton } from "../components/subscriptions/CreateButton";
+import { UpdateButton } from "../components/subscriptions/UpdateButton";
+import { DeleteButton } from "../components/subscriptions/DeleteButton";
+import { withAuth } from "../components/withAuth";
 
 class Subscriptions extends React.PureComponent<{}> {
   render() {

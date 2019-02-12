@@ -1,8 +1,9 @@
 import * as React from "react";
-import { Button, Form } from "semantic-ui-react";
+import { Button, Form, GridColumn, Card, Container } from "semantic-ui-react";
 import { Formik, Field } from "formik";
 import { Mutation } from "react-apollo";
 import Router from "next/router";
+import axios from "axios";
 
 import { InputField } from "../components/formik-fields/InputField";
 import { ErrorMessage } from "../components/ErrorMessage";
@@ -14,6 +15,7 @@ import { meQuery } from "../graphql/user/queries/me";
 import { NextContextWithApollo } from "../types/NextContextWithApollo";
 import checkLoggedIn from "../lib/checkLoggedIn";
 import redirect from "../lib/redirect";
+import { authTokenStore } from "../lib/authTokenStore";
 
 interface FormValues {
   email: string;
@@ -21,7 +23,6 @@ interface FormValues {
 }
 
 export default class Login extends React.PureComponent<{
-  goTo: string;
   isAdmin: boolean;
 }> {
   static async getInitialProps(context: NextContextWithApollo) {
@@ -31,82 +32,101 @@ export default class Login extends React.PureComponent<{
     const admin = asPath.match(/admin/);
 
     const isAdmin = admin ? true : false;
-    const goTo = admin ? "/admin" : "/";
 
     if (loggedInUser.me) {
       // Already signed in? No need to continue.
       // Throw them back to the main page
 
-      redirect(context, goTo);
+      redirect(context, "/");
     }
 
-    return { goTo, isAdmin };
+    return { isAdmin };
   }
 
   render() {
     return (
-      <Layout title="login" showMenu={true}>
-        <Mutation<LoginMutation, LoginVariables> mutation={loginMutation}>
-          {mutate => (
-            <Formik<FormValues>
-              initialValues={{ email: "", password: "" }}
-              onSubmit={async (input, { setErrors, setSubmitting }) => {
-                const { isAdmin } = this.props;
-                const response = await mutate({
-                  variables: { isAdmin, input },
-                  update: (store, { data }) => {
-                    if (!data || !data.login.user) {
-                      return;
-                    }
+      <Layout title="login">
+        <Container
+          style={{
+            display: "flex",
+            flex: 1,
+            justifyContent: "center",
+            marginTop: 40,
+          }}
+        >
+          <Card>
+            <Card.Content>
+              <Card.Header>Login</Card.Header>
+              <Mutation<LoginMutation, LoginVariables> mutation={loginMutation}>
+                {mutate => (
+                  <Formik<FormValues>
+                    initialValues={{ email: "", password: "" }}
+                    onSubmit={async (input, { setErrors, setSubmitting }) => {
+                      const { isAdmin } = this.props;
+                      const response = await mutate({
+                        variables: { isAdmin, input },
+                        update: async (store, { data }) => {
+                          if (!data || !data.login.user) {
+                            return;
+                          }
 
-                    store.writeQuery({
-                      query: meQuery,
-                      data: {
-                        me: data.login.user,
-                      },
-                    });
-                  },
-                });
+                          const { token, refreshToken } = data.login.tokens;
+                          await axios.post("/tokens", { token, refreshToken });
+                          await authTokenStore.setTokens(token, refreshToken);
 
-                if (
-                  response &&
-                  response.data &&
-                  response.data.login.errors &&
-                  response.data.login.errors.length
-                ) {
-                  setSubmitting(false);
-                  return setErrors(normalizeErrors(response.data.login.errors));
-                } else {
-                  Router.push(this.props.goTo);
-                }
-              }}
-              validateOnBlur={false}
-              validateOnChange={false}
-            >
-              {({ errors, handleSubmit, isSubmitting }) => (
-                <Form onSubmit={handleSubmit}>
-                  <Field
-                    name="email"
-                    label="Email"
-                    placeholder="Email"
-                    component={InputField}
-                  />
-                  <Field
-                    name="password"
-                    label="Password"
-                    placeholder="Password"
-                    component={InputField}
-                    type="password"
-                  />
-                  <ErrorMessage errors={errors} />
-                  <Button disabled={isSubmitting} type="submit">
-                    Login
-                  </Button>
-                </Form>
-              )}
-            </Formik>
-          )}
-        </Mutation>
+                          store.writeQuery({
+                            query: meQuery,
+                            data: {
+                              me: data.login.user,
+                            },
+                          });
+                        },
+                      });
+
+                      if (
+                        response &&
+                        response.data &&
+                        response.data.login.errors &&
+                        response.data.login.errors.length
+                      ) {
+                        setSubmitting(false);
+                        return setErrors(
+                          normalizeErrors(response.data.login.errors)
+                        );
+                      } else {
+                        Router.push("/");
+                      }
+                    }}
+                    validateOnBlur={false}
+                    validateOnChange={false}
+                  >
+                    {({ errors, handleSubmit, isSubmitting }) => (
+                      <Form onSubmit={handleSubmit}>
+                        <Field
+                          name="email"
+                          label="Email"
+                          placeholder="Email"
+                          component={InputField}
+                        />
+                        <Field
+                          name="password"
+                          label="Password"
+                          placeholder="Password"
+                          component={InputField}
+                          type="password"
+                        />
+                        <ErrorMessage errors={errors} />
+                        <Button disabled={isSubmitting} type="submit">
+                          Login
+                        </Button>
+                      </Form>
+                    )}
+                  </Formik>
+                )}
+              </Mutation>
+            </Card.Content>
+          </Card>
+        </Container>
       </Layout>
     );
   }

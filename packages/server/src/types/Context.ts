@@ -8,3 +8,7 @@ export interface MyContext {
   user: User;
   userLoader: DataLoader<string, User>;
 }
+
+export interface UserInfoInRequest extends Request {
+  user?: User | null;
+}

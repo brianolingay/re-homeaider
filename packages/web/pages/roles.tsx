@@ -1,19 +1,19 @@
 import * as React from "react";
 import { Table, Grid } from "semantic-ui-react";
-import Layout from "../../components/Layout";
-import Loading from "../../components/Loader";
-import { AllAdminExceptMeComponent } from "../../components/apollo-components";
-import { CreateButton } from "../../components/user/CreateButton";
-import { UpdateButton } from "../../components/user/UpdateButton";
-import { DeleteButton } from "../../components/user/DeleteButton";
-import { withAuth } from "../../components/withAuth";
+import Layout from "../components/Layout";
+import { RolesComponent } from "../components/apollo-components";
+import Loading from "../components/Loader";
+import { CreateButton } from "../components/role/CreateButton";
+import { UpdateButton } from "../components/role/UpdateButton";
+import { DeleteButton } from "../components/role/DeleteButton";
+import { withAuth } from "../components/withAuth";
 
-class Users extends React.PureComponent<{}> {
+class Roles extends React.PureComponent<{}> {
   render() {
     return (
-      <Layout title="Users" showMenu={true}>
+      <Layout title="Role" showMenu={true}>
         {/* @ts-ignore */}
-        <AllAdminExceptMeComponent>
+        <RolesComponent>
           {({ data, loading, refetch }) => {
             if (loading) {
               return <Loading />;
@@ -28,10 +28,8 @@ class Users extends React.PureComponent<{}> {
                   <Table fixed>
                     <Table.Header>
                       <Table.Row>
-                        <Table.HeaderCell>Full Name</Table.HeaderCell>
-                        <Table.HeaderCell>Email</Table.HeaderCell>
-                        <Table.HeaderCell>Mobile</Table.HeaderCell>
-                        <Table.HeaderCell>Role</Table.HeaderCell>
+                        <Table.HeaderCell>Name</Table.HeaderCell>
+                        <Table.HeaderCell>Description</Table.HeaderCell>
                         <Table.HeaderCell textAlign="right">
                           Actions
                         </Table.HeaderCell>
@@ -40,22 +38,18 @@ class Users extends React.PureComponent<{}> {
 
                     <Table.Body>
                       {data ? (
-                        data.allAdminExceptMe.map(item => (
-                          <Table.Row key={item._id}>
-                            <Table.Cell>
-                              {item.firstName} {item.lastName}
-                            </Table.Cell>
-                            <Table.Cell>{item.email}</Table.Cell>
-                            <Table.Cell>{item.mobile}</Table.Cell>
-                            <Table.Cell>{item.role.name}</Table.Cell>
+                        data.roles.map(item => (
+                          <Table.Row key={`tr-role-${item._id}`}>
+                            <Table.Cell>{item.name}</Table.Cell>
+                            <Table.Cell>{item.description}</Table.Cell>
                             <Table.Cell>
                               <DeleteButton
-                                key={`user-del-${item._id}`}
-                                userId={item._id}
+                                key={`role-del-${item._id}`}
+                                roleId={item._id}
                                 refetch={refetch}
                               />
                               <UpdateButton
-                                key={`user-update-${item._id}`}
+                                key={`role-update-${item._id}`}
                                 item={item}
                                 refetch={refetch}
                               />
@@ -65,9 +59,7 @@ class Users extends React.PureComponent<{}> {
                       ) : (
                         <Table.Row>
                           <Table.HeaderCell />
-                          <Table.HeaderCell />
                           <Table.HeaderCell>No Data</Table.HeaderCell>
-                          <Table.HeaderCell />
                           <Table.HeaderCell />
                         </Table.Row>
                       )}
@@ -77,10 +69,10 @@ class Users extends React.PureComponent<{}> {
               </Grid>
             );
           }}
-        </AllAdminExceptMeComponent>
+        </RolesComponent>
       </Layout>
     );
   }
 }
 
-export default withAuth(Users);
+export default withAuth(Roles);

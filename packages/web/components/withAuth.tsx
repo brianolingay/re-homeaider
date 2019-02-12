@@ -11,12 +11,9 @@ export const withAuth = <T extends object>(C: React.ComponentClass<T>) => {
       apolloClient,
       ...ctx
     }: NextContextWithApollo) {
-      const admin = asPath.match(/admin/);
-      const goTo = admin ? "/admin/login" : "/";
-
       const response = await apolloClient.query<MeQuery>({ query: meQuery });
       if (!response || !response.data || !response.data.me) {
-        redirect(ctx, goTo);
+        redirect(ctx, "/login");
         return {
           me: null,
         };

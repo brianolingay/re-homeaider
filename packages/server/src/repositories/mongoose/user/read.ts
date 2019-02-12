@@ -2,8 +2,8 @@ import { ObjectId } from "mongodb";
 import { RoleModel } from "./../../../models/Role";
 import { UserModel } from "../../../models/User";
 
-export const me = async (userId: string) => {
-  const user = await UserModel.findById(userId)
+export const me = async (userId: ObjectId) => {
+  const user = await UserModel.findOne({ _id: userId }, "-password")
     .populate("role")
     .lean()
     .exec();
@@ -11,7 +11,7 @@ export const me = async (userId: string) => {
   return user ? user : null;
 };
 
-export const allAdminExceptMe = async (userId: string) => {
+export const allAdminExceptMe = async (userId: ObjectId) => {
   const role = await RoleModel.findOne({ name: "admin" }, "_id")
     .lean()
     .exec();

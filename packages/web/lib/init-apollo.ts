@@ -8,6 +8,7 @@ import { createHttpLink, HttpLink } from "apollo-link-http";
 import { setContext } from "apollo-link-context";
 import fetch from "isomorphic-unfetch";
 import { isBrowser } from "./isBrowser";
+import { Tokens } from "./authTokenStore";
 
 const apolloMap: { [key: string]: ApolloClient<NormalizedCacheObject> } = {};
 
@@ -19,17 +20,18 @@ if (!isBrowser) {
 function create(
   linkOptions: HttpLink.Options,
   initialState: any,
-  { getToken }: { getToken: () => string },
+  { getTokens }: { getTokens: () => Promise<Tokens> },
   cacheConfig: ApolloReducerConfig = {}
 ) {
   const httpLink = createHttpLink(linkOptions);
 
-  const authLink = setContext((_, { headers }) => {
-    const token = getToken();
+  const authLink = setContext(async (_, { headers }) => {
+    const tokens = await getTokens();
     return {
       headers: {
         ...headers,
-        authorization: token ? `Bearer ${token}` : "",
+        ["x-token"]: tokens.token,
+        ["x-refresh_token"]: tokens.refreshToken,
       },
     };
   });
@@ -46,7 +48,7 @@ function create(
 export default function initApollo(
   linkOptions: HttpLink.Options,
   initialState: any,
-  options: { getToken: () => string },
+  options: { getTokens: () => Promise<Tokens> },
   cacheConfig: ApolloReducerConfig = {}
 ) {
   // Make sure to create a new client for every server-side request so that data
