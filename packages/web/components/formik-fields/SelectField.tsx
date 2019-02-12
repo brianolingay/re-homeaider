@@ -20,7 +20,7 @@ export const SelectField = ({
         fluid
         selection
         options={options}
-        onChange={(e, { name, value }) => setFieldValue(name, value)}
+        onChange={(_, { name, value }) => setFieldValue(name, value)}
       />
     </Form.Field>
   );

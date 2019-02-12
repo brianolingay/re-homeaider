@@ -1,20 +1,20 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
     "jsx": "preserve",
-    "lib": ["dom", "es2017"],
-    "moduleResolution": "node",
     "allowJs": true,
-    "noEmit": true,
+    "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "removeComments": false,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "composite": true
-  },
-  "references": [{ "path": "../common" }]
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "typeRoots": ["./node_modules/@types"],
+    "lib": ["dom", "es2015", "es2016"]
+  }
 }

@@ -36,7 +36,7 @@ const Layout: React.SFC<Props> = ({
     </Head>
     {showMenu && (
       <Mutation<LogoutMutation> mutation={logoutMutation}>
-        {mutate => (
+        {() => (
           <Query<MeQuery> ssr={false} query={meQuery}>
             {({ data, loading }) => {
               const isLoggedIn = !!data.me;

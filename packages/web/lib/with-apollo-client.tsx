@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { getDataFromTree } from "react-apollo";
 import Head from "next/head";
 
@@ -10,8 +10,8 @@ import { meQuery } from "../graphql/user/queries/me";
 import { MeQuery } from "../components/apollo-components";
 import { authTokenStore } from "./authTokenStore";
 
-//const url = "https://homeaider-server.herokuapp.com"
-const url = "http://localhost:4000";
+const url = "https://homeaider-server.herokuapp.com";
+// const url = "http://localhost:4000";
 
 const SERVER_LINK_OPTIONS = {
   uri: `${url}/graphql`,

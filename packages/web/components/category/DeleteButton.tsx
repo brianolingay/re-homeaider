@@ -1,11 +1,7 @@
 import * as React from "react";
 import { ApolloQueryResult } from "apollo-boost";
 import { Button, Icon } from "semantic-ui-react";
-import {
-  CategoryInfoFragment,
-  CategoriesQuery,
-  DeleteCategoryComponent,
-} from "../apollo-components";
+import { CategoriesQuery, DeleteCategoryComponent } from "../apollo-components";
 
 type Props = {
   categoryId: string;

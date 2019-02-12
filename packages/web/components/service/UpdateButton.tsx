@@ -6,7 +6,6 @@ import {
   ServiceInfoFragment,
   ServicesQuery,
   UpdateServiceComponent,
-  CategoryInfoFragment,
 } from "../apollo-components";
 import {
   ServiceFormValues,

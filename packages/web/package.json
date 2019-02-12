@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "nodemon server/index.ts",
-    "build": "next build",
-    "start": "next start -p $PORT",
-    "heroku-postbuild": "next build",
+    "build": "rimraf dist && next build && tsc --project tsconfig.server.json",
+    "start": "node dist/index.js",
     "type-check": "tsc",
     "generate": "gql-gen"
   },
@@ -47,6 +46,7 @@
     "graphql-codegen-typescript-common": "0.16.0",
     "graphql-codegen-typescript-react-apollo": "0.16.0",
     "nodemon": "1.18.9",
+    "rimraf": "^2.6.3",
     "ts-node": "8.0.1",
     "typescript": "^3.3.3",
     "url-loader": "1.1.2"
@@ -56,6 +56,8 @@
     "nohoist": [
       "**/@types/react",
       "**/@types/react/**",
+      "**/rimraf",
+      "**/rimraf/**",
       "**/@zeit/next-typescript",
       "**/@zeit/next-typescript/**",
       "**/@zeit/next-css",

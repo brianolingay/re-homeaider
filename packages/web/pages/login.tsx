@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, Form, GridColumn, Card, Container } from "semantic-ui-react";
+import { Button, Form, Card, Container } from "semantic-ui-react";
 import { Formik, Field } from "formik";
 import { Mutation } from "react-apollo";
 import Router from "next/router";

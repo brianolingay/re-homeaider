@@ -8,7 +8,7 @@ import { InputField } from "../formik-fields/InputField";
 import { ErrorMessage } from "../ErrorMessage";
 import { normalizeErrors } from "../../utils/normalizeErrors";
 import { TextAreaField } from "../formik-fields/TextAreaField";
-import { ServicesQuery, CategoryInfoFragment } from "../apollo-components";
+import { ServicesQuery } from "../apollo-components";
 import { SelectField } from "../formik-fields/SelectField";
 
 export interface CategoriesOptions {

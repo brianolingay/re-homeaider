@@ -4,7 +4,7 @@ import { Grid, Menu, Segment } from "semantic-ui-react";
 export default class SideBar extends React.Component {
   state = { activeItem: "categories" };
 
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
+  handleItemClick = (_, { name }) => this.setState({ activeItem: name });
 
   render() {
     const { activeItem } = this.state;
