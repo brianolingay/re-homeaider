@@ -32,11 +32,13 @@ export default class Services extends React.PureComponent<{
     });
 
     return {
-      categories: categories.map(item => ({
-        key: item._id,
-        value: item._id,
-        text: item.name,
-      })),
+      categories: categories
+        ? categories.map(item => ({
+            key: item._id,
+            value: item._id,
+            text: item.name,
+          }))
+        : [],
     };
   }
 

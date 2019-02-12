@@ -41,12 +41,12 @@ app.prepare().then(() => {
   server.get("*", async (req, res) => {
     const parsedUrl = parse(req.url, true);
 
-    const token = await redis.get("token");
-    const refreshToken = await redis.get("refreshToken");
-    if (token && refreshToken) {
-      req.headers["x-token"] = token;
-      req.headers["x-refresh-token"] = refreshToken;
-    }
+    // const token = await redis.get("token");
+    // const refreshToken = await redis.get("refreshToken");
+    // if (token && refreshToken) {
+    //   req.headers["x-token"] = token;
+    //   req.headers["x-refresh-token"] = refreshToken;
+    // }
 
     handle(req, res, parsedUrl);
   });

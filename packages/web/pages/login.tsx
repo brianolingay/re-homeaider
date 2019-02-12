@@ -95,6 +95,7 @@ export default class Login extends React.PureComponent<{
                         );
                       } else {
                         Router.push("/");
+                        setSubmitting(false);
                       }
                     }}
                     validateOnBlur={false}
