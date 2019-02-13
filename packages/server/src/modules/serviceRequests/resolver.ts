@@ -59,9 +59,41 @@ export class ServiceRequestResolver {
       serviceSeeker: ctx.user._id,
     });
 
-    await serviceRequest.save();
+    try {
+      await serviceRequest.save();
 
-    if (serviceRequest) {
+      const newServiceRequest = serviceRequest
+        .populate("serviceSeeker")
+        .populate("provider")
+        .populate({
+          path: "service",
+          populate: { path: "category" },
+        });
+
+      if (newServiceRequest) {
+        if (serviceRequestInput.provider) {
+          const payload: NewHiringServiceRequestPayload = {
+            providerId: serviceRequestInput.provider,
+            serviceRequest: newServiceRequest,
+          };
+          await pubSub.publish(Topics.NewHiringServiceRequest, payload);
+        } else {
+          const payload: NewBookingServiceRequestPayload = {
+            serviceRequest: newServiceRequest,
+          };
+          await pubSub.publish(Topics.NewBookingServiceRequest, payload);
+        }
+
+        const payload: ServiceRequestProgressPayload = {
+          serviceRequestId: newServiceRequest._id,
+          serviceRequest: newServiceRequest,
+        };
+        await pubSub.publish(Topics.ServiceRequestProgress, payload);
+      }
+
+      return { serviceRequestId: newServiceRequest._id, errors: [] };
+    } catch (err) {
+      console.log(err);
       return {
         serviceRequestId: null,
         errors: [
@@ -72,37 +104,6 @@ export class ServiceRequestResolver {
         ],
       };
     }
-
-    const newServiceRequest = serviceRequest!
-      .populate("serviceSeeker")
-      .populate("provider")
-      .populate({
-        path: "service",
-        populate: { path: "category" },
-      });
-
-    if (newServiceRequest) {
-      if (serviceRequestInput.provider) {
-        const payload: NewHiringServiceRequestPayload = {
-          providerId: serviceRequestInput.provider,
-          serviceRequest: newServiceRequest,
-        };
-        await pubSub.publish(Topics.NewHiringServiceRequest, payload);
-      } else {
-        const payload: NewBookingServiceRequestPayload = {
-          serviceRequest: newServiceRequest,
-        };
-        await pubSub.publish(Topics.NewBookingServiceRequest, payload);
-      }
-
-      const payload: ServiceRequestProgressPayload = {
-        serviceRequestId: newServiceRequest._id,
-        serviceRequest: newServiceRequest,
-      };
-      await pubSub.publish(Topics.ServiceRequestProgress, payload);
-    }
-
-    return { serviceRequestId: newServiceRequest._id, errors: [] };
   }
 
   @Authorized()
@@ -157,9 +158,10 @@ export class ServiceRequestResolver {
     if (!ctx.user) {
       return [];
     }
-
+    const services = ctx.user.services.map(item => item._id);
+    console.log(services);
     const serviceRequests = await ServiceRequestModel.find({
-      service: { $in: ctx.user.services },
+      service: { $in: services },
       provider: null,
       canceledAt: null,
       accepted: false,
@@ -168,14 +170,8 @@ export class ServiceRequestResolver {
       completedAt: null,
     })
       .sort({ createdAt: -1 })
-      .populate({
-        path: "serviceSeeker",
-        populate: { path: "role" },
-      })
-      .populate({
-        path: "provider",
-        populate: { path: "role" },
-      })
+      .populate("serviceSeeker")
+      .populate("provider")
       .populate({
         path: "service",
         populate: { path: "category" },
@@ -202,14 +198,8 @@ export class ServiceRequestResolver {
       startedAt: null,
       ignoredAt: null,
     })
-      .populate({
-        path: "serviceSeeker",
-        populate: { path: "role" },
-      })
-      .populate({
-        path: "provider",
-        populate: { path: "role" },
-      })
+      .populate("serviceSeeker")
+      .populate("provider")
       .populate({
         path: "service",
         populate: { path: "category" },
@@ -237,6 +227,7 @@ export class ServiceRequestResolver {
       .lean()
       .exec();
 
+    console.log(serviceRequest);
     return serviceRequest;
   }
 
@@ -250,7 +241,8 @@ export class ServiceRequestResolver {
       ServiceRequestProgressPayload,
       ServiceRequestProgressArgs
     >) => {
-      return payload.serviceRequestId === args.serviceRequestId;
+      console.log(payload.serviceRequestId === args.serviceRequestId);
+      return true;
     },
   })
   serviceRequestProgress(

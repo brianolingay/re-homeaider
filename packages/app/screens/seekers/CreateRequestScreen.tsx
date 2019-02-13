@@ -164,19 +164,23 @@ export class CreateRequestScreen extends React.PureComponent<Props> {
                               },
                             });
 
+                            console.log("Create Request Response");
+                            console.log(response);
+
                             if (
                               response &&
                               response.data &&
-                              !response.data.createServiceRequest.errors &&
-                              !response.data.createServiceRequest.errors.length
+                              response.data.createServiceRequest
+                                .serviceRequestId
                             ) {
-                              console.log("Create Request Response");
-                              console.log(response.data.createServiceRequest);
+                              const {
+                                data: {
+                                  createServiceRequest: { serviceRequestId },
+                                },
+                              } = response;
                               navigation.navigate("ServiceRequestProcess", {
                                 type,
-                                serviceRequestId:
-                                  response.data.createServiceRequest
-                                    .serviceRequestId,
+                                serviceRequestId,
                               });
                             }
                           }}

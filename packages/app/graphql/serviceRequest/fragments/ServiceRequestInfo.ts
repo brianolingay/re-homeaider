@@ -6,13 +6,34 @@ export const serviceRequestInfoFragment = gql`
   fragment ServiceRequestInfo on ServiceRequest {
     _id
     serviceSeeker {
-      ...UserInfo
+      _id
+      email
+      firstName
+      lastName
+      mobile
+      phone
+      address
+      city
+      country
     }
     provider {
-      ...UserInfo
+      _id
+      email
+      firstName
+      lastName
+      mobile
+      phone
+      address
+      city
+      country
     }
     service {
-      ...ServiceInfo
+      _id
+      name
+      category {
+        _id
+        name
+      }
     }
     amount
     address

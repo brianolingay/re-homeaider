@@ -1,8 +1,5 @@
 import * as React from "react";
-import {
-  AvailableBookingRequestComponent,
-  UserInfoFragment,
-} from "../apollo-components";
+import { AvailableBookingRequestComponent } from "../apollo-components";
 import { newBookingServiceRequestSubscription } from "../../graphql/serviceRequest/subscriptions/newBookingServiceRequest";
 import { List, ListItem, Body, Text, Right } from "native-base";
 import { AppLoading } from "expo";
@@ -19,15 +16,23 @@ export class AvailableBookings extends React.PureComponent<Props> {
     const { type, user, navigation } = this.props;
     return (
       <AvailableBookingRequestComponent>
-        {({ data: { availableBookingRequest }, loading, subscribeToMore }) => {
+        {({
+          error,
+          data: { availableBookingRequest },
+          loading,
+          subscribeToMore,
+        }) => {
           if (loading) {
             return <AppLoading />;
           }
 
+          console.log(error);
+
           if (user && user.me) {
+            const services = user.me.services.map(item => item._id);
             this.unsubscribe = subscribeToMore({
               document: newBookingServiceRequestSubscription,
-              variables: { serviceIds: user.me.services },
+              variables: { serviceIds: services },
               updateQuery: (prev, { subscriptionData }) => {
                 if (!subscriptionData.data) {
                   return prev;
@@ -36,8 +41,7 @@ export class AvailableBookings extends React.PureComponent<Props> {
                 return {
                   ...prev,
                   availableBookingRequest: [
-                    (subscriptionData.data as any).newBookingServiceRequest
-                      .serviceRequest,
+                    (subscriptionData.data as any).newBookingServiceRequest,
                     ...prev.availableBookingRequest,
                   ],
                 };

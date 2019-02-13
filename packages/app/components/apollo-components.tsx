@@ -477,11 +477,67 @@ export type ServiceRequestInfoFragment = {
   rating: number;
 };
 
-export type ServiceRequestInfoServiceSeeker = UserInfoFragment;
+export type ServiceRequestInfoServiceSeeker = {
+  __typename?: "User";
 
-export type ServiceRequestInfoProvider = UserInfoFragment;
+  _id: ObjectId;
 
-export type ServiceRequestInfoService = ServiceInfoFragment;
+  email: string;
+
+  firstName: string;
+
+  lastName: string;
+
+  mobile: string;
+
+  phone: Maybe<string>;
+
+  address: Maybe<string>;
+
+  city: Maybe<string>;
+
+  country: Maybe<string>;
+};
+
+export type ServiceRequestInfoProvider = {
+  __typename?: "User";
+
+  _id: ObjectId;
+
+  email: string;
+
+  firstName: string;
+
+  lastName: string;
+
+  mobile: string;
+
+  phone: Maybe<string>;
+
+  address: Maybe<string>;
+
+  city: Maybe<string>;
+
+  country: Maybe<string>;
+};
+
+export type ServiceRequestInfoService = {
+  __typename?: "Service";
+
+  _id: ObjectId;
+
+  name: string;
+
+  category: ServiceRequestInfoCategory;
+};
+
+export type ServiceRequestInfoCategory = {
+  __typename?: "Category";
+
+  _id: ObjectId;
+
+  name: string;
+};
 
 export type ErrorInfoFragment = {
   __typename?: "ErrorResponse";
@@ -576,6 +632,60 @@ export const FindServicesByCategoryInfoFragmentDoc = gql`
   }
 `;
 
+export const ServiceRequestInfoFragmentDoc = gql`
+  fragment ServiceRequestInfo on ServiceRequest {
+    _id
+    serviceSeeker {
+      _id
+      email
+      firstName
+      lastName
+      mobile
+      phone
+      address
+      city
+      country
+    }
+    provider {
+      _id
+      email
+      firstName
+      lastName
+      mobile
+      phone
+      address
+      city
+      country
+    }
+    service {
+      _id
+      name
+      category {
+        _id
+        name
+      }
+    }
+    amount
+    address
+    coordinates
+    accepted
+    arrivedAt
+    startedAt
+    canceledAt
+    completedAt
+    ignoredAt
+    feedBack
+    rating
+  }
+`;
+
+export const ErrorInfoFragmentDoc = gql`
+  fragment ErrorInfo on ErrorResponse {
+    path
+    message
+  }
+`;
+
 export const UserSubscriptionInfoFragmentDoc = gql`
   fragment UserSubscriptionInfo on UserSubscription {
     _id
@@ -643,42 +753,6 @@ export const UserInfoFragmentDoc = gql`
   ${UserSubscriptionInfoFragmentDoc}
   ${ServiceInfoFragmentDoc}
   ${RoleInfoFragmentDoc}
-`;
-
-export const ServiceRequestInfoFragmentDoc = gql`
-  fragment ServiceRequestInfo on ServiceRequest {
-    _id
-    serviceSeeker {
-      ...UserInfo
-    }
-    provider {
-      ...UserInfo
-    }
-    service {
-      ...ServiceInfo
-    }
-    amount
-    address
-    coordinates
-    accepted
-    arrivedAt
-    startedAt
-    canceledAt
-    completedAt
-    ignoredAt
-    feedBack
-    rating
-  }
-
-  ${UserInfoFragmentDoc}
-  ${ServiceInfoFragmentDoc}
-`;
-
-export const ErrorInfoFragmentDoc = gql`
-  fragment ErrorInfo on ErrorResponse {
-    path
-    message
-  }
 `;
 
 // ====================================================

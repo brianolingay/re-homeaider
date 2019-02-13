@@ -4,6 +4,10 @@ import { UserModel } from "../../../models/User";
 export const me = async (userId: ObjectId) => {
   const user = await UserModel.findOne({ _id: userId }, "-password")
     .populate("role")
+    .populate({
+      path: "services",
+      populate: { path: "category" },
+    })
     .lean()
     .exec();
 

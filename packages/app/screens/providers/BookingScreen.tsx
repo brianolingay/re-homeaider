@@ -25,19 +25,19 @@ export class BookingScreen extends React.PureComponent<Props> {
       query: meQuery,
     });
 
-    if (user && user.me) {
-      const {
-        role: { name },
-        services,
-      } = user.me;
-      navigation.navigate(
-        services.lenght
-          ? "Profile"
-          : name === "service_seeker"
-          ? "Seekers"
-          : "Providers"
-      );
-    }
+    // if (user && user.me) {
+    //   const {
+    //     role: { name },
+    //     services,
+    //   } = user.me;
+    //   navigation.navigate(
+    //     services.lenght
+    //       ? "Profile"
+    //       : name === "service_seeker"
+    //       ? "Seekers"
+    //       : "Providers"
+    //   );
+    // }
 
     return {
       navigation,

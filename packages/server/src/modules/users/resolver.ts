@@ -55,6 +55,7 @@ export class UserResolver {
       return null;
     }
 
+    console.log(ctx.user);
     return await UserRepository.me(ctx.user._id);
   }
 

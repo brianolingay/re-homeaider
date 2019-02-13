@@ -11,15 +11,15 @@ import { meQuery } from "./graphql/user/queries/me";
 import { MeQuery } from "./components/apollo-components";
 import { nativeAuthTokenStorage } from "./lib/nativeAuthTokenStorage";
 
-// const host = "homeaider-server.herokuapp.com";
-const host = "192.168.254.102:4000";
+const host = "homeaider-server.herokuapp.com";
+// const host = "192.168.254.102:4000";
 
 const SERVER_LINK_OPTIONS = {
-  uri: `http://${host}/graphql`,
+  uri: `https://${host}/graphql`,
   credentials: "include",
 };
 
-const wsUrl = `ws://${host}/subscriptions`
+const wsUrl = `ws://${host}/subscriptions`;
 
 type Props = {
   skipLoadingScreen: boolean;

@@ -78,6 +78,8 @@ export class LoginScreen extends React.PureComponent<Props> {
                     },
                   });
 
+                  console.log(response);
+
                   if (
                     response &&
                     response.data &&

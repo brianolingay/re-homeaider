@@ -20,8 +20,11 @@ import { userLoader } from "./loaders/userLoader";
 import { defaultUserAndRole } from "./utils/defaultUserAndRole";
 import { verifyToken, refreshTokens } from "./utils/jwtAuth";
 import { UserInfoInRequest } from "./types/Context";
+import { createServer } from "http";
 
 // const RedisStore = connectRedis(session as any);
+
+const port = process.env.PORT || 4000;
 
 const startServer = async () => {
   await createMongooseConn();
@@ -38,15 +41,17 @@ const startServer = async () => {
       : {}
   );
 
+  const schema = await buildSchema({
+    resolvers: [__dirname + "/modules/**/resolver.*"],
+    pubSub,
+    scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }],
+    authChecker: ({ context }) => {
+      return Boolean(context.user); // or false if access denied
+    },
+  });
+
   const server = new ApolloServer({
-    schema: await buildSchema({
-      resolvers: [__dirname + "/modules/**/resolver.*"],
-      pubSub,
-      scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }],
-      authChecker: ({ context }) => {
-        return Boolean(context.user); // or false if access denied
-      },
-    }),
+    schema,
     context: ({ req, connection }: any) => ({
       req,
       userLoader: userLoader(),
@@ -86,6 +91,10 @@ const startServer = async () => {
   const whitelist = [
     "http://localhost:3000",
     "https://homeaider.herokuapp.com",
+    `http://localhost:${port}`,
+    `ws://localhost:${port}`,
+    "https://homeaider-server.herokuapp.com",
+    "ws://homeaider-server.herokuapp.com",
   ];
 
   app.use(
@@ -122,30 +131,16 @@ const startServer = async () => {
     return next();
   });
 
-  // app.use(
-  //   session({
-  //     store: new RedisStore({
-  //       client: redis as any,
-  //     }),
-  //     name: "qid",
-  //     secret: process.env.SESSION_SECRET,
-  //     resave: false,
-  //     saveUninitialized: false,
-  //     cookie: {
-  //       httpOnly: true,
-  //       secure: process.env.NODE_ENV === "production",
-  //       maxAge: 1000 * 60 * 60 * 24 * 7 * 365, // 7 years
-  //     },
-  //   } as any)
-  // );
-
   server.applyMiddleware({ app, cors: false }); // app is from an existing express app
-  const port = process.env.PORT || 4000;
-  app.listen({ port }, () =>
+
+  const httpServer = createServer(app);
+  server.installSubscriptionHandlers(httpServer);
+
+  httpServer.listen(port, () => {
     console.log(
       `🚀 Server ready at http://localhost:${port}${server.graphqlPath}`
-    )
-  );
+    );
+  });
 };
 
 startServer();
