@@ -17,12 +17,11 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "*.jpg": ["./app/src/types/jpg"],
-      "*.png": ["./app/src/types/png"],
+      "*.jpg": ["./app/types/jpg"],
+      "*.png": ["./app/types/png"],
       "react-native-google-places-autocomplete": [
-        "./app/src/types/react-native-google-places-autocomplete"
-      ],
-      "apollo-link-context": ["./app/src/types/apollo-link-context"]
+        "./app/types/react-native-google-places-autocomplete"
+      ]
       // "react-native-maps": ["./app/src/types/react-native-maps"]
     }
   },

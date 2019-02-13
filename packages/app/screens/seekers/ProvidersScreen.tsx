@@ -19,16 +19,13 @@ import {
   Card,
   CardItem,
 } from "native-base";
+import { AppLoading } from "expo";
 
 type Props = {
   navigation: any;
 };
 
-interface State {
-  provider: UserInfoFragment | null;
-}
-
-export class ProvidersScreen extends React.PureComponent<Props, State> {
+export class ProvidersScreen extends React.PureComponent<Props> {
   static navigationOptions = ({ navigation }) => ({
     header: (
       <Header>
@@ -38,14 +35,14 @@ export class ProvidersScreen extends React.PureComponent<Props, State> {
           </Button>
         </Left>
         <Body>
-          <Title>Services</Title>
+          <Title>Providers</Title>
         </Body>
         <Right />
       </Header>
     ),
   });
 
-  static state = {
+  state = {
     provider: null,
   };
 
@@ -54,8 +51,14 @@ export class ProvidersScreen extends React.PureComponent<Props, State> {
     const type = navigation.getParam("type");
     const serviceId = navigation.getParam("serviceId");
     return (
-      <ProvidersByServiceComponent variables={serviceId}>
-        {({ data: { providersByService } }) => {
+      <ProvidersByServiceComponent variables={{ serviceId }}>
+        {({ data: { providersByService }, loading }) => {
+          if (loading) {
+            return <AppLoading />;
+          }
+
+          console.log(this.state.provider);
+
           return (
             <Container>
               <Content>
@@ -64,7 +67,14 @@ export class ProvidersScreen extends React.PureComponent<Props, State> {
                     {providersByService.map(item => (
                       <ListItem
                         key={`provider-${item._id}`}
-                        onPress={() => this.setState({ provider: item })}
+                        onPress={() => {
+                          // this.setState({ provider: item });
+                          navigation.navigate("CreateRequest", {
+                            type,
+                            serviceId,
+                            providerId: item._id,
+                          });
+                        }}
                       >
                         <Body>
                           <Text>
@@ -91,16 +101,33 @@ export class ProvidersScreen extends React.PureComponent<Props, State> {
                     </CardItem>
                     <CardItem cardBody>
                       <Card transparent>
+                        {this.state.provider.address &&
+                        this.state.provider.city &&
+                        this.state.provider.country ? (
+                          <CardItem>
+                            <Body>
+                              <Text>
+                                {this.state.provider.address}
+                                {", "}
+                                {this.state.provider.city}
+                                {", "}
+                                {this.state.provider.country}
+                              </Text>
+                              <Text note>Address</Text>
+                            </Body>
+                          </CardItem>
+                        ) : (
+                          <CardItem>
+                            <Body>
+                              <Text>N/A</Text>
+                              <Text note>Address</Text>
+                            </Body>
+                          </CardItem>
+                        )}
                         <CardItem>
                           <Body>
-                            <Text>
-                              {this.state.provider.address}
-                              {", "}
-                              {this.state.provider.city}
-                              {", "}
-                              {this.state.provider.country}
-                            </Text>
-                            <Text note>Address</Text>
+                            <Text>{this.state.provider.mobile || `N/A`}</Text>
+                            <Text note>Mobile</Text>
                           </Body>
                         </CardItem>
                         <CardItem>
@@ -109,37 +136,42 @@ export class ProvidersScreen extends React.PureComponent<Props, State> {
                             <Text note>Mobile</Text>
                           </Body>
                         </CardItem>
+
                         <CardItem>
                           <Body>
-                            <Text>{this.state.provider.phone}</Text>
+                            <Text>{this.state.provider.phone || `N/A`}</Text>
                             <Text note>Phone</Text>
                           </Body>
                         </CardItem>
                       </Card>
                     </CardItem>
                     <CardItem footer>
-                      <Button
-                        iconLeft
-                        danger
-                        onPress={() => this.setState({ provider: null })}
+                      <Body
+                        style={{ flex: 1, justifyContent: "space-between" }}
                       >
-                        <Icon type="Entypo" name="block" color="#ffffff" />
-                        <Text>Cancel</Text>
-                      </Button>
-                      <Button
-                        iconLeft
-                        primary
-                        onPress={() =>
-                          navigation.navigate("CreateRequest", {
-                            type,
-                            serviceId,
-                            providerId: this.state.provider._id,
-                          })
-                        }
-                      >
-                        <Icon type="FontAwesome" name="check" />
-                        <Text>Proceed</Text>
-                      </Button>
+                        <Button
+                          iconLeft
+                          danger
+                          onPress={() => this.setState({ provider: null })}
+                        >
+                          <Icon type="Entypo" name="block" color="#ffffff" />
+                          <Text>Cancel</Text>
+                        </Button>
+                        <Button
+                          iconLeft
+                          primary
+                          onPress={() =>
+                            navigation.navigate("CreateRequest", {
+                              type,
+                              serviceId,
+                              providerId: this.state.provider._id,
+                            })
+                          }
+                        >
+                          <Icon type="FontAwesome" name="check" />
+                          <Text>Proceed</Text>
+                        </Button>
+                      </Body>
                     </CardItem>
                   </Card>
                 )}

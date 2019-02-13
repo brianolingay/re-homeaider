@@ -15,6 +15,8 @@ import {
   Right,
 } from "native-base";
 import { UserInfoFragment } from "../components/apollo-components";
+import { meQuery } from "../graphql/user/queries/me";
+import { nativeAuthTokenStorage } from "../lib/nativeAuthTokenStorage";
 
 const styles = StyleSheet.create({
   listHows: {

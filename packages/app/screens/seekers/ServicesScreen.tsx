@@ -14,6 +14,7 @@ import {
   List,
   Text,
 } from "native-base";
+import { AppLoading } from "expo";
 
 type Props = {
   navigation: any;
@@ -38,11 +39,15 @@ export class ServicesScreen extends React.PureComponent<Props> {
   render() {
     const { navigation } = this.props;
     const type = navigation.getParam("type");
-    const categoryId = navigation.getParam("categoryId");
+    const categoryId = navigation.getParam("categoryId") as any;
+    console.log(categoryId);
 
     return (
-      <FindServicesByCategoryComponent variables={categoryId}>
-        {({ data: { findServicesByCategory } }) => {
+      <FindServicesByCategoryComponent variables={{ categoryId }}>
+        {({ data: { findServicesByCategory }, loading }) => {
+          if (loading) {
+            return <AppLoading />;
+          }
           return (
             <Container>
               <Content>

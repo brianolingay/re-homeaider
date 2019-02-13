@@ -8,6 +8,7 @@ import {
 import { StyleSheet } from "react-native";
 import { BookStack, HireStock } from "./SeekerStack";
 import { LogoutComponent } from "../components/apollo-components";
+import { nativeAuthTokenStorage } from "../lib/nativeAuthTokenStorage";
 
 const styles = StyleSheet.create({
   container: {
@@ -30,17 +31,17 @@ export const SeekersDrawer = createDrawerNavigator(
           <DrawerItems {...props} />
         </Content>
         <LogoutComponent>
-          {mutate => (
+          {() => (
             <Button
               icon
               block
               light
               onPress={async () => {
-                await mutate();
+                await nativeAuthTokenStorage.removeTokens();
                 props.navigation.navigate("Auth");
               }}
             >
-              <Icon type="Entypo" name="logout" />
+              <Icon type="Entypo" name="log-out" />
               <Text>Logout</Text>
             </Button>
           )}

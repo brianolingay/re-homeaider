@@ -11,34 +11,37 @@ import {
   Content,
 } from "native-base";
 import { AvailableCategories } from "../../components/seekers/AvaialbleCategories";
+import { DrawerActions } from "react-navigation";
 
 type Props = {
   navigation: any;
 };
 
 export class BookScreen extends React.PureComponent<Props> {
+  static navigationOptions = ({ navigation }) => ({
+    header: (
+      <Header>
+        <Left>
+          <Button
+            transparent
+            onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+          >
+            <Icon name="menu" />
+          </Button>
+        </Left>
+        <Body>
+          <Title>Book</Title>
+        </Body>
+        <Right />
+      </Header>
+    ),
+  });
+
   render() {
     return (
       <Container>
-        <Header>
-          <Left>
-            <Button
-              transparent
-              onPress={() => this.props.navigation.navigate("DrawerOpen")}
-            >
-              <Icon name="menu" />
-            </Button>
-          </Left>
-          <Body>
-            <Title>Booking</Title>
-          </Body>
-          <Right />
-        </Header>
         <Content padder>
-          <AvailableCategories
-            type="Book"
-            navigation={this.props.navigation}
-          />
+          <AvailableCategories type="Book" navigation={this.props.navigation} />
         </Content>
       </Container>
     );

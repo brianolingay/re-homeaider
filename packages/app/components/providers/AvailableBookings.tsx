@@ -5,38 +5,45 @@ import {
 } from "../apollo-components";
 import { newBookingServiceRequestSubscription } from "../../graphql/serviceRequest/subscriptions/newBookingServiceRequest";
 import { List, ListItem, Body, Text, Right } from "native-base";
+import { AppLoading } from "expo";
 
 type Props = {
   type: string;
-  me: UserInfoFragment;
+  user: any;
   navigation: any;
 };
 
 export class AvailableBookings extends React.PureComponent<Props> {
   unsubscribe: (() => void) | undefined;
   render() {
-    const { type, me, navigation } = this.props;
+    const { type, user, navigation } = this.props;
     return (
       <AvailableBookingRequestComponent>
         {({ data: { availableBookingRequest }, loading, subscribeToMore }) => {
-          this.unsubscribe = subscribeToMore({
-            document: newBookingServiceRequestSubscription,
-            variables: { serviceIds: me.services },
-            updateQuery: (prev, { subscriptionData }) => {
-              if (!subscriptionData.data) {
-                return prev;
-              }
+          if (loading) {
+            return <AppLoading />;
+          }
 
-              return {
-                ...prev,
-                availableBookingRequest: [
-                  (subscriptionData.data as any).newBookingServiceRequest
-                    .serviceRequest,
-                  ...prev.availableBookingRequest,
-                ],
-              };
-            },
-          });
+          if (user && user.me) {
+            this.unsubscribe = subscribeToMore({
+              document: newBookingServiceRequestSubscription,
+              variables: { serviceIds: user.me.services },
+              updateQuery: (prev, { subscriptionData }) => {
+                if (!subscriptionData.data) {
+                  return prev;
+                }
+
+                return {
+                  ...prev,
+                  availableBookingRequest: [
+                    (subscriptionData.data as any).newBookingServiceRequest
+                      .serviceRequest,
+                    ...prev.availableBookingRequest,
+                  ],
+                };
+              },
+            });
+          }
 
           return (
             <List>
@@ -44,7 +51,7 @@ export class AvailableBookings extends React.PureComponent<Props> {
                 <ListItem
                   key={`serviceRequest-${item._id}`}
                   onPress={() =>
-                    navigation.navigation("ServiceRequestProcess", {
+                    navigation.navigate("ServiceRequestProcess", {
                       type,
                       serviceRequestId: item._id,
                     })

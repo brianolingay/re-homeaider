@@ -24,6 +24,17 @@ export const createOrRegister = async (role: String, input: any) => {
     .lean()
     .exec();
 
+  if (!roleData) {
+    return {
+      errors: [
+        {
+          path: "email",
+          message: "This role is not yet available",
+        },
+      ],
+    };
+  }
+
   const userAlreadyExists = await UserModel.findOne({ email }, "_id", {
     lean: true,
   }).exec();

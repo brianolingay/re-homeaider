@@ -16,21 +16,15 @@ import {
   Right,
 } from "native-base";
 import { View } from "react-native";
-// @ts-ignore
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { MapViewContainer } from "../../components/MapViewContainer";
+import { AppLoading } from "expo";
 
 type Props = {
   navigation: any;
 };
 
-interface State {
-  address: string;
-  coordinates: number[];
-  showPlacesList: boolean;
-}
-
-export class CreateRequestScreen extends React.PureComponent<Props, State> {
+export class CreateRequestScreen extends React.PureComponent<Props> {
   static navigationOptions = ({ navigation }) => ({
     header: (
       <Header>
@@ -47,7 +41,7 @@ export class CreateRequestScreen extends React.PureComponent<Props, State> {
     ),
   });
 
-  static state = {
+  state = {
     address: "",
     coordinates: [],
     showPlacesList: false,
@@ -58,9 +52,14 @@ export class CreateRequestScreen extends React.PureComponent<Props, State> {
     const type = navigation.getParam("type");
     const serviceId = navigation.getParam("serviceId");
     const providerId = navigation.getParam("providerId", null);
+
     return (
       <CurrentLocationComponent>
-        {({ data: { currentLocation } }) => {
+        {({ data: { currentLocation }, loading }) => {
+          if (loading) {
+            return <AppLoading />;
+          }
+
           return (
             <CreateServiceRequestComponent>
               {mutate => {
@@ -150,7 +149,9 @@ export class CreateRequestScreen extends React.PureComponent<Props, State> {
                       )}
                       {this.state.address.length > 0 && (
                         <Button
+                          block
                           icon
+                          style={{ marginTop: 15 }}
                           onPress={async () => {
                             const response = await mutate({
                               variables: {
@@ -169,7 +170,9 @@ export class CreateRequestScreen extends React.PureComponent<Props, State> {
                               !response.data.createServiceRequest.errors &&
                               !response.data.createServiceRequest.errors.length
                             ) {
-                              navigation.navigation("ServiceRequestProcess", {
+                              console.log("Create Request Response");
+                              console.log(response.data.createServiceRequest);
+                              navigation.navigate("ServiceRequestProcess", {
                                 type,
                                 serviceRequestId:
                                   response.data.createServiceRequest

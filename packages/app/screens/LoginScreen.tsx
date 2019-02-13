@@ -18,7 +18,7 @@ import { InputField } from "../components/formik-fields/InputField";
 import { normalizeErrors } from "../utils/normalizeErrors";
 import { LoginComponent } from "../components/apollo-components";
 import { meQuery } from "../graphql/user/queries/me";
-import { AsyncStorage } from "react-native";
+import { nativeAuthTokenStorage } from "../lib/nativeAuthTokenStorage";
 
 interface FormValues {
   email: string;
@@ -53,16 +53,21 @@ export class LoginScreen extends React.PureComponent<Props> {
           <LoginComponent>
             {mutate => (
               <Formik<FormValues>
-                initialValues={{ email: "", password: "" }}
+                initialValues={{
+                  email: "archie@homeaider.com",
+                  password: "homeaider",
+                }}
                 onSubmit={async (input, { setErrors, setSubmitting }) => {
                   const { navigation } = this.props;
                   const isAdmin = false;
                   const response = await mutate({
                     variables: { isAdmin, input },
-                    update: (store, { data }) => {
+                    update: async (store, { data }) => {
                       if (!data || !data.login.user) {
                         return;
                       }
+
+                      await nativeAuthTokenStorage.setTokens(data.login.tokens);
 
                       store.writeQuery({
                         query: meQuery,
@@ -85,13 +90,16 @@ export class LoginScreen extends React.PureComponent<Props> {
                     );
                   } else {
                     const {
-                      _id,
                       role: { name },
+                      services,
                     } = (response as any).data.login.user;
-                    await AsyncStorage.setItem("userId", _id);
-                    navigation.navigate(
-                      name === "service_seeker" ? "Seekers" : "Providers"
-                    );
+                    const location =
+                      name === "service_seeker"
+                        ? "Seekers"
+                        : services
+                        ? "Providers"
+                        : "Profile";
+                    navigation.navigate(location);
                   }
                 }}
                 validateOnBlur={false}

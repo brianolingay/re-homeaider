@@ -1,6 +1,7 @@
 import * as React from "react";
 import { AvailableCategoriesComponent } from "../apollo-components";
 import { List, ListItem, Text, Right, Body } from "native-base";
+import { AppLoading } from "expo";
 
 type Props = {
   type: string;
@@ -12,14 +13,18 @@ export class AvailableCategories extends React.PureComponent<Props> {
     const { type, navigation } = this.props;
     return (
       <AvailableCategoriesComponent>
-        {({ data: { availableCategories } }) => {
+        {({ data: { availableCategories }, loading }) => {
+          if (loading) {
+            return <AppLoading />;
+          }
+
           return (
             <List>
               {availableCategories.map(item => (
                 <ListItem
                   key={`category-${item._id}`}
                   onPress={() => {
-                    navigation.navigate("Service", {
+                    navigation.navigate("Services", {
                       type,
                       categoryId: item._id,
                     });

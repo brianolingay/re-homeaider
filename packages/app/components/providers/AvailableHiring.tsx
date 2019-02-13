@@ -6,6 +6,7 @@ import {
   AvailableHiringRequestComponent,
 } from "../apollo-components";
 import { newHiringServiceRequestSubscription } from "../../graphql/serviceRequest/subscriptions/newHiringServiceRequest";
+import { AppLoading } from "expo";
 
 type Props = {
   type: string;
@@ -20,6 +21,10 @@ export class AvailableHiring extends React.PureComponent<Props> {
     return (
       <AvailableHiringRequestComponent>
         {({ data: { availableHiringRequest }, loading, subscribeToMore }) => {
+          if (loading) {
+            return <AppLoading />;
+          }
+
           this.unsubscribe = subscribeToMore({
             document: newHiringServiceRequestSubscription,
             variables: { providerId: me._id },
@@ -45,7 +50,7 @@ export class AvailableHiring extends React.PureComponent<Props> {
                 <ListItem
                   key={`serviceRequest-${item._id}`}
                   onPress={() =>
-                    navigation.navigation("ServiceRequestProcess", {
+                    navigation.navigate("ServiceRequestProcess", {
                       type,
                       serviceRequestId: item._id,
                     })

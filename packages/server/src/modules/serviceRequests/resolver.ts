@@ -3,7 +3,6 @@ import {
   NewBookingServiceRequestPayload,
   NewHiringServiceRequestPayload,
 } from "./interfaces";
-import { UserModel } from "./../../models/User";
 import { MyContext } from "./../../types/Context";
 import { ServiceRequestModel } from "./../../models/ServiceRequest";
 import {
@@ -43,9 +42,21 @@ export class ServiceRequestResolver {
     @Ctx() ctx: MyContext,
     @PubSub() pubSub: PubSubEngine
   ): Promise<ServiceRequestResponse> {
+    if (!ctx.user) {
+      return {
+        serviceRequestId: null,
+        errors: [
+          {
+            path: "create",
+            message: "Something went wrong while booking a service",
+          },
+        ],
+      };
+    }
+
     const serviceRequest = new ServiceRequestModel({
       ...serviceRequestInput,
-      serviceSeeker: ctx.req.session!.userId,
+      serviceSeeker: ctx.user._id,
     });
 
     await serviceRequest.save();
@@ -83,6 +94,12 @@ export class ServiceRequestResolver {
         };
         await pubSub.publish(Topics.NewBookingServiceRequest, payload);
       }
+
+      const payload: ServiceRequestProgressPayload = {
+        serviceRequestId: newServiceRequest._id,
+        serviceRequest: newServiceRequest,
+      };
+      await pubSub.publish(Topics.ServiceRequestProgress, payload);
     }
 
     return { serviceRequestId: newServiceRequest._id, errors: [] };
@@ -137,31 +154,36 @@ export class ServiceRequestResolver {
   async availableBookingRequest(
     @Ctx() ctx: MyContext
   ): Promise<ServiceRequest[]> {
-    const newUser = await UserModel.findOne({ _id: ctx.req.session!.userId });
-    if (newUser) {
-      const serviceRequests = await ServiceRequestModel.find({
-        service: { $in: newUser.services },
-        provider: null,
-        canceledAt: null,
-        accepted: false,
-        startedAt: null,
-        ignoredAt: null,
-        completedAt: null,
-      })
-        .sort({ createdAt: -1 })
-        .populate("serviceSeeker")
-        .populate("provider")
-        .populate({
-          path: "service",
-          populate: { path: "category" },
-        })
-        .lean()
-        .exec();
-
-      return serviceRequests;
+    if (!ctx.user) {
+      return [];
     }
 
-    return [];
+    const serviceRequests = await ServiceRequestModel.find({
+      service: { $in: ctx.user.services },
+      provider: null,
+      canceledAt: null,
+      accepted: false,
+      startedAt: null,
+      ignoredAt: null,
+      completedAt: null,
+    })
+      .sort({ createdAt: -1 })
+      .populate({
+        path: "serviceSeeker",
+        populate: { path: "role" },
+      })
+      .populate({
+        path: "provider",
+        populate: { path: "role" },
+      })
+      .populate({
+        path: "service",
+        populate: { path: "category" },
+      })
+      .lean()
+      .exec();
+
+    return serviceRequests;
   }
 
   @Authorized()
@@ -169,15 +191,25 @@ export class ServiceRequestResolver {
   async availableHiringRequest(
     @Ctx() ctx: MyContext
   ): Promise<ServiceRequest[]> {
+    if (!ctx.user) {
+      return [];
+    }
+
     const serviceRequests = await ServiceRequestModel.find({
-      provider: ctx.req.session!.userId,
+      provider: ctx.user._id,
       canceledAt: null,
       accepted: false,
       startedAt: null,
       ignoredAt: null,
     })
-      .populate("serviceSeeker")
-      .populate("provider")
+      .populate({
+        path: "serviceSeeker",
+        populate: { path: "role" },
+      })
+      .populate({
+        path: "provider",
+        populate: { path: "role" },
+      })
       .populate({
         path: "service",
         populate: { path: "category" },

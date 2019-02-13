@@ -24,6 +24,10 @@ export const login = async (isAdmin: Boolean, loginInput: LoginInput) => {
   const { email, password } = loginInput;
   const user = await UserModel.findOne({ email })
     .populate("role")
+    .populate({
+      path: "services",
+      populate: { path: "category" },
+    })
     .lean()
     .exec();
 

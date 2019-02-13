@@ -1,11 +1,5 @@
 import * as React from "react";
-import {
-  Platform,
-  StatusBar,
-  StyleSheet,
-  View,
-  AsyncStorage,
-} from "react-native";
+import { Platform, StatusBar, StyleSheet, View } from "react-native";
 // @ts-ignore
 import { AppLoading, Asset, Font, Icon } from "expo";
 import { ApolloProvider } from "react-apollo";
@@ -15,46 +9,23 @@ import initApollo from "./lib/init-apollo";
 import { NormalizedCacheObject, ApolloClient } from "apollo-boost";
 import { meQuery } from "./graphql/user/queries/me";
 import { MeQuery } from "./components/apollo-components";
+import { nativeAuthTokenStorage } from "./lib/nativeAuthTokenStorage";
 
-const host =
-  Platform.OS === "ios" ? "http://localhost:4000" : "192.168.254.102:4000";
+// const host = "homeaider-server.herokuapp.com";
+const host = "192.168.254.102:4000";
 
 const SERVER_LINK_OPTIONS = {
   uri: `http://${host}/graphql`,
   credentials: "include",
 };
 
-const wsUrl = `ws://${host}/subscriptions`;
+const wsUrl = `ws://${host}/subscriptions`
 
-export default class App extends React.Component<any> {
-  static async getInitialProps(ctx: any) {
-    const apollo = initApollo(
-      SERVER_LINK_OPTIONS,
-      wsUrl,
-      {},
-      {
-        getToken: async () => await AsyncStorage.getItem("userId"),
-      }
-    );
+type Props = {
+  skipLoadingScreen: boolean;
+};
 
-    const {
-      data: { me },
-    } = await apollo.query<MeQuery>({
-      query: meQuery,
-    });
-
-    ctx.ctx.apolloClient = apollo;
-
-    // Extract query data from the Apollo's store
-    const apolloState = apollo.cache.extract();
-
-    return {
-      ...ctx,
-      me,
-      apolloState,
-    };
-  }
-
+export default class App extends React.Component<Props> {
   apolloClient: ApolloClient<NormalizedCacheObject>;
 
   state = {
@@ -68,16 +39,15 @@ export default class App extends React.Component<any> {
     this.apolloClient = initApollo(
       SERVER_LINK_OPTIONS,
       wsUrl,
-      props.apolloState,
+      {},
       {
-        getToken: async () => await AsyncStorage.getItem("userId"),
+        getTokens: nativeAuthTokenStorage.getTokens,
       }
     );
   }
 
   render() {
-    const { skipLoadingScreen, ...otherProps } = this.props;
-    if (!this.state.isLoadingComplete && !skipLoadingScreen) {
+    if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (
         <AppLoading
           startAsync={this._loadResourcesAsync}
@@ -90,7 +60,7 @@ export default class App extends React.Component<any> {
         <View style={styles.container}>
           <ApolloProvider client={this.apolloClient}>
             {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-            <AppNavigator {...otherProps} />
+            <AppNavigator />
           </ApolloProvider>
         </View>
       );

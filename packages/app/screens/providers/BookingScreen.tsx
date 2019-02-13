@@ -11,31 +11,62 @@ import {
   Content,
 } from "native-base";
 import { AvailableBookings } from "../../components/providers/AvailableBookings";
-import { UserInfoFragment } from "../../components/apollo-components";
+import { meQuery } from "../../graphql/user/queries/me";
+import { DrawerActions } from "react-navigation";
 
 type Props = {
-  me: UserInfoFragment;
+  user: any;
   navigation: any;
 };
 
 export class BookingScreen extends React.PureComponent<Props> {
+  static async getInitialProps({ apolloClient, navigation }: any) {
+    const { data: user } = await apolloClient.query({
+      query: meQuery,
+    });
+
+    if (user && user.me) {
+      const {
+        role: { name },
+        services,
+      } = user.me;
+      navigation.navigate(
+        services.lenght
+          ? "Profile"
+          : name === "service_seeker"
+          ? "Seekers"
+          : "Providers"
+      );
+    }
+
+    return {
+      navigation,
+      user,
+    };
+  }
+
+  static navigationOptions = ({ navigation }) => ({
+    header: (
+      <Header>
+        <Left>
+          <Button
+            transparent
+            onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+          >
+            <Icon name="menu" />
+          </Button>
+        </Left>
+        <Body>
+          <Title>Bookings</Title>
+        </Body>
+        <Right />
+      </Header>
+    ),
+  });
+
   render() {
     return (
       <Container>
-        <Header>
-          <Left>
-            <Button
-              transparent
-              onPress={() => this.props.navigation.navigate("DrawerOpen")}
-            >
-              <Icon name="menu" />
-            </Button>
-          </Left>
-          <Body>
-            <Title>Booking</Title>
-          </Body>
-          <Right />
-        </Header>
         <Content padder>
           <AvailableBookings {...this.props} type="Booking" />
         </Content>

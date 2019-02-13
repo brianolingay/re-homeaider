@@ -8,44 +8,51 @@ import {
   Text,
   H1,
   H2,
+  Header,
+  Left,
+  Right,
+  Button,
 } from "native-base";
 import {
-  ServiceRequestProgressComponent,
   UserInfoFragment,
+  ViewServiceRequestComponent,
 } from "../components/apollo-components";
 import { MapViewContainer } from "../components/MapViewContainer";
 import { UpdateServiceRequestProcessContainer } from "../components/UpdateServiceResquestContainer";
+import { serviceRequestProgressSubscription } from "../graphql/serviceRequest/subscriptions/serviceRequestProgress";
+import { AppLoading } from "expo";
 
 type Props = {
   me: UserInfoFragment;
   navigation: any;
 };
 
-interface State {
-  amount: number;
-  rating: number;
-  shouldReSubscribe: boolean;
-}
-
-export class ServiceRequestProcessScreen extends React.PureComponent<
-  Props,
-  State
-> {
+export class ServiceRequestProcessScreen extends React.PureComponent<Props> {
   static navigationOptions = ({ navigation }) => {
     const type = navigation.getParam("type");
     return {
-      header: `${type} Progress`,
+      header: (
+        <Header>
+          <Left />
+          <Body>
+            <Text>{`${type} Progress`}</Text>
+          </Body>
+          <Right />
+        </Header>
+      ),
     };
   };
 
-  static state = {
+  state = {
     amount: 0,
     rating: 0,
     shouldReSubscribe: true,
   };
 
+  unsubscribe: (() => void) | undefined;
+
   componentWillUnmount() {
-    this.setState({ shouldReSubscribe: false });
+    this.unsubscribe();
   }
 
   render() {
@@ -53,18 +60,30 @@ export class ServiceRequestProcessScreen extends React.PureComponent<
     const serviceRequestId = navigation.getParam("serviceRequestId");
 
     return (
-      <ServiceRequestProgressComponent
-        variables={serviceRequestId}
-        shouldResubscribe={this.state.shouldReSubscribe}
-      >
-        {({ data: { serviceRequestProgress }, loading }) => {
+      <ViewServiceRequestComponent variables={{ serviceRequestId }}>
+        {({ data: { viewServiceRequest }, loading, subscribeToMore }) => {
           if (loading) {
-            return <Text>Loading...</Text>;
+            return <AppLoading />;
           }
 
-          if (serviceRequestProgress.canceledAt) {
-            return navigation.goBack();
-          }
+          this.unsubscribe = subscribeToMore({
+            document: serviceRequestProgressSubscription,
+            variables: { serviceRequestId },
+            updateQuery: (prev, { subscriptionData }) => {
+              if (!subscriptionData.data) {
+                return prev;
+              }
+
+              return {
+                ...prev,
+                viewServiceRequest: {
+                  ...prev.viewServiceRequest,
+                  ...(subscriptionData.data as any).serviceRequestProgress
+                    .serviceRequest,
+                },
+              };
+            },
+          });
 
           return (
             <Container>
@@ -73,7 +92,7 @@ export class ServiceRequestProcessScreen extends React.PureComponent<
                   <CardItem>
                     <Body>
                       <H1 style={{ textAlign: "center" }}>
-                        {serviceRequestProgress.service.category.name}
+                        {viewServiceRequest.service.category.name}
                       </H1>
                       <Text note style={{ textAlign: "center" }}>
                         Category
@@ -83,7 +102,7 @@ export class ServiceRequestProcessScreen extends React.PureComponent<
                   <CardItem>
                     <Body>
                       <H2 style={{ textAlign: "center" }}>
-                        {serviceRequestProgress.service.name}
+                        {viewServiceRequest.service.name}
                       </H2>
                       <Text note style={{ textAlign: "center" }}>
                         Service
@@ -92,15 +111,15 @@ export class ServiceRequestProcessScreen extends React.PureComponent<
                   </CardItem>
                   <CardItem cardBody>
                     <MapViewContainer
-                      latitude={serviceRequestProgress.coordinates[0]}
-                      longitude={serviceRequestProgress.coordinates[1]}
+                      latitude={viewServiceRequest.coordinates[0]}
+                      longitude={viewServiceRequest.coordinates[1]}
                       coordinates={
-                        serviceRequestProgress.provider
+                        viewServiceRequest.provider
                           ? [
-                              serviceRequestProgress.coordinates,
-                              serviceRequestProgress.provider.coordinates,
+                              viewServiceRequest.coordinates,
+                              viewServiceRequest.provider.coordinates,
                             ]
-                          : [serviceRequestProgress.coordinates, []]
+                          : [viewServiceRequest.coordinates, []]
                       }
                     />
                   </CardItem>
@@ -117,8 +136,8 @@ export class ServiceRequestProcessScreen extends React.PureComponent<
                         <CardItem>
                           <Body>
                             <Text>
-                              {serviceRequestProgress.serviceSeeker.firstName}{" "}
-                              {serviceRequestProgress.serviceSeeker.lastName}
+                              {viewServiceRequest.serviceSeeker.firstName}{" "}
+                              {viewServiceRequest.serviceSeeker.lastName}
                             </Text>
                             <Text note>Seeker Name</Text>
                           </Body>
@@ -126,7 +145,7 @@ export class ServiceRequestProcessScreen extends React.PureComponent<
                         <CardItem>
                           <Body>
                             <Text>
-                              {serviceRequestProgress.serviceSeeker.email}
+                              {viewServiceRequest.serviceSeeker.email}
                             </Text>
                             <Text note>Seeker Email</Text>
                           </Body>
@@ -134,7 +153,7 @@ export class ServiceRequestProcessScreen extends React.PureComponent<
                         <CardItem>
                           <Body>
                             <Text>
-                              {serviceRequestProgress.serviceSeeker.mobile}
+                              {viewServiceRequest.serviceSeeker.mobile}
                             </Text>
                             <Text note>Mobile</Text>
                           </Body>
@@ -142,7 +161,7 @@ export class ServiceRequestProcessScreen extends React.PureComponent<
                         <CardItem>
                           <Body>
                             <Text>
-                              {serviceRequestProgress.serviceSeeker.phone}
+                              {viewServiceRequest.serviceSeeker.phone}
                             </Text>
                             <Text note>Phone</Text>
                           </Body>
@@ -162,40 +181,38 @@ export class ServiceRequestProcessScreen extends React.PureComponent<
                         <CardItem>
                           <Body>
                             <Text>
-                              {serviceRequestProgress.provider.firstName}{" "}
-                              {serviceRequestProgress.provider.lastName}
+                              {viewServiceRequest.provider.firstName}{" "}
+                              {viewServiceRequest.provider.lastName}
                             </Text>
                             <Text note>Seeker Name</Text>
                           </Body>
                         </CardItem>
                         <CardItem>
                           <Body>
-                            <Text>{serviceRequestProgress.provider.email}</Text>
+                            <Text>{viewServiceRequest.provider.email}</Text>
                             <Text note>Seeker Email</Text>
                           </Body>
                         </CardItem>
                         <CardItem>
                           <Body>
-                            <Text>
-                              {serviceRequestProgress.provider.mobile}
-                            </Text>
+                            <Text>{viewServiceRequest.provider.mobile}</Text>
                             <Text note>Mobile</Text>
                           </Body>
                         </CardItem>
                         <CardItem>
                           <Body>
-                            <Text>{serviceRequestProgress.provider.phone}</Text>
+                            <Text>{viewServiceRequest.provider.phone}</Text>
                             <Text note>Phone</Text>
                           </Body>
                         </CardItem>
                         <CardItem>
                           <Body>
                             <Text>
-                              {serviceRequestProgress.provider.address}
+                              {viewServiceRequest.provider.address}
                               {", "}
-                              {serviceRequestProgress.provider.city}
+                              {viewServiceRequest.provider.city}
                               {", "}
-                              {serviceRequestProgress.provider.country}
+                              {viewServiceRequest.provider.country}
                             </Text>
                             <Text note>Address</Text>
                           </Body>
@@ -213,8 +230,8 @@ export class ServiceRequestProcessScreen extends React.PureComponent<
                   <CardItem>
                     <Body>
                       <Text>
-                        {serviceRequestProgress.arrivedAt
-                          ? serviceRequestProgress.arrivedAt
+                        {viewServiceRequest.arrivedAt
+                          ? viewServiceRequest.arrivedAt
                           : "N/A"}
                       </Text>
                       <Text note>Arrived At</Text>
@@ -223,8 +240,8 @@ export class ServiceRequestProcessScreen extends React.PureComponent<
                   <CardItem>
                     <Body>
                       <Text>
-                        {serviceRequestProgress.startedAt
-                          ? serviceRequestProgress.startedAt
+                        {viewServiceRequest.startedAt
+                          ? viewServiceRequest.startedAt
                           : "N/A"}
                       </Text>
                       <Text note>Started At</Text>
@@ -233,8 +250,8 @@ export class ServiceRequestProcessScreen extends React.PureComponent<
                   <CardItem>
                     <Body>
                       <Text>
-                        {serviceRequestProgress.completedAt
-                          ? serviceRequestProgress.completedAt
+                        {viewServiceRequest.completedAt
+                          ? viewServiceRequest.completedAt
                           : "N/A"}
                       </Text>
                       <Text note>Completed At</Text>
@@ -243,8 +260,8 @@ export class ServiceRequestProcessScreen extends React.PureComponent<
                   <CardItem>
                     <Body>
                       <Text>
-                        {serviceRequestProgress.arrivedAt
-                          ? serviceRequestProgress.arrivedAt
+                        {viewServiceRequest.arrivedAt
+                          ? viewServiceRequest.arrivedAt
                           : "N/A"}
                       </Text>
                       <Text note>Arrived At</Text>
@@ -253,13 +270,13 @@ export class ServiceRequestProcessScreen extends React.PureComponent<
                 </Card>
                 <UpdateServiceRequestProcessContainer
                   {...this.props}
-                  serviceRequestProgress={serviceRequestProgress}
+                  serviceRequestProgress={viewServiceRequest}
                 />
               </Content>
             </Container>
           );
         }}
-      </ServiceRequestProgressComponent>
+      </ViewServiceRequestComponent>
     );
   }
 }

@@ -1,5 +1,4 @@
 import { ObjectId } from "mongodb";
-import { RoleModel } from "./../../../models/Role";
 import { UserModel } from "../../../models/User";
 
 export const me = async (userId: ObjectId) => {
@@ -12,11 +11,7 @@ export const me = async (userId: ObjectId) => {
 };
 
 export const allAdminExceptMe = async (userId: ObjectId) => {
-  const role = await RoleModel.findOne({ name: "admin" }, "_id")
-    .lean()
-    .exec();
-
-  const users = await UserModel.find({ _id: { $ne: userId }, role: role._id })
+  const users = await UserModel.find({ _id: { $ne: userId } })
     .populate("role")
     .lean()
     .exec();
@@ -26,7 +21,11 @@ export const allAdminExceptMe = async (userId: ObjectId) => {
 
 export const providersByService = async (serviceId: ObjectId) => {
   const users = await UserModel.find({ services: serviceId })
-    .populate("services")
+    .populate("role")
+    .populate({
+      path: "services",
+      populate: { path: "category" },
+    })
     .lean()
     .exec();
 
