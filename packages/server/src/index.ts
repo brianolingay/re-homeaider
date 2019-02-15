@@ -42,7 +42,7 @@ const startServer = async () => {
   );
 
   const schema = await buildSchema({
-    resolvers: [__dirname + "/modules/**/resolver.*"],
+    resolvers: [__dirname + "/type-graphql/modules/**/resolver.*"],
     pubSub,
     scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }],
     authChecker: ({ context }) => {

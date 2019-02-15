@@ -1,0 +1,16 @@
+type User {
+  _id: ID!
+  email: String!
+  firstName: String!
+  lastName: String!
+  mobile: String!
+  phone: String
+  address: String
+  city: String
+  country: String
+  coordinates: [Float!]
+  userSubscription: UserSubscription
+  subscribedAt: Date
+  services: [Service!]
+  role: Role!
+}

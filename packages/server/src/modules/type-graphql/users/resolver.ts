@@ -1,9 +1,9 @@
 import { ObjectId } from "mongodb";
 import { Resolver, Query, Ctx, Mutation, Authorized, Arg } from "type-graphql";
-import { User } from "../../types/objects/User";
-import { MyContext } from "../../types/Context";
+import { User } from "../../../types/objects/User";
+import { MyContext } from "../../../types/Context";
 
-import { UserRepository } from "../../repositories/mongoose/user";
+import { UserRepository } from "../../../repositories/mongoose/user";
 
 import { LoginInput } from "./login/createInput";
 import { LoginResponse } from "./login/createResponse";
