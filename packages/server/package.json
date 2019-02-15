@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@homeaider/common": "1.0.0",
-    "apollo-server-express": "^2.3.1",
+    "apollo-server-express": "^2.4.0",
     "bcryptjs": "^2.4.3",
     "connect-redis": "^3.4.0",
     "cors": "^2.8.5",
@@ -49,7 +49,7 @@
   },
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon --exec ts-node src/index.ts",
-    "build": "rimraf dist && tsc",
+    "build": "rimraf dist && tsc --build tsconfig.json",
     "serve": "NODE_ENV=production node dist/index.js"
   },
   "workspaces": {
