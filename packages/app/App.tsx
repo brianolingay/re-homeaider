@@ -7,15 +7,14 @@ import { AppNavigator } from "./navigation/AppNavigator";
 
 import initApollo from "./lib/init-apollo";
 import { NormalizedCacheObject, ApolloClient } from "apollo-boost";
-import { meQuery } from "./graphql/user/queries/me";
-import { MeQuery } from "./components/apollo-components";
+// import { meQuery } from "./graphql/user/queries/me";
+// import { MeQuery } from "./components/apollo-components";
 import { nativeAuthTokenStorage } from "./lib/nativeAuthTokenStorage";
 
-const host = "homeaider-server.herokuapp.com";
-// const host = "192.168.254.102:4000";
+const host = "192.168.1.17:4000";
 
 const SERVER_LINK_OPTIONS = {
-  uri: `https://${host}/graphql`,
+  uri: `http://${host}/graphql`,
   credentials: "include",
 };
 
