@@ -1,5 +1,11 @@
 # re-homeaider
 
+## Project setup
+```
+$ git clone https://github.com/brianolingay/re-homeaider.git
+$ cd re-homeaider && yarn install
+```
+
 > Quick Note: Common directory should be build first specially when has changes or its not yes build.
 
 ## Common (mostly input/form validation)
