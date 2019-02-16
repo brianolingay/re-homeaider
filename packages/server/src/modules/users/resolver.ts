@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { Resolver, Query, Ctx, Mutation, Authorized, Arg } from "type-graphql";
-import { User } from "../../types/objects/User";
+import { UserDetailed } from "../../types/objects/User";
 import { MyContext } from "../../types/Context";
 
 import { UserRepository } from "../../repositories/mongoose/user";
@@ -12,7 +12,7 @@ import { RegisterInput } from "./register/createInput";
 import { UserResponse } from "./createResponse";
 import { UserInput } from "./createInput";
 
-@Resolver(User)
+@Resolver(UserDetailed)
 export class UserResolver {
   constructor() {}
 
@@ -46,11 +46,11 @@ export class UserResolver {
     );
   }
 
-  @Query(() => User, { nullable: true })
+  @Query(() => UserDetailed, { nullable: true })
   async me(
     @Ctx()
     ctx: MyContext
-  ): Promise<User | null> {
+  ): Promise<UserDetailed | null> {
     if (!ctx.user) {
       return null;
     }
@@ -60,23 +60,14 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Query(() => [User], { nullable: true })
+  @Query(() => [UserDetailed], { nullable: true })
   async allAdminExceptMe(
     @Ctx()
     ctx: MyContext
-  ): Promise<User[]> {
+  ): Promise<UserDetailed[]> {
     const { _id } = ctx.user;
 
     return await UserRepository.allAdminExceptMe(_id);
-  }
-
-  @Authorized()
-  @Query(() => [User], { nullable: true })
-  async providersByService(
-    @Arg("serviceId") serviceId: ObjectId
-  ): Promise<User[]> {
-    const users = await UserRepository.providersByService(serviceId);
-    return users;
   }
 
   @Authorized()

@@ -1,7 +1,7 @@
-import { User } from "./User";
 import { ObjectType, Field } from "type-graphql";
 import { ObjectId } from "mongodb";
 import { Service } from "./Service";
+import { User } from "./User";
 
 @ObjectType()
 export class ServiceRequest {

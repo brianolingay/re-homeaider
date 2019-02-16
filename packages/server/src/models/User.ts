@@ -1,8 +1,7 @@
+import { ProviderServiceInterface } from "./ProviderService";
 import { Document, Schema, Types, model } from "mongoose";
 import { ImageInterface, imageSchema } from "./Image";
-import { CertificateInterface, certificateSchema } from "./Certificate";
 import { UserSubscriptionInterface } from "./UserSubscription";
-import { ServiceInterface } from "./Service";
 import { RoleInterface } from "./Role";
 
 export interface UserInterface extends Document {
@@ -18,8 +17,7 @@ export interface UserInterface extends Document {
   password: string;
   userSubscription: UserSubscriptionInterface | null;
   subscribedAt: Date | null;
-  services: ServiceInterface[];
-  cetertificates: [CertificateInterface] | null;
+  providerServices: ProviderServiceInterface[];
   avatar: ImageInterface | null;
   role: RoleInterface;
   status: string;
@@ -61,7 +59,7 @@ const userSchema: Schema = new Schema(
     },
     userSubscription: { type: Types.ObjectId, ref: "UserSubscription" },
     subscribedAt: Date,
-    services: [{ type: Schema.Types.ObjectId, ref: "Service" }],
+    providerServices: [{ type: Schema.Types.ObjectId, ref: "ProviderService" }],
     role: { type: Types.ObjectId, ref: "Role" },
     status: { type: String, enum: ["online", "idle", "office"] },
     confirmed: { type: Boolean, default: false },
@@ -69,7 +67,6 @@ const userSchema: Schema = new Schema(
       type: Boolean,
       default: false,
     },
-    cetertificates: [certificateSchema],
     avatar: imageSchema,
   },
   { autoIndex: false }

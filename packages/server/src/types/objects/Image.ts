@@ -1,14 +1,10 @@
 import { ObjectType, Field } from "type-graphql";
-import { ObjectId } from "mongodb";
 
 @ObjectType()
 export class Image {
-  @Field()
-  readonly _id: ObjectId;
+  @Field(() => String, { nullable: true })
+  filename: string | null;
 
-  @Field()
-  filename: string;
-
-  @Field()
-  filepath: string;
+  @Field(() => String, { nullable: true })
+  filepath: string | null;
 }

@@ -1,3 +1,4 @@
+import { ProviderServiceModel } from "./../models/ProviderService";
 import * as bcrypt from "bcryptjs";
 import { UserModel } from "../models/User";
 import { RoleModel } from "../models/Role";
@@ -5,7 +6,6 @@ import { CategoryModel } from "../models/Category";
 import { ServiceModel } from "../models/Service";
 
 const userRole = async (roleName: string, userInput: any) => {
-  let services = null;
   const roleExist = await RoleModel.findOne({ name: roleName }).exec();
 
   if (!roleExist) {
@@ -17,21 +17,35 @@ const userRole = async (roleName: string, userInput: any) => {
       email,
     }).exec();
 
-    if (roleName === "provider") {
-      services = await ServiceModel.find({}, "_id")
-        .lean()
-        .exec();
-    }
+    const services = await ServiceModel.find({}, "_id")
+      .lean()
+      .exec();
+
     if (!userExist) {
       const user = new UserModel({
         ...userInput,
         password: await bcrypt.hash("homeaider", bcrypt.genSaltSync(10)),
         mobile: "09271221146",
         role: role._id,
-        services,
       });
 
       await user.save();
+
+      if (roleName === "provider") {
+        for (let service of services) {
+          const providerService = new ProviderServiceModel({
+            description: `Sample Service ${service._id}`,
+            user: user._id,
+            service: service._id,
+          });
+
+          await providerService.save();
+
+          user.providerServices.push(providerService._id);
+
+          await user.save();
+        }
+      }
     }
   }
 };

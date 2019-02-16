@@ -125,6 +125,18 @@ export type CurrentLocationQuery = {
 
 export type CurrentLocationCurrentLocation = LocationInfoFragment;
 
+export type ProvidersByServiceVariables = {
+  serviceId: ObjectId;
+};
+
+export type ProvidersByServiceQuery = {
+  __typename?: "Query";
+
+  providersByService: Maybe<ProvidersByServiceProvidersByService[]>;
+};
+
+export type ProvidersByServiceProvidersByService = ProviderServiceInfoFragment;
+
 export type FindServicesByCategoryVariables = {
   categoryId: ObjectId;
 };
@@ -361,18 +373,6 @@ export type MeQuery = {
 
 export type MeMe = UserInfoFragment;
 
-export type ProvidersByServiceVariables = {
-  serviceId: ObjectId;
-};
-
-export type ProvidersByServiceQuery = {
-  __typename?: "Query";
-
-  providersByService: Maybe<ProvidersByServiceProvidersByService[]>;
-};
-
-export type ProvidersByServiceProvidersByService = UserInfoFragment;
-
 export type UserSubscriptionsVariables = {};
 
 export type UserSubscriptionsQuery = {
@@ -408,6 +408,82 @@ export type LocationInfoFragment = {
 
   coordinates: Maybe<number[]>;
 };
+
+export type ProviderServiceBasicInfoFragment = {
+  __typename?: "ProviderServiceWithService";
+
+  _id: ObjectId;
+
+  description: Maybe<string>;
+
+  certificates: Maybe<ProviderServiceBasicInfoCertificates[]>;
+
+  approved: boolean;
+
+  service: ProviderServiceBasicInfoService;
+};
+
+export type ProviderServiceBasicInfoCertificates = {
+  __typename?: "Certificate";
+
+  name: string;
+
+  description: Maybe<string>;
+
+  certifiedAt: Maybe<DateTime>;
+
+  images: Maybe<ProviderServiceBasicInfoImages[]>;
+};
+
+export type ProviderServiceBasicInfoImages = {
+  __typename?: "Image";
+
+  filepath: Maybe<string>;
+
+  filename: Maybe<string>;
+};
+
+export type ProviderServiceBasicInfoService = ServiceInfoFragment;
+
+export type ProviderServiceInfoFragment = {
+  __typename?: "ProviderServiceWithUser";
+
+  _id: ObjectId;
+
+  description: Maybe<string>;
+
+  certificates: Maybe<ProviderServiceInfoCertificates[]>;
+
+  approved: boolean;
+
+  service: ProviderServiceInfoService;
+
+  user: ProviderServiceInfoUser;
+};
+
+export type ProviderServiceInfoCertificates = {
+  __typename?: "Certificate";
+
+  name: string;
+
+  description: Maybe<string>;
+
+  certifiedAt: Maybe<DateTime>;
+
+  images: Maybe<ProviderServiceInfoImages[]>;
+};
+
+export type ProviderServiceInfoImages = {
+  __typename?: "Image";
+
+  filepath: Maybe<string>;
+
+  filename: Maybe<string>;
+};
+
+export type ProviderServiceInfoService = ServiceInfoFragment;
+
+export type ProviderServiceInfoUser = UserBasicInfoFragment;
 
 export type RoleInfoFragment = {
   __typename?: "Role";
@@ -477,67 +553,11 @@ export type ServiceRequestInfoFragment = {
   rating: number;
 };
 
-export type ServiceRequestInfoServiceSeeker = {
-  __typename?: "User";
+export type ServiceRequestInfoServiceSeeker = UserBasicInfoFragment;
 
-  _id: ObjectId;
+export type ServiceRequestInfoProvider = UserBasicInfoFragment;
 
-  email: string;
-
-  firstName: string;
-
-  lastName: string;
-
-  mobile: string;
-
-  phone: Maybe<string>;
-
-  address: Maybe<string>;
-
-  city: Maybe<string>;
-
-  country: Maybe<string>;
-};
-
-export type ServiceRequestInfoProvider = {
-  __typename?: "User";
-
-  _id: ObjectId;
-
-  email: string;
-
-  firstName: string;
-
-  lastName: string;
-
-  mobile: string;
-
-  phone: Maybe<string>;
-
-  address: Maybe<string>;
-
-  city: Maybe<string>;
-
-  country: Maybe<string>;
-};
-
-export type ServiceRequestInfoService = {
-  __typename?: "Service";
-
-  _id: ObjectId;
-
-  name: string;
-
-  category: ServiceRequestInfoCategory;
-};
-
-export type ServiceRequestInfoCategory = {
-  __typename?: "Category";
-
-  _id: ObjectId;
-
-  name: string;
-};
+export type ServiceRequestInfoService = ServiceInfoFragment;
 
 export type ErrorInfoFragment = {
   __typename?: "ErrorResponse";
@@ -547,8 +567,32 @@ export type ErrorInfoFragment = {
   message: string;
 };
 
-export type UserInfoFragment = {
+export type UserBasicInfoFragment = {
   __typename?: "User";
+
+  _id: ObjectId;
+
+  email: string;
+
+  firstName: string;
+
+  lastName: string;
+
+  mobile: string;
+
+  phone: Maybe<string>;
+
+  address: Maybe<string>;
+
+  city: Maybe<string>;
+
+  country: Maybe<string>;
+
+  coordinates: Maybe<number[]>;
+};
+
+export type UserInfoFragment = {
+  __typename?: "UserDetailed";
 
   _id: ObjectId;
 
@@ -574,14 +618,20 @@ export type UserInfoFragment = {
 
   subscribedAt: Maybe<DateTime>;
 
-  services: Maybe<UserInfoServices[]>;
+  providerServices: Maybe<UserInfoProviderServices[]>;
 
   role: Maybe<UserInfoRole>;
 };
 
 export type UserInfoUserSubscription = UserSubscriptionInfoFragment;
 
-export type UserInfoServices = ServiceInfoFragment;
+export type UserInfoProviderServices = {
+  __typename?: "ProviderServiceWithService";
+
+  service: UserInfoService;
+} & ProviderServiceBasicInfoFragment;
+
+export type UserInfoService = ServiceInfoFragment;
 
 export type UserInfoRole = RoleInfoFragment;
 
@@ -624,79 +674,6 @@ export const LocationInfoFragmentDoc = gql`
   }
 `;
 
-export const FindServicesByCategoryInfoFragmentDoc = gql`
-  fragment FindServicesByCategoryInfo on FindServicesByCategoryResponse {
-    _id
-    name
-    totalUsers
-  }
-`;
-
-export const ServiceRequestInfoFragmentDoc = gql`
-  fragment ServiceRequestInfo on ServiceRequest {
-    _id
-    serviceSeeker {
-      _id
-      email
-      firstName
-      lastName
-      mobile
-      phone
-      address
-      city
-      country
-    }
-    provider {
-      _id
-      email
-      firstName
-      lastName
-      mobile
-      phone
-      address
-      city
-      country
-    }
-    service {
-      _id
-      name
-      category {
-        _id
-        name
-      }
-    }
-    amount
-    address
-    coordinates
-    accepted
-    arrivedAt
-    startedAt
-    canceledAt
-    completedAt
-    ignoredAt
-    feedBack
-    rating
-  }
-`;
-
-export const ErrorInfoFragmentDoc = gql`
-  fragment ErrorInfo on ErrorResponse {
-    path
-    message
-  }
-`;
-
-export const UserSubscriptionInfoFragmentDoc = gql`
-  fragment UserSubscriptionInfo on UserSubscription {
-    _id
-    name
-    description
-    amount
-    benefits
-    paymentMode
-  }
-`;
-
 export const CategoryInfoFragmentDoc = gql`
   fragment CategoryInfo on Category {
     _id
@@ -718,6 +695,124 @@ export const ServiceInfoFragmentDoc = gql`
   ${CategoryInfoFragmentDoc}
 `;
 
+export const UserBasicInfoFragmentDoc = gql`
+  fragment UserBasicInfo on User {
+    _id
+    email
+    firstName
+    lastName
+    mobile
+    phone
+    address
+    city
+    country
+    coordinates
+  }
+`;
+
+export const ProviderServiceInfoFragmentDoc = gql`
+  fragment ProviderServiceInfo on ProviderServiceWithUser {
+    _id
+    description
+    certificates {
+      name
+      description
+      certifiedAt
+      images {
+        filepath
+        filename
+      }
+    }
+    approved
+    service {
+      ...ServiceInfo
+    }
+    user {
+      ...UserBasicInfo
+    }
+  }
+
+  ${ServiceInfoFragmentDoc}
+  ${UserBasicInfoFragmentDoc}
+`;
+
+export const FindServicesByCategoryInfoFragmentDoc = gql`
+  fragment FindServicesByCategoryInfo on FindServicesByCategoryResponse {
+    _id
+    name
+    totalUsers
+  }
+`;
+
+export const ServiceRequestInfoFragmentDoc = gql`
+  fragment ServiceRequestInfo on ServiceRequest {
+    _id
+    serviceSeeker {
+      ...UserBasicInfo
+    }
+    provider {
+      ...UserBasicInfo
+    }
+    service {
+      ...ServiceInfo
+    }
+    amount
+    address
+    coordinates
+    accepted
+    arrivedAt
+    startedAt
+    canceledAt
+    completedAt
+    ignoredAt
+    feedBack
+    rating
+  }
+
+  ${UserBasicInfoFragmentDoc}
+  ${ServiceInfoFragmentDoc}
+`;
+
+export const ErrorInfoFragmentDoc = gql`
+  fragment ErrorInfo on ErrorResponse {
+    path
+    message
+  }
+`;
+
+export const UserSubscriptionInfoFragmentDoc = gql`
+  fragment UserSubscriptionInfo on UserSubscription {
+    _id
+    name
+    description
+    amount
+    benefits
+    paymentMode
+  }
+`;
+
+export const ProviderServiceBasicInfoFragmentDoc = gql`
+  fragment ProviderServiceBasicInfo on ProviderServiceWithService {
+    _id
+    description
+    certificates {
+      name
+      description
+      certifiedAt
+      images {
+        filepath
+        filename
+      }
+    }
+    approved
+    service {
+      ...ServiceInfo
+    }
+  }
+
+  ${ServiceInfoFragmentDoc}
+`;
+
 export const RoleInfoFragmentDoc = gql`
   fragment RoleInfo on Role {
     _id
@@ -727,7 +822,7 @@ export const RoleInfoFragmentDoc = gql`
 `;
 
 export const UserInfoFragmentDoc = gql`
-  fragment UserInfo on User {
+  fragment UserInfo on UserDetailed {
     _id
     email
     firstName
@@ -742,8 +837,11 @@ export const UserInfoFragmentDoc = gql`
       ...UserSubscriptionInfo
     }
     subscribedAt
-    services {
-      ...ServiceInfo
+    providerServices {
+      ...ProviderServiceBasicInfo
+      service {
+        ...ServiceInfo
+      }
     }
     role {
       ...RoleInfo
@@ -751,6 +849,7 @@ export const UserInfoFragmentDoc = gql`
   }
 
   ${UserSubscriptionInfoFragmentDoc}
+  ${ProviderServiceBasicInfoFragmentDoc}
   ${ServiceInfoFragmentDoc}
   ${RoleInfoFragmentDoc}
 `;
@@ -849,6 +948,50 @@ export function CurrentLocationHOC<TProps, TChildProps = any>(
     CurrentLocationVariables,
     CurrentLocationProps<TChildProps>
   >(CurrentLocationDocument, operationOptions);
+}
+export const ProvidersByServiceDocument = gql`
+  query ProvidersByService($serviceId: ObjectId!) {
+    providersByService(serviceId: $serviceId) {
+      ...ProviderServiceInfo
+    }
+  }
+
+  ${ProviderServiceInfoFragmentDoc}
+`;
+export class ProvidersByServiceComponent extends React.Component<
+  Partial<
+    ReactApollo.QueryProps<ProvidersByServiceQuery, ProvidersByServiceVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Query<ProvidersByServiceQuery, ProvidersByServiceVariables>
+        query={ProvidersByServiceDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
+export type ProvidersByServiceProps<TChildProps = any> = Partial<
+  ReactApollo.DataProps<ProvidersByServiceQuery, ProvidersByServiceVariables>
+> &
+  TChildProps;
+export function ProvidersByServiceHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        ProvidersByServiceQuery,
+        ProvidersByServiceVariables,
+        ProvidersByServiceProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    ProvidersByServiceQuery,
+    ProvidersByServiceVariables,
+    ProvidersByServiceProps<TChildProps>
+  >(ProvidersByServiceDocument, operationOptions);
 }
 export const FindServicesByCategoryDocument = gql`
   query FindServicesByCategory($categoryId: ObjectId!) {
@@ -1566,50 +1709,6 @@ export function MeHOC<TProps, TChildProps = any>(
     MeVariables,
     MeProps<TChildProps>
   >(MeDocument, operationOptions);
-}
-export const ProvidersByServiceDocument = gql`
-  query ProvidersByService($serviceId: ObjectId!) {
-    providersByService(serviceId: $serviceId) {
-      ...UserInfo
-    }
-  }
-
-  ${UserInfoFragmentDoc}
-`;
-export class ProvidersByServiceComponent extends React.Component<
-  Partial<
-    ReactApollo.QueryProps<ProvidersByServiceQuery, ProvidersByServiceVariables>
-  >
-> {
-  render() {
-    return (
-      <ReactApollo.Query<ProvidersByServiceQuery, ProvidersByServiceVariables>
-        query={ProvidersByServiceDocument}
-        {...(this as any)["props"] as any}
-      />
-    );
-  }
-}
-export type ProvidersByServiceProps<TChildProps = any> = Partial<
-  ReactApollo.DataProps<ProvidersByServiceQuery, ProvidersByServiceVariables>
-> &
-  TChildProps;
-export function ProvidersByServiceHOC<TProps, TChildProps = any>(
-  operationOptions:
-    | ReactApollo.OperationOption<
-        TProps,
-        ProvidersByServiceQuery,
-        ProvidersByServiceVariables,
-        ProvidersByServiceProps<TChildProps>
-      >
-    | undefined
-) {
-  return ReactApollo.graphql<
-    TProps,
-    ProvidersByServiceQuery,
-    ProvidersByServiceVariables,
-    ProvidersByServiceProps<TChildProps>
-  >(ProvidersByServiceDocument, operationOptions);
 }
 export const UserSubscriptionsDocument = gql`
   query UserSubscriptions {

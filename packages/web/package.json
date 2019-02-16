@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "nodemon server/index.ts",
     "build": "rimraf dist && next build && tsc --project tsconfig.server.json",
-    "start": "NODE_ENV=production && node dist/index.js",
+    "start": "NODE_ENV=development && node dist/index.js",
     "type-check": "tsc",
     "generate": "gql-gen"
   },

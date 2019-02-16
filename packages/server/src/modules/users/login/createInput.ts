@@ -1,8 +1,8 @@
 import { InputType, Field } from "type-graphql";
-import { User } from "../../../types/objects/User";
+import { UserDetailed } from "../../../types/objects/User";
 
 @InputType()
-export class LoginInput implements Partial<User> {
+export class LoginInput implements Partial<UserDetailed> {
   @Field()
   email: string;
 

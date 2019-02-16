@@ -1,39 +1,18 @@
 import gql from "graphql-tag";
-import { userInfoFragment } from "../../user/fragments/UserInfo";
 import { serviceInfoFragment } from "../../service/fragments/ServiceInfo";
+import { userBasicInfoFragment } from "../../user/fragments/UserInfo";
 
 export const serviceRequestInfoFragment = gql`
   fragment ServiceRequestInfo on ServiceRequest {
     _id
     serviceSeeker {
-      _id
-      email
-      firstName
-      lastName
-      mobile
-      phone
-      address
-      city
-      country
+      ...UserBasicInfo
     }
     provider {
-      _id
-      email
-      firstName
-      lastName
-      mobile
-      phone
-      address
-      city
-      country
+      ...UserBasicInfo
     }
     service {
-      _id
-      name
-      category {
-        _id
-        name
-      }
+      ...ServiceInfo
     }
     amount
     address
@@ -48,6 +27,6 @@ export const serviceRequestInfoFragment = gql`
     rating
   }
 
-  ${userInfoFragment}
+  ${userBasicInfoFragment}
   ${serviceInfoFragment}
 `;

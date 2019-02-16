@@ -648,7 +648,7 @@ export type ErrorInfoFragment = {
 };
 
 export type UserInfoFragment = {
-  __typename?: "User";
+  __typename?: "UserDetailed";
 
   _id: ObjectId;
 
@@ -732,7 +732,7 @@ export const ErrorInfoFragmentDoc = gql`
 `;
 
 export const UserInfoFragmentDoc = gql`
-  fragment UserInfo on User {
+  fragment UserInfo on UserDetailed {
     _id
     email
     firstName

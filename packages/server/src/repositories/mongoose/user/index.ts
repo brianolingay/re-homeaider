@@ -1,7 +1,7 @@
 import { create } from "./create";
 import { deleteUser } from "./delete";
 import { login } from "./login";
-import { me, allAdminExceptMe, providersByService } from "./read";
+import { me, allAdminExceptMe } from "./read";
 import { register } from "./register";
 import { update } from "./update";
 
@@ -11,7 +11,6 @@ export const UserRepository = {
   deleteUser,
   login,
   me,
-  providersByService,
   register,
   update,
 };

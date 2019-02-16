@@ -1,8 +1,8 @@
 import { Document, Schema } from "mongoose";
 
 export interface ImageInterface extends Document {
-  filename: string;
-  filePath: string;
+  filename: string | null;
+  filepath: string | null;
 }
 
 export const imageSchema: Schema = new Schema({
@@ -10,7 +10,7 @@ export const imageSchema: Schema = new Schema({
     type: String,
     trim: true,
   },
-  filePath: {
+  filepath: {
     type: String,
     trim: true,
   },

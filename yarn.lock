@@ -5,7 +5,6 @@
 "@apollographql/apollo-tools@^0.3.0":
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/@apollographql/apollo-tools/-/apollo-tools-0.3.3.tgz#7ec7af07021336ab6947e21e290dd06cb705233e"
-  integrity sha512-/vLzZjloWB4xzgw2MRs9TUDIdCzS+No1hEClkEKqcnH86c2EgE/W0Dv2nkCTH9WxDrfryziJWbNMurYYkm61Zw==
   dependencies:
     apollo-env "0.3.3"
 
@@ -2154,7 +2153,6 @@ apollo-boost@0.1.27, apollo-boost@^0.1.27:
 apollo-cache-control@0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/apollo-cache-control/-/apollo-cache-control-0.5.0.tgz#78cfefec57c5c0a9648137e3250b91172998061e"
-  integrity sha512-zu26CFj7CboxLB6cckZQEiSUGXIr8MViEGIC5Vesz2yd37sjtevMfRwQhxFuK0HinR0T/WC3dz2k5cj+33vQQQ==
   dependencies:
     apollo-server-env "2.2.0"
     graphql-extensions "0.5.0"
@@ -2191,7 +2189,6 @@ apollo-client@^2.4.12:
 apollo-datasource@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/apollo-datasource/-/apollo-datasource-0.3.0.tgz#88c680edd63a2f7ea05fc25da290a430632d39f4"
-  integrity sha512-+jWs3ezhx4lcAAPIHtlj0Zoiv2tvwfzn7feHuhxub3xFwkJm39T8hPjb3aMQCsuS7TukBD+F5ndgVob5hL/5Nw==
   dependencies:
     apollo-server-caching "0.3.0"
     apollo-server-env "2.2.0"
@@ -2205,7 +2202,6 @@ apollo-engine-reporting-protobuf@0.2.0:
 apollo-engine-reporting@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/apollo-engine-reporting/-/apollo-engine-reporting-1.0.0.tgz#af93b755482ad5a6c52f9f728f3e24e801aa2385"
-  integrity sha512-9gZSME9ggZwL1nBBvfgSehwc+PtcvZC1/3NYrBOFgidJbrEFita2w5A0jM8Brjo+N2FMKNYWGj8WQ1ywO21JPg==
   dependencies:
     apollo-engine-reporting-protobuf "0.2.0"
     apollo-graphql "0.1.0"
@@ -2217,7 +2213,6 @@ apollo-engine-reporting@1.0.0:
 apollo-env@0.3.3:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/apollo-env/-/apollo-env-0.3.3.tgz#e758ece2fbc4f81abc6f07442680ed9e314ecf6c"
-  integrity sha512-VsUX14bfQCJpKmTyYNBTeLrdeFabjmpSPVQ2y4IKnwqaxVqZuRca3WFE8ercszO1tLwS6HMM7mFw+IIbtQXo/w==
   dependencies:
     core-js "3.0.0-beta.13"
     node-fetch "^2.2.0"
@@ -2225,7 +2220,6 @@ apollo-env@0.3.3:
 apollo-graphql@0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/apollo-graphql/-/apollo-graphql-0.1.0.tgz#e453b133daa8b686644da05ec8e556cf31c57037"
-  integrity sha512-Mi5GqZJz1A/0i8SEm9EVHWe/LkGbYzV5wzobUY+1Q0SI1NdFtRgqHZUdHU0hz1jDnL+dpRqK1huVmtOO/DGa/A==
   dependencies:
     lodash.sortby "^4.7.0"
 
@@ -2296,14 +2290,12 @@ apollo-link@^1.2.8:
 apollo-server-caching@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/apollo-server-caching/-/apollo-server-caching-0.3.0.tgz#96669b5e3bf693e6a54683edfab4b9495deb17d8"
-  integrity sha512-dHwWUsRZu7I1yUfzTwPJgOigMsftgp8w3X96Zdch1ICWN7cM6aNxks9tTnLd+liUSEzdYLlTmEy5VUturF2IAw==
   dependencies:
     lru-cache "^5.0.0"
 
 apollo-server-core@2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-2.4.0.tgz#928c563f68d9f69a4288e7a4bf14ca79f8599f2b"
-  integrity sha512-rTFJa12NzTWC9IJrXDr8AZMs1Slbes9YxbyaI+cMC5fs8O9wkCkb34C/1Tp7xKX0fgauXrKZpXv7yPTSm+4YFg==
   dependencies:
     "@apollographql/apollo-tools" "^0.3.0"
     "@apollographql/graphql-playground-html" "^1.6.6"
@@ -2340,7 +2332,6 @@ apollo-server-errors@2.2.0:
 apollo-server-express@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/apollo-server-express/-/apollo-server-express-2.4.0.tgz#fe8e748f07f01a837d1449e4c28ab27ae7b7d054"
-  integrity sha512-uDS7OZJ3EwFr4eZ9k1MiBtUTaqKgCXUUTCknPTdCbTzBel7TjNsa6PNKrSQk+jrLja2H8VwNjbra8uBF5z70Pw==
   dependencies:
     "@apollographql/graphql-playground-html" "^1.6.6"
     "@types/accepts" "^1.3.5"
@@ -2358,12 +2349,10 @@ apollo-server-express@^2.4.0:
 apollo-server-plugin-base@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/apollo-server-plugin-base/-/apollo-server-plugin-base-0.3.0.tgz#26c7f9c020b2d444de5bebd2e3c406bebd9c302e"
-  integrity sha512-SOwp4cpZwyklvP1MkMcY6+12c1hrb5gwC4vK4a23kL5rr9FC0sENcXo3uVVM4XlDGOXIkY+sCM8ngKFuef2flw==
 
 apollo-tracing@0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/apollo-tracing/-/apollo-tracing-0.5.0.tgz#6eebaf1e840ece99299103def689d39fe49780a3"
-  integrity sha512-j0icEhLYf0xS6Q/iCXA2j9KfpYw0a/XvLSUio7fm5yUwtXP2Pp11x5BtK1dI8sLMiaOqUrREz2XjV4PKLzQPuA==
   dependencies:
     apollo-server-env "2.2.0"
     graphql-extensions "0.5.0"
@@ -4038,7 +4027,6 @@ copy-descriptor@^0.1.0:
 core-js@3.0.0-beta.13:
   version "3.0.0-beta.13"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.0.0-beta.13.tgz#7732c69be5e4758887917235fe7c0352c4cb42a1"
-  integrity sha512-16Q43c/3LT9NyePUJKL8nRIQgYWjcBhjJSMWg96PVSxoS0PeE0NHitPI3opBrs9MGGHjte1KoEVr9W63YKlTXQ==
 
 core-js@^1.0.0:
   version "1.2.7"
@@ -6214,7 +6202,6 @@ graphql-config@2.2.1:
 graphql-extensions@0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/graphql-extensions/-/graphql-extensions-0.5.0.tgz#117b9872e5cafbebef5254ad795b41fa97037c14"
-  integrity sha512-2i0rpe4/D8jZj6XmxXGLFDAsGLhkFrSdpS5WfvTAzoXOc52hUAxNdsbgRQGeKMFhmanqA6FDXxO/s+BtPHChVA==
   dependencies:
     "@apollographql/apollo-tools" "^0.3.0"
 
@@ -6312,10 +6299,9 @@ graphql-upload@^8.0.2:
     http-errors "^1.7.1"
     object-path "^0.11.4"
 
-graphql@^14.0.2:
+graphql@14.0.2, graphql@^14.0.2:
   version "14.0.2"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.0.2.tgz#7dded337a4c3fd2d075692323384034b357f5650"
-  integrity sha512-gUC4YYsaiSJT1h40krG3J+USGlwhzNTXSb4IOZljn9ag5Tj+RkoXrWp+Kh7WyE3t1NCfab5kzCuxBIvOMERMXw==
   dependencies:
     iterall "^1.2.2"
 
@@ -11853,7 +11839,6 @@ type-check@~0.3.2:
 type-graphql@^0.16.0:
   version "0.16.0"
   resolved "https://registry.yarnpkg.com/type-graphql/-/type-graphql-0.16.0.tgz#4d22beffb7ce3f8601e6ad090b4104b7852e5c9d"
-  integrity sha512-rR8cgRB9GuJfv0IFKHQKgfFan8aSlPFtJjMWkdmMY9fmeoJY6IGWm18bev1C1dO4jT9kKXi6Yeese636vakTng==
   dependencies:
     "@types/glob" "^7.1.1"
     "@types/graphql" "^14.0.2"
@@ -11901,7 +11886,6 @@ typescript@^3.2.2:
 typescript@^3.3.3:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.3.3.tgz#f1657fc7daa27e1a8930758ace9ae8da31403221"
-  integrity sha512-Y21Xqe54TBVp+VDSNbuDYdGw0BpoR/Q6wo/+35M8PAU0vipahnyduJWirxxdxjsAkS7hue53x2zp8gz7F05u0A==
 
 ua-parser-js@^0.7.18, ua-parser-js@^0.7.19:
   version "0.7.19"

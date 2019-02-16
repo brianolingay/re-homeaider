@@ -10,8 +10,8 @@ import { meQuery } from "../graphql/user/queries/me";
 import { MeQuery } from "../components/apollo-components";
 import { authTokenStore } from "./authTokenStore";
 
-// const url = "https://homeaider-server.herokuapp.com";
-const url = "http://localhost:4000";
+const url = "https://homeaider-server.herokuapp.com";
+// const url = "http://localhost:4000";
 
 const SERVER_LINK_OPTIONS = {
   uri: `${url}/graphql`,

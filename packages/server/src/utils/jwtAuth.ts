@@ -1,6 +1,6 @@
 import { UserRepository } from "./../repositories/mongoose/user/index";
 import * as jwt from "jsonwebtoken";
-import { User } from "../types/objects/User";
+import { UserDetailed } from "../types/objects/User";
 import { TokensResponse } from "../modules/shared/tokensReponse";
 
 const SECRET_ONE =
@@ -9,10 +9,10 @@ const SECRET_TWO =
   "9a974f00463a02fef75be762f3c1879fca2daf275faf11017708933665ec1c87";
 
 interface NewRefreshToken extends TokensResponse {
-  user: User | null;
+  user: UserDetailed | null;
 }
 
-export const createToken = async (user: User): Promise<TokensResponse> => {
+export const createToken = async (user: UserDetailed): Promise<TokensResponse> => {
   const token = jwt.sign({ user }, SECRET_ONE, {
     expiresIn: "1h",
   });
