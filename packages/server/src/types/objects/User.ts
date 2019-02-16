@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { ObjectType, Field } from "type-graphql";
-import { ProviderServiceWithService } from "./ProviderService";
+import { ProviderService } from "./ProviderService";
 import { Role } from "./Role";
 import { UserSubscription } from "./UserSubscription";
 
@@ -35,18 +35,15 @@ export class User {
 
   @Field(() => [Number], { nullable: true })
   coordinates: number[] | null;
-}
 
-@ObjectType()
-export class UserDetailed extends User {
   @Field(() => UserSubscription, { nullable: true })
   userSubscription: UserSubscription | null;
 
   @Field(() => Date, { nullable: true })
   subscribedAt: Date | null;
 
-  @Field(() => [ProviderServiceWithService], { nullable: true })
-  providerServices: ProviderServiceWithService[];
+  @Field(() => [ProviderService], { nullable: true })
+  providerServices: ProviderService[];
 
   @Field(() => Role, { nullable: true })
   role: Role | null;

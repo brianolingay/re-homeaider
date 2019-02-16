@@ -1,17 +1,17 @@
 import { Resolver, Query, Authorized, Arg } from "type-graphql";
 import { ObjectId } from "mongodb";
 import { ProviderServiceModel } from "../../models/ProviderService";
-import { ProviderServiceWithUser } from "../../types/objects/ProviderService";
+import { ProviderService } from "../../types/objects/ProviderService";
 
-@Resolver(ProviderServiceWithUser)
+@Resolver(ProviderService)
 export class ProviderServiceResolver {
   constructor() {}
 
   @Authorized()
-  @Query(() => [ProviderServiceWithUser], { nullable: true })
+  @Query(() => [ProviderService], { nullable: true })
   async providersByService(
     @Arg("serviceId") serviceId: ObjectId
-  ): Promise<ProviderServiceWithUser[]> {
+  ): Promise<ProviderService[]> {
     const providers = await ProviderServiceModel.find({
       service: serviceId,
     })

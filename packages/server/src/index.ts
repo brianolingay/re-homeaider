@@ -46,7 +46,7 @@ const startServer = async () => {
       origin:
         process.env.NODE_ENV === "production"
           ? "https://homeaider.herokuapp.com"
-          : `http://localhost:${port}`,
+          : `http://localhost:3000`,
     })
   );
 

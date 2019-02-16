@@ -1,14 +1,14 @@
 import { Request } from "express";
 import * as DataLoader from "dataloader";
 
-import { UserDetailed } from "./objects/User";
+import { User } from "./objects/User";
 
 export interface MyContext {
   req: Request;
-  user: UserDetailed;
-  userLoader: DataLoader<string, UserDetailed>;
+  user: User;
+  userLoader: DataLoader<string, User>;
 }
 
 export interface UserInfoInRequest extends Request {
-  user?: UserDetailed | null;
+  user?: User | null;
 }

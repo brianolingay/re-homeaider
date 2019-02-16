@@ -23,16 +23,10 @@ export class ProviderService {
 
   @Field(() => Date, { nullable: true })
   updatedAt: Date | null;
-}
 
-@ObjectType()
-export class ProviderServiceWithService extends ProviderService {
-  @Field(() => Service)
-  service: Service;
-}
+  @Field(() => Service, { nullable: true })
+  service: Service | null;
 
-@ObjectType()
-export class ProviderServiceWithUser extends ProviderServiceWithService {
-  @Field(() => User)
-  user: User;
+  @Field(() => User, { nullable: true })
+  user: User | null;
 }

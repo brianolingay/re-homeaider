@@ -19,7 +19,15 @@ export const me = async (userId: ObjectId) => {
 
 export const allAdminExceptMe = async (userId: ObjectId) => {
   const users = await UserModel.find({ _id: { $ne: userId } })
+    .populate("userSubscription")
     .populate("role")
+    .populate({
+      path: "providerServices",
+      populate: {
+        path: "service",
+        populate: { path: "category" },
+      },
+    })
     .lean()
     .exec();
 

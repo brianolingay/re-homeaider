@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { Resolver, Query, Ctx, Mutation, Authorized, Arg } from "type-graphql";
-import { UserDetailed } from "../../types/objects/User";
+import { User } from "../../types/objects/User";
 import { MyContext } from "../../types/Context";
 import { UserRepository } from "../../repositories/mongoose/user";
 
@@ -11,7 +11,7 @@ import { RegisterInput } from "./register/createInput";
 import { UserResponse } from "./createResponse";
 import { UserInput } from "./createInput";
 
-@Resolver(UserDetailed)
+@Resolver(User)
 export class UserResolver {
   constructor() {}
 
@@ -45,11 +45,11 @@ export class UserResolver {
     );
   }
 
-  @Query(() => UserDetailed, { nullable: true })
+  @Query(() => User, { nullable: true })
   async me(
     @Ctx()
     ctx: MyContext
-  ): Promise<UserDetailed | null> {
+  ): Promise<User | null> {
     if (!ctx.user) {
       return null;
     }
@@ -59,11 +59,11 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Query(() => [UserDetailed], { nullable: true })
+  @Query(() => [User], { nullable: true })
   async allAdminExceptMe(
     @Ctx()
     ctx: MyContext
-  ): Promise<UserDetailed[]> {
+  ): Promise<User[]> {
     const { _id } = ctx.user;
 
     return await UserRepository.allAdminExceptMe(_id);

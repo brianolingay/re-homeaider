@@ -410,7 +410,7 @@ export type LocationInfoFragment = {
 };
 
 export type ProviderServiceBasicInfoFragment = {
-  __typename?: "ProviderServiceWithService";
+  __typename?: "ProviderService";
 
   _id: ObjectId;
 
@@ -420,7 +420,7 @@ export type ProviderServiceBasicInfoFragment = {
 
   approved: boolean;
 
-  service: ProviderServiceBasicInfoService;
+  service: Maybe<ProviderServiceBasicInfoService>;
 };
 
 export type ProviderServiceBasicInfoCertificates = {
@@ -446,7 +446,7 @@ export type ProviderServiceBasicInfoImages = {
 export type ProviderServiceBasicInfoService = ServiceInfoFragment;
 
 export type ProviderServiceInfoFragment = {
-  __typename?: "ProviderServiceWithUser";
+  __typename?: "ProviderService";
 
   _id: ObjectId;
 
@@ -456,9 +456,9 @@ export type ProviderServiceInfoFragment = {
 
   approved: boolean;
 
-  service: ProviderServiceInfoService;
+  service: Maybe<ProviderServiceInfoService>;
 
-  user: ProviderServiceInfoUser;
+  user: Maybe<ProviderServiceInfoUser>;
 };
 
 export type ProviderServiceInfoCertificates = {
@@ -514,7 +514,7 @@ export type ServiceInfoFragment = {
 
   description: Maybe<string>;
 
-  category: ServiceInfoCategory;
+  category: Maybe<ServiceInfoCategory>;
 };
 
 export type ServiceInfoCategory = CategoryInfoFragment;
@@ -592,7 +592,7 @@ export type UserBasicInfoFragment = {
 };
 
 export type UserInfoFragment = {
-  __typename?: "UserDetailed";
+  __typename?: "User";
 
   _id: ObjectId;
 
@@ -626,9 +626,9 @@ export type UserInfoFragment = {
 export type UserInfoUserSubscription = UserSubscriptionInfoFragment;
 
 export type UserInfoProviderServices = {
-  __typename?: "ProviderServiceWithService";
+  __typename?: "ProviderService";
 
-  service: UserInfoService;
+  service: Maybe<UserInfoService>;
 } & ProviderServiceBasicInfoFragment;
 
 export type UserInfoService = ServiceInfoFragment;
@@ -711,7 +711,7 @@ export const UserBasicInfoFragmentDoc = gql`
 `;
 
 export const ProviderServiceInfoFragmentDoc = gql`
-  fragment ProviderServiceInfo on ProviderServiceWithUser {
+  fragment ProviderServiceInfo on ProviderService {
     _id
     description
     certificates {
@@ -792,7 +792,7 @@ export const UserSubscriptionInfoFragmentDoc = gql`
 `;
 
 export const ProviderServiceBasicInfoFragmentDoc = gql`
-  fragment ProviderServiceBasicInfo on ProviderServiceWithService {
+  fragment ProviderServiceBasicInfo on ProviderService {
     _id
     description
     certificates {
@@ -822,7 +822,7 @@ export const RoleInfoFragmentDoc = gql`
 `;
 
 export const UserInfoFragmentDoc = gql`
-  fragment UserInfo on UserDetailed {
+  fragment UserInfo on User {
     _id
     email
     firstName

@@ -17,7 +17,7 @@ const userRole = async (roleName: string, userInput: any) => {
       email,
     }).exec();
 
-    const services = await ServiceModel.find({}, "_id")
+    const services = await ServiceModel.find({})
       .lean()
       .exec();
 
@@ -32,7 +32,9 @@ const userRole = async (roleName: string, userInput: any) => {
       await user.save();
 
       if (roleName === "provider") {
+        console.log(services);
         for (let service of services) {
+          console.log(service);
           const providerService = new ProviderServiceModel({
             description: `Sample Service ${service._id}`,
             user: user._id,
