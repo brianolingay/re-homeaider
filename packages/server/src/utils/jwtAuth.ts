@@ -12,7 +12,9 @@ interface NewRefreshToken extends TokensResponse {
   user: UserDetailed | null;
 }
 
-export const createToken = async (user: UserDetailed): Promise<TokensResponse> => {
+export const createToken = async (
+  user: UserDetailed
+): Promise<TokensResponse> => {
   const token = jwt.sign({ user }, SECRET_ONE, {
     expiresIn: "1h",
   });

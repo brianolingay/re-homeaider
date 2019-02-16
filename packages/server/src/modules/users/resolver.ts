@@ -2,7 +2,6 @@ import { ObjectId } from "mongodb";
 import { Resolver, Query, Ctx, Mutation, Authorized, Arg } from "type-graphql";
 import { UserDetailed } from "../../types/objects/User";
 import { MyContext } from "../../types/Context";
-
 import { UserRepository } from "../../repositories/mongoose/user";
 
 import { LoginInput } from "./login/createInput";
@@ -39,7 +38,7 @@ export class UserResolver {
     ctx: MyContext
   ) {
     return await new Promise(res =>
-      ctx.req.session!.destroy(err => {
+      ctx.req.session!.destroy((err: any) => {
         console.log(err);
         res(!err);
       })

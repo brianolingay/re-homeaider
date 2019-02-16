@@ -5,6 +5,7 @@ import { UserSubscriptionInterface } from "./UserSubscription";
 import { RoleInterface } from "./Role";
 
 export interface UserInterface extends Document {
+  _id: Types.ObjectId;
   email: string;
   firstName: string;
   lastName: string;
