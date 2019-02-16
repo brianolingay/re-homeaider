@@ -85,6 +85,15 @@ export default class Login extends React.PureComponent<{
 
                       if (
                         response &&
+                        response.errors &&
+                        response.errors.length
+                      ) {
+                        setSubmitting(false);
+                        return;
+                      }
+
+                      if (
+                        response &&
                         response.data &&
                         response.data.login.errors &&
                         response.data.login.errors.length
@@ -102,25 +111,27 @@ export default class Login extends React.PureComponent<{
                     validateOnChange={false}
                   >
                     {({ errors, handleSubmit, isSubmitting }) => (
-                      <Form onSubmit={handleSubmit}>
-                        <Field
-                          name="email"
-                          label="Email"
-                          placeholder="Email"
-                          component={InputField}
-                        />
-                        <Field
-                          name="password"
-                          label="Password"
-                          placeholder="Password"
-                          component={InputField}
-                          type="password"
-                        />
-                        <ErrorMessage errors={errors} />
-                        <Button disabled={isSubmitting} type="submit">
-                          Login
-                        </Button>
-                      </Form>
+                      <Container>
+                        {errors && <ErrorMessage errors={errors} />}
+                        <Form onSubmit={handleSubmit}>
+                          <Field
+                            name="email"
+                            label="Email"
+                            placeholder="Email"
+                            component={InputField}
+                          />
+                          <Field
+                            name="password"
+                            label="Password"
+                            placeholder="Password"
+                            component={InputField}
+                            type="password"
+                          />
+                          <Button disabled={isSubmitting} type="submit">
+                            Login
+                          </Button>
+                        </Form>
+                      </Container>
                     )}
                   </Formik>
                 )}

@@ -628,7 +628,7 @@ export type ServiceInfoFragment = {
 
   description: Maybe<string>;
 
-  category: ServiceInfoCategory;
+  category: Maybe<ServiceInfoCategory>;
 };
 
 export type ServiceInfoCategory = {

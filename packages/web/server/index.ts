@@ -3,12 +3,12 @@ import { parse } from "url";
 import * as next from "next";
 import * as express from "express";
 import * as bodyParser from "body-parser";
-import * as Redis from "ioredis";
+// import * as Redis from "ioredis";
 
-const redis =
-  process.env.NODE_ENV === "production"
-    ? new Redis(process.env.REDIS_URL)
-    : new Redis();
+// const redis =
+//   process.env.NODE_ENV === "production"
+//     ? new Redis(process.env.REDIS_URL)
+//     : new Redis();
 
 import { routes } from "./routes";
 
@@ -25,15 +25,16 @@ app.prepare().then(() => {
   server.post("/tokens", (req, res) => {
     const { token, refreshToken } = req.body;
 
-    redis.set("token", token);
-    redis.set("refreshToken", refreshToken);
+    console.log({ token, refreshToken });
+    // redis.set("token", token);
+    // redis.set("refreshToken", refreshToken);
 
     res.json({ ok: true });
   });
 
   server.delete("/remove", (_, res) => {
-    redis.del("token");
-    redis.del("refreshToken");
+    // redis.del("token");
+    // redis.del("refreshToken");
 
     res.json({ ok: true });
   });

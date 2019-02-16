@@ -158,7 +158,7 @@ export class ServiceRequestResolver {
     if (!ctx.user) {
       return [];
     }
-    const services = ctx.user.providerServices.map(item => item.service._id);
+    const services = ctx.user.providerServices.map(item => item.service!._id);
     console.log(services);
     const serviceRequests = await ServiceRequestModel.find({
       service: { $in: services },

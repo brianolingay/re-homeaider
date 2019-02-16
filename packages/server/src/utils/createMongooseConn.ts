@@ -9,7 +9,7 @@ export const createMongooseConn = async () => {
     useNewUrlParser: true,
   });
 
-  conn.set("debug", true);
+  conn.set("debug", process.env.NODE_ENV !== "production");
 
   if (process.env.NODE_ENV === "test") {
     await conn.connection.dropDatabase();
