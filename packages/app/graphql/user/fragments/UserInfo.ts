@@ -1,23 +1,8 @@
 import gql from "graphql-tag";
-import { providerServiceBasicInfoFragment } from "../../providerService/fragments/ProviderServiceCompleteInfo";
+import { providerServiceBasicInfoFragment } from "../../providerService/fragments/ProviderServiceBasicInfo";
 import { roleInfoFragment } from "../../role/fragments/RoleInfo";
 import { serviceInfoFragment } from "../../service/fragments/ServiceInfo";
 import { userSubscriptionInfoFragment } from "../../userSubscription/fragments/UserSubscriptionInfo";
-
-export const userBasicInfoFragment = gql`
-  fragment UserBasicInfo on User {
-    _id
-    email
-    firstName
-    lastName
-    mobile
-    phone
-    address
-    city
-    country
-    coordinates
-  }
-`;
 
 export const userInfoFragment = gql`
   fragment UserInfo on UserDetailed {
@@ -50,5 +35,4 @@ export const userInfoFragment = gql`
   ${providerServiceBasicInfoFragment}
   ${serviceInfoFragment}
   ${roleInfoFragment}
-  ${userBasicInfoFragment}
 `;

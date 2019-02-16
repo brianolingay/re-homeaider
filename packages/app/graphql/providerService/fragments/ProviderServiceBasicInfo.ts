@@ -1,9 +1,8 @@
 import gql from "graphql-tag";
 import { serviceInfoFragment } from "../../service/fragments/ServiceInfo";
-import { userBasicInfoFragment } from "./../../user/fragments/UserBasicInfo";
 
-export const providerServiceInfoFragment = gql`
-  fragment ProviderServiceInfo on ProviderServiceWithUser {
+export const providerServiceBasicInfoFragment = gql`
+  fragment ProviderServiceBasicInfo on ProviderServiceWithService {
     _id
     description
     certificates {
@@ -19,11 +18,7 @@ export const providerServiceInfoFragment = gql`
     service {
       ...ServiceInfo
     }
-    user {
-      ...UserBasicInfo
-    }
   }
 
-  ${userBasicInfoFragment}
   ${serviceInfoFragment}
 `;
