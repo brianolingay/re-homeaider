@@ -20,6 +20,7 @@ export class ProviderServiceResolver {
         path: "service",
         populate: { path: "category" },
       })
+      .lean()
       .exec();
 
     return providers;

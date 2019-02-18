@@ -32,7 +32,7 @@ export const login = async (
       path: "providerServices",
       populate: {
         path: "service",
-        populate: "category",
+        populate: { path: "category" },
       },
     })
     .lean()

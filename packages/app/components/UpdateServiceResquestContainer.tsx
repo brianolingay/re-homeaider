@@ -55,6 +55,7 @@ export class UpdateServiceRequestProcessContainer extends React.PureComponent<
   render() {
     const { serviceRequestProgress, me, navigation, unsubscribe } = this.props;
     const type = navigation.getParam("type");
+    // [TODO]: Fix button alignment, font size in overlay,
     return (
       <View>
         {me.role.name === "provider" ? (
@@ -64,6 +65,7 @@ export class UpdateServiceRequestProcessContainer extends React.PureComponent<
                 {!serviceRequestProgress.accepted && (
                   <View
                     style={{
+                      flex: 1,
                       justifyContent: "space-between",
                       alignItems: "center",
                     }}

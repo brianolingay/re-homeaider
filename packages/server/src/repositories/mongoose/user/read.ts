@@ -6,12 +6,13 @@ export const me = async (userId: ObjectId) => {
     .populate("userSubscription")
     .populate("role")
     .populate({
-      path: "providerService",
+      path: "providerServices",
       populate: {
-        path: "services",
+        path: "service",
         populate: { path: "category" },
       },
     })
+    .lean()
     .exec();
 
   return user ? user : null;

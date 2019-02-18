@@ -54,7 +54,7 @@ export class LoginScreen extends React.PureComponent<Props> {
             {mutate => (
               <Formik<FormValues>
                 initialValues={{
-                  email: "archie@homeaider.com",
+                  email: "charlie@homeaider.com",
                   password: "homeaider",
                 }}
                 onSubmit={async (input, { setErrors, setSubmitting }) => {
@@ -96,11 +96,9 @@ export class LoginScreen extends React.PureComponent<Props> {
                       services,
                     } = (response as any).data.login.user;
                     const location =
-                      name === "service_seeker"
-                        ? "Seekers"
-                        : services
-                        ? "Providers"
-                        : "Profile";
+                      name === "service_seeker" ? "Seekers" : "Providers";
+                    // ? "Providers"
+                    // : "Profile";
                     navigation.navigate(location);
                   }
                 }}

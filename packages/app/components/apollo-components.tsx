@@ -1,5 +1,9 @@
 export type Maybe<T> = T | null;
 
+export interface AvailableBookingInput {
+  services?: Maybe<ObjectId[]>;
+}
+
 export interface CategoryInput {
   name: string;
 
@@ -202,7 +206,9 @@ export type UpdateServiceRequestErrors = {
   message: string;
 };
 
-export type AvailableBookingRequestVariables = {};
+export type AvailableBookingRequestVariables = {
+  input: AvailableBookingInput;
+};
 
 export type AvailableBookingRequestQuery = {
   __typename?: "Query";
@@ -237,7 +243,7 @@ export type ViewServiceRequestQuery = {
 export type ViewServiceRequestViewServiceRequest = ServiceRequestInfoFragment;
 
 export type NewBookingServiceRequestVariables = {
-  serviceIds: ObjectId[];
+  input: AvailableBookingInput;
 };
 
 export type NewBookingServiceRequestSubscription = {
@@ -538,15 +544,15 @@ export type ServiceRequestInfoFragment = {
 
   accepted: boolean;
 
-  arrivedAt: Maybe<DateTime>;
+  arrivedAt: Maybe<string>;
 
-  startedAt: Maybe<DateTime>;
+  startedAt: Maybe<string>;
 
-  canceledAt: Maybe<DateTime>;
+  canceledAt: Maybe<string>;
 
-  completedAt: Maybe<DateTime>;
+  completedAt: Maybe<string>;
 
-  ignoredAt: Maybe<DateTime>;
+  ignoredAt: Maybe<string>;
 
   feedBack: Maybe<string>;
 
@@ -1168,8 +1174,8 @@ export function UpdateServiceRequestHOC<TProps, TChildProps = any>(
   >(UpdateServiceRequestDocument, operationOptions);
 }
 export const AvailableBookingRequestDocument = gql`
-  query AvailableBookingRequest {
-    availableBookingRequest {
+  query AvailableBookingRequest($input: AvailableBookingInput!) {
+    availableBookingRequest(input: $input) {
       ...ServiceRequestInfo
     }
   }
@@ -1318,8 +1324,8 @@ export function ViewServiceRequestHOC<TProps, TChildProps = any>(
   >(ViewServiceRequestDocument, operationOptions);
 }
 export const NewBookingServiceRequestDocument = gql`
-  subscription NewBookingServiceRequest($serviceIds: [ObjectId!]!) {
-    newBookingServiceRequest(serviceIds: $serviceIds) {
+  subscription NewBookingServiceRequest($input: AvailableBookingInput!) {
+    newBookingServiceRequest(input: $input) {
       ...ServiceRequestInfo
     }
   }

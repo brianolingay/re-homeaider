@@ -22,7 +22,7 @@ import {
 } from "type-graphql";
 import { ObjectId } from "mongodb";
 import { ServiceRequest } from "../../types/objects/ServiceRequest";
-import { ServiceRequestInput } from "./input";
+import { ServiceRequestInput, AvailableBookingInput } from "./input";
 import { ServiceRequestResponse } from "./response";
 import {
   ServiceRequestProgressArgs,
@@ -182,15 +182,15 @@ export class ServiceRequestResolver {
   @Authorized()
   @Query(() => [ServiceRequest], { nullable: true })
   async availableBookingRequest(
+    @Arg("input") input: AvailableBookingInput,
     @Ctx() ctx: MyContext
   ): Promise<ServiceRequest[]> {
     if (!ctx.user) {
       return [];
     }
-    const services = ctx.user.providerServices.map(item => item.service!._id);
-    console.log(services);
+    // [TODO]: Fix results...
     const serviceRequests = await ServiceRequestModel.find({
-      service: { $in: services },
+      service: { $in: input.services },
       provider: null,
       canceledAt: null,
       accepted: false,
@@ -299,12 +299,13 @@ export class ServiceRequestResolver {
       NewBookingServiceRequestArgs
     >) => {
       return Boolean(
-        args.serviceIds.filter(
-          item =>
-            item === payload.serviceRequest.service._id &&
-            !payload.serviceRequest.accepted &&
-            !payload.serviceRequest.canceledAt
-        ).length
+        args.input.services &&
+          args.input.services.filter(
+            item =>
+              item === payload.serviceRequest.service._id &&
+              !payload.serviceRequest.accepted &&
+              !payload.serviceRequest.canceledAt
+          ).length
       );
     },
   })

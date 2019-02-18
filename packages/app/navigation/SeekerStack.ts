@@ -9,9 +9,6 @@ import { ServiceRequestProcessScreen } from "../screens/ServiceRequestProgressSc
 export const BookStack = createStackNavigator(
   {
     Book: BookScreen,
-    // Services: ServicesScreen,
-    // CreateRequest: CreateRequestScreen,
-    // ServiceRequestProcess: ServiceRequestProcessScreen,
   },
   { initialRouteName: "Book" }
 );
