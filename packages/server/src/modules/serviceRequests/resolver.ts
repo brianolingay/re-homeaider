@@ -30,6 +30,8 @@ import {
   NewHiringServiceRequestArgs,
 } from "./args";
 import { Topics } from "./topics";
+import { UserModel } from "../../models/User";
+import { currentLocation } from "./../../repositories/Location";
 
 @Resolver(ServiceRequest)
 export class ServiceRequestResolver {
@@ -111,15 +113,38 @@ export class ServiceRequestResolver {
   async updateServiceRequest(
     @Arg("serviceRequestId") serviceRequestId: ObjectId,
     @Arg("input") serviceRequestInput: ServiceRequestInput,
+    @Ctx() ctx: MyContext,
     @PubSub(Topics.ServiceRequestProgress)
     publish: Publisher<ServiceRequestProgressPayload>
   ): Promise<ServiceRequestResponse> {
+    const userId = serviceRequestInput.provider
+      ? serviceRequestInput.provider
+      : ctx.user._id;
+
+    console.log(userId);
+    try {
+      const { coordinates } = currentLocation(ctx);
+      await UserModel.updateOne({ _id: userId }, { coordinates });
+    } catch (err) {
+      console.log(err);
+      return {
+        serviceRequestId,
+        errors: [
+          {
+            path: "update current location",
+            message: "Something went wrong with the service request",
+          },
+        ],
+      };
+    }
+
     try {
       await ServiceRequestModel.updateOne(
         { _id: serviceRequestId },
         { ...serviceRequestInput }
       );
     } catch (err) {
+      console.log(err);
       return {
         serviceRequestId,
         errors: [
@@ -144,7 +169,11 @@ export class ServiceRequestResolver {
       .exec();
 
     if (serviceRequest) {
-      await publish({ serviceRequestId, serviceRequest });
+      console.log(serviceRequest);
+      await publish({
+        serviceRequestId: serviceRequestId.toString(),
+        serviceRequest,
+      });
     }
 
     return { serviceRequestId, errors: [] };
@@ -241,8 +270,12 @@ export class ServiceRequestResolver {
       ServiceRequestProgressPayload,
       ServiceRequestProgressArgs
     >) => {
+      console.log(typeof payload.serviceRequestId);
+      console.log(payload.serviceRequestId);
+      console.log(typeof args.serviceRequestId);
+      console.log(args.serviceRequestId);
       console.log(payload.serviceRequestId === args.serviceRequestId);
-      return true;
+      return payload.serviceRequestId === args.serviceRequestId;
     },
   })
   serviceRequestProgress(

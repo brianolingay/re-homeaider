@@ -79,6 +79,7 @@ const startServer = async () => {
       authChecker: ({ context }) => {
         return context.user; // or false if access denied
       },
+      validate: false,
     }),
     context: ({ req, connection }: any) => ({
       req,
@@ -87,10 +88,10 @@ const startServer = async () => {
     subscriptions: {
       path: "/subscriptions",
       onConnect: async ({ token, refreshToken }: any) => {
+        console.log({ check: "Checking for token", token, refreshToken });
         if (token && refreshToken) {
           try {
-            const { user } = await verifyToken(token);
-            return { user };
+            return await verifyToken(token);
           } catch (err) {
             const newTokens = await refreshTokens(refreshToken);
             return { user: newTokens.user };

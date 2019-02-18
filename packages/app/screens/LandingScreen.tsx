@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, AsyncStorage } from "react-native";
+import { StyleSheet } from "react-native";
 import {
   Button,
   Container,
@@ -14,9 +14,6 @@ import {
   Title,
   Right,
 } from "native-base";
-import { UserInfoFragment } from "../components/apollo-components";
-import { meQuery } from "../graphql/user/queries/me";
-import { nativeAuthTokenStorage } from "../lib/nativeAuthTokenStorage";
 
 const styles = StyleSheet.create({
   listHows: {

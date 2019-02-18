@@ -14,11 +14,14 @@ import {
   Body,
   Title,
   Right,
+  Text,
 } from "native-base";
-import { View } from "react-native";
+import { View, Dimensions } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { MapViewContainer } from "../../components/MapViewContainer";
 import { AppLoading } from "expo";
+
+const height = Dimensions.get("window").height / 1.5;
 
 type Props = {
   navigation: any;
@@ -140,66 +143,73 @@ export class CreateRequestScreen extends React.PureComponent<Props> {
                               ? this.state.coordinates[1]
                               : currentLocation.coordinates[1]
                           }
-                          coordinates={
-                            this.state.coordinates.length > 0
-                              ? [this.state.coordinates]
-                              : [currentLocation.coordinates]
-                          }
+                          coordinates={[
+                            {
+                              color: "red",
+                              coordinates:
+                                this.state.coordinates.length > 0
+                                  ? this.state.coordinates
+                                  : currentLocation.coordinates,
+                            },
+                          ]}
+                          height={height}
                         />
                       )}
-                      {this.state.address.length > 0 && (
-                        <Button
-                          block
-                          icon
-                          style={{ marginTop: 15 }}
-                          onPress={async () => {
-                            const response = await mutate({
-                              variables: {
-                                input: {
-                                  service: serviceId as ObjectId,
-                                  provider: providerId,
-                                  address: this.state.address,
-                                  coordinates: this.state.coordinates,
+                      {this.state.address.length > 0 &&
+                        currentLocation.coordinates.length > 0 && (
+                          <Button
+                            block
+                            icon
+                            style={{ marginTop: 15 }}
+                            onPress={async () => {
+                              const response = await mutate({
+                                variables: {
+                                  input: {
+                                    service: serviceId as ObjectId,
+                                    provider: providerId,
+                                    address: this.state.address,
+                                    coordinates: this.state.coordinates,
+                                  },
                                 },
-                              },
-                            });
-
-                            console.log("Create Request Response");
-                            console.log(response);
-
-                            if (
-                              response &&
-                              response.data &&
-                              response.data.createServiceRequest
-                                .serviceRequestId
-                            ) {
-                              const {
-                                data: {
-                                  createServiceRequest: { serviceRequestId },
-                                },
-                              } = response;
-                              navigation.navigate("ServiceRequestProcess", {
-                                type,
-                                serviceRequestId,
                               });
-                            }
-                          }}
-                        >
-                          {type === "Hiring" ? (
-                            <Icon
-                              type="Feather"
-                              name="user-check"
-                              color="#ffffff"
-                            />
-                          ) : (
-                            <Icon
-                              type="FontAwesome"
-                              name="book"
-                              color="#ffffff"
-                            />
-                          )}
-                        </Button>
-                      )}
+
+                              console.log("Create Request Response");
+                              console.log(response);
+
+                              if (
+                                response &&
+                                response.data &&
+                                response.data.createServiceRequest
+                                  .serviceRequestId
+                              ) {
+                                const {
+                                  data: {
+                                    createServiceRequest: { serviceRequestId },
+                                  },
+                                } = response;
+                                navigation.navigate("ServiceRequestProcess", {
+                                  type,
+                                  serviceRequestId,
+                                });
+                              }
+                            }}
+                          >
+                            {type === "Hire" ? (
+                              <Icon
+                                type="Feather"
+                                name="user-check"
+                                color="#ffffff"
+                              />
+                            ) : (
+                              <Icon
+                                type="FontAwesome"
+                                name="book"
+                                color="#ffffff"
+                              />
+                            )}
+                            <Text>{type}</Text>
+                          </Button>
+                        )}
                     </Content>
                   </Container>
                 );

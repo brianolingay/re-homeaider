@@ -261,7 +261,7 @@ export type NewHiringServiceRequestSubscription = {
 export type NewHiringServiceRequestNewHiringServiceRequest = ServiceRequestInfoFragment;
 
 export type ServiceRequestProgressVariables = {
-  serviceRequestId: ObjectId;
+  serviceRequestId: string;
 };
 
 export type ServiceRequestProgressSubscription = {
@@ -1424,7 +1424,7 @@ export function NewHiringServiceRequestHOC<TProps, TChildProps = any>(
   >(NewHiringServiceRequestDocument, operationOptions);
 }
 export const ServiceRequestProgressDocument = gql`
-  subscription ServiceRequestProgress($serviceRequestId: ObjectId!) {
+  subscription ServiceRequestProgress($serviceRequestId: ID!) {
     serviceRequestProgress(serviceRequestId: $serviceRequestId) {
       ...ServiceRequestInfo
     }

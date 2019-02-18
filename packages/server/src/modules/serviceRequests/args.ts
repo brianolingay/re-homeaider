@@ -1,10 +1,10 @@
 import { ObjectId } from "mongodb";
-import { Field, ArgsType } from "type-graphql";
+import { Field, ArgsType, ID } from "type-graphql";
 
 @ArgsType()
 export class ServiceRequestProgressArgs {
-  @Field()
-  serviceRequestId: ObjectId;
+  @Field(() => ID)
+  serviceRequestId: string;
 }
 
 @ArgsType()

@@ -7,8 +7,6 @@ import { AppNavigator } from "./navigation/AppNavigator";
 
 import initApollo from "./lib/init-apollo";
 import { NormalizedCacheObject, ApolloClient } from "apollo-boost";
-import { meQuery } from "./graphql/user/queries/me";
-import { MeQuery } from "./components/apollo-components";
 import { nativeAuthTokenStorage } from "./lib/nativeAuthTokenStorage";
 
 const host = "homeaider-server.herokuapp.com";
