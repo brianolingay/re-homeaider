@@ -3,7 +3,6 @@ import { Button, Form, Card, Container } from "semantic-ui-react";
 import { Formik, Field } from "formik";
 import { Mutation } from "react-apollo";
 import Router from "next/router";
-import axios from "axios";
 
 import { InputField } from "../components/formik-fields/InputField";
 import { ErrorMessage } from "../components/ErrorMessage";
@@ -71,7 +70,6 @@ export default class Login extends React.PureComponent<{
                           }
 
                           const { token, refreshToken } = data.login.tokens;
-                          await axios.post("/tokens", { token, refreshToken });
                           await authTokenStore.setTokens(token, refreshToken);
 
                           store.writeQuery({

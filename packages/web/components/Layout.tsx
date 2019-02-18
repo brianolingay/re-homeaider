@@ -2,7 +2,6 @@ import * as React from "react";
 import Head from "next/head";
 import { Container, Menu, Segment, Dropdown } from "semantic-ui-react";
 import { Query, Mutation } from "react-apollo";
-import axios from "axios";
 
 import { meQuery } from "../graphql/user/queries/me";
 import { MeQuery, LogoutMutation } from "./apollo-components";
@@ -76,7 +75,6 @@ const Layout: React.SFC<Props> = ({
                             <Dropdown.Item
                               onClick={async () => {
                                 await authTokenStore.removeTokens();
-                                await axios.delete("/remove");
                                 (window as any).location = "/login";
                                 // Router.push("/home");
                                 // await client.resetStore();

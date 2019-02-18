@@ -55,7 +55,9 @@
   "workspaces": {
     "nohoist": [
       "typeorm",
-      "typeorm/**"
+      "typeorm/**",
+      "rimraf",
+      "rimraf/**"
     ]
   }
 }

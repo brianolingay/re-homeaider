@@ -43,10 +43,7 @@ const startServer = async () => {
   app.use(
     cors({
       credentials: true,
-      origin:
-        process.env.NODE_ENV === "production"
-          ? "https://homeaider.herokuapp.com"
-          : `http://localhost:3000`,
+      origin: process.env.FRONTEND_HOST,
     })
   );
 
@@ -129,6 +126,7 @@ const startServer = async () => {
     console.log(
       `🚀 Server ready at http://localhost:${port}${server.graphqlPath}`
     );
+    console.log(process.env.FRONTEND_HOST);
   });
 };
 

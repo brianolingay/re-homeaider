@@ -3,13 +3,13 @@ FROM node
 WORKDIR /usr/app
 
 COPY ./package.json .
+COPY ./yarn.lock .
 COPY ./packages/web/ ./packages/web/
 COPY ./packages/common/package.json ./packages/common/
+COPY ./packages/common/dist ./packages/common/dist
 
 RUN npm i -g yarn
 RUN yarn install
-
-COPY ./packages/common/dist ./packages/common/dist
 
 WORKDIR ./packages/web
 
