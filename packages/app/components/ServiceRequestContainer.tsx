@@ -20,10 +20,11 @@ import { shallowCompare } from "../utils/shouldComponentUpdateMixin";
 const height = Dimensions.get("window").height / 3;
 
 type Props = {
-  viewServiceRequest: ServiceRequestInfoFragment;
   me: UserInfoFragment;
   navigation: any;
   subscribe: () => () => void;
+  type: string;
+  viewServiceRequest: ServiceRequestInfoFragment;
 };
 
 const AccountInfoHeader = () => (
@@ -117,8 +118,15 @@ export class ServiceRequestContainer extends React.PureComponent<Props> {
   //   return shallowCompare(this, prevProps, prevState);
   // }
 
+  unsubscribe: (() => void) | undefined;
+
   componentDidMount() {
-    this.props.subscribe();
+    const { navigation, subscribe, viewServiceRequest, type } = this.props;
+    this.unsubscribe = subscribe();
+
+    if (viewServiceRequest.canceledAt || viewServiceRequest.ignoredAt) {
+      navigation.navigate(type);
+    }
   }
 
   render() {
@@ -193,51 +201,45 @@ export class ServiceRequestContainer extends React.PureComponent<Props> {
                 </Body>
               </CardItem>
             )}
-            <CardItem>
-              <Body>
-                <Text>
-                  {viewServiceRequest.arrivedAt
-                    ? viewServiceRequest.arrivedAt
-                    : "Waiting..."}
-                </Text>
-                <Text note>Arrived At</Text>
-              </Body>
-            </CardItem>
-            <CardItem>
-              <Body>
-                <Text>
-                  {viewServiceRequest.startedAt
-                    ? viewServiceRequest.startedAt
-                    : "Waiting..."}
-                </Text>
-                <Text note>Started At</Text>
-              </Body>
-            </CardItem>
-            <CardItem>
-              <Body>
-                <Text>
-                  {viewServiceRequest.completedAt
-                    ? viewServiceRequest.completedAt
-                    : "Waiting..."}
-                </Text>
-                <Text note>Completed At</Text>
-              </Body>
-            </CardItem>
-            <CardItem>
-              <Body>
-                <Text>
-                  {viewServiceRequest.canceledAt
-                    ? viewServiceRequest.canceledAt
-                    : "N/A"}
-                </Text>
-                <Text note>Cancelled At</Text>
-              </Body>
-            </CardItem>
+
+            {Boolean(viewServiceRequest.amount) && (
+              <CardItem>
+                <Body>
+                  <Text>{viewServiceRequest.amount}</Text>
+                  <Text note>Agreed Amount</Text>
+                </Body>
+              </CardItem>
+            )}
+            {Boolean(viewServiceRequest.arrivedAt) && (
+              <CardItem>
+                <Body>
+                  <Text>{viewServiceRequest.arrivedAt}</Text>
+                  <Text note>Arrived At</Text>
+                </Body>
+              </CardItem>
+            )}
+            {Boolean(viewServiceRequest.startedAt) && (
+              <CardItem>
+                <Body>
+                  <Text>{viewServiceRequest.startedAt}</Text>
+                  <Text note>Started At</Text>
+                </Body>
+              </CardItem>
+            )}
+            {Boolean(viewServiceRequest.completedAt) && (
+              <CardItem>
+                <Body>
+                  <Text>{viewServiceRequest.completedAt}</Text>
+                  <Text note>Completed At</Text>
+                </Body>
+              </CardItem>
+            )}
           </Card>
           <UpdateServiceRequestProcessContainer
             navigation={navigation}
             me={me}
             serviceRequestProgress={viewServiceRequest}
+            unsubscribe={this.unsubscribe}
           />
         </Content>
       </Container>

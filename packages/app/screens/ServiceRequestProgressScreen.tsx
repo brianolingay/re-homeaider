@@ -51,6 +51,7 @@ export class ServiceRequestProcessScreen extends React.PureComponent<Props> {
   render() {
     const { navigation } = this.props;
     const serviceRequestId = navigation.getParam("serviceRequestId");
+    const type = navigation.getParam("type");
 
     return (
       <MeComponent>
@@ -73,7 +74,6 @@ export class ServiceRequestProcessScreen extends React.PureComponent<Props> {
                   <ServiceRequestContainer
                     me={me}
                     navigation={navigation}
-                    viewServiceRequest={viewServiceRequest}
                     subscribe={() =>
                       subscribeToMore({
                         document: serviceRequestProgressSubscription,
@@ -97,6 +97,8 @@ export class ServiceRequestProcessScreen extends React.PureComponent<Props> {
                         },
                       })
                     }
+                    type={type}
+                    viewServiceRequest={viewServiceRequest}
                   />
                 );
               }}
