@@ -10,9 +10,13 @@ import {
   Right,
   Content,
 } from "native-base";
-import { UserInfoFragment } from "../../components/apollo-components";
+import {
+  UserInfoFragment,
+  MeComponent,
+} from "../../components/apollo-components";
 import { AvailableHiring } from "../../components/providers/AvailableHiring";
 import { DrawerActions } from "react-navigation";
+import { AppLoading } from "expo";
 
 type Props = {
   me: UserInfoFragment;
@@ -42,7 +46,21 @@ export class HiringScreen extends React.PureComponent<Props> {
     return (
       <Container>
         <Content padder>
-          <AvailableHiring {...this.props} type="Hiring" />
+          <MeComponent>
+            {({ data: { me }, loading }) => {
+              if (loading) {
+                return <AppLoading />;
+              }
+
+              return (
+                <AvailableHiring
+                  me={me}
+                  navigation={this.props.navigation}
+                  type="Hiring"
+                />
+              );
+            }}
+          </MeComponent>
         </Content>
       </Container>
     );

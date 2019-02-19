@@ -223,8 +223,6 @@ export class ServiceRequestResolver {
       provider: ctx.user._id,
       canceledAt: null,
       accepted: false,
-      startedAt: null,
-      ignoredAt: null,
     })
       .populate("serviceSeeker")
       .populate("provider")

@@ -121,8 +121,13 @@ export class ServiceRequestContainer extends React.PureComponent<Props> {
   unsubscribe: (() => void) | undefined;
 
   componentDidMount() {
-    const { navigation, subscribe, viewServiceRequest, type } = this.props;
-    this.unsubscribe = subscribe();
+    const { me, navigation, subscribe, viewServiceRequest, type } = this.props;
+    if (
+      me.role.name === "service_seeker" ||
+      (me.role.name === "provider" && viewServiceRequest.accepted)
+    ) {
+      this.unsubscribe = subscribe();
+    }
 
     if (viewServiceRequest.canceledAt || viewServiceRequest.ignoredAt) {
       navigation.navigate(type);
@@ -183,58 +188,61 @@ export class ServiceRequestContainer extends React.PureComponent<Props> {
           {me.role.name === "service_seeker" && viewServiceRequest.provider && (
             <ProviderAccountInfo viewServiceRequest={viewServiceRequest} />
           )}
-          <Card>
-            <CardItem header>
-              <Body>
-                <Text style={{ fontSize: 18 }}>Updates</Text>
-              </Body>
-            </CardItem>
-            {!viewServiceRequest.accepted && !viewServiceRequest.arrivedAt && (
-              <CardItem>
-                <Spinner />
-              </CardItem>
-            )}
-            {viewServiceRequest.accepted && !viewServiceRequest.arrivedAt && (
-              <CardItem>
+          {(me.role.name === "service_seeker" ||
+            (me.role.name === "provider" && viewServiceRequest.accepted)) && (
+            <Card>
+              <CardItem header>
                 <Body>
-                  <Text>Comming...</Text>
+                  <Text style={{ fontSize: 18 }}>Updates</Text>
                 </Body>
               </CardItem>
-            )}
+              {!viewServiceRequest.accepted && !viewServiceRequest.arrivedAt && (
+                <CardItem>
+                  <Spinner />
+                </CardItem>
+              )}
+              {viewServiceRequest.accepted && !viewServiceRequest.arrivedAt && (
+                <CardItem>
+                  <Body>
+                    <Text>Comming...</Text>
+                  </Body>
+                </CardItem>
+              )}
 
-            {Boolean(viewServiceRequest.amount) && (
-              <CardItem>
-                <Body>
-                  <Text>{viewServiceRequest.amount}</Text>
-                  <Text note>Agreed Amount</Text>
-                </Body>
-              </CardItem>
-            )}
-            {Boolean(viewServiceRequest.arrivedAt) && (
-              <CardItem>
-                <Body>
-                  <Text>{viewServiceRequest.arrivedAt}</Text>
-                  <Text note>Arrived At</Text>
-                </Body>
-              </CardItem>
-            )}
-            {Boolean(viewServiceRequest.startedAt) && (
-              <CardItem>
-                <Body>
-                  <Text>{viewServiceRequest.startedAt}</Text>
-                  <Text note>Started At</Text>
-                </Body>
-              </CardItem>
-            )}
-            {Boolean(viewServiceRequest.completedAt) && (
-              <CardItem>
-                <Body>
-                  <Text>{viewServiceRequest.completedAt}</Text>
-                  <Text note>Completed At</Text>
-                </Body>
-              </CardItem>
-            )}
-          </Card>
+              {Boolean(viewServiceRequest.amount) && (
+                <CardItem>
+                  <Body>
+                    <Text>{viewServiceRequest.amount}</Text>
+                    <Text note>Agreed Amount</Text>
+                  </Body>
+                </CardItem>
+              )}
+              {Boolean(viewServiceRequest.arrivedAt) && (
+                <CardItem>
+                  <Body>
+                    <Text>{viewServiceRequest.arrivedAt}</Text>
+                    <Text note>Arrived At</Text>
+                  </Body>
+                </CardItem>
+              )}
+              {Boolean(viewServiceRequest.startedAt) && (
+                <CardItem>
+                  <Body>
+                    <Text>{viewServiceRequest.startedAt}</Text>
+                    <Text note>Started At</Text>
+                  </Body>
+                </CardItem>
+              )}
+              {Boolean(viewServiceRequest.completedAt) && (
+                <CardItem>
+                  <Body>
+                    <Text>{viewServiceRequest.completedAt}</Text>
+                    <Text note>Completed At</Text>
+                  </Body>
+                </CardItem>
+              )}
+            </Card>
+          )}
           <UpdateServiceRequestProcessContainer
             navigation={navigation}
             me={me}

@@ -91,6 +91,10 @@ export class UpdateServiceRequestProcessContainer extends React.PureComponent<
                       iconLeft
                       danger
                       onPress={async () => {
+                        if (unsubscribe) {
+                          unsubscribe();
+                        }
+
                         if (type === "Hiring") {
                           await mutate({
                             variables: {
