@@ -100,6 +100,7 @@ export class RegisterScreen extends React.PureComponent<Props> {
                       placeholder="Email"
                       returnKeyType="next"
                       keyboardType="email-address"
+                      autoCapitalize="none"
                       component={InputField}
                     />
                     <Field
@@ -126,6 +127,7 @@ export class RegisterScreen extends React.PureComponent<Props> {
                       label="Password"
                       placeholder="Password"
                       secureTextEntry={true}
+                      autoCapitalize="none"
                       component={InputField}
                     />
                     <Button

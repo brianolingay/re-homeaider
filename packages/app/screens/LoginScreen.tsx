@@ -112,6 +112,7 @@ export class LoginScreen extends React.PureComponent<Props> {
                       label="Email"
                       returnKeyType="next"
                       keyboardType="email-address"
+                      autoCapitalize="none"
                       component={InputField}
                     />
                     <Field
@@ -119,6 +120,7 @@ export class LoginScreen extends React.PureComponent<Props> {
                       label="Password"
                       secureTextEntry={true}
                       component={InputField}
+                      autoCapitalize="none"
                       returnKeyType="done"
                     />
                     <Button
