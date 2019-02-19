@@ -6,7 +6,7 @@ import {
   createDrawerNavigator,
 } from "react-navigation";
 import { StyleSheet } from "react-native";
-import { LogoutComponent } from "../components/apollo-components";
+import { MeComponent } from "../components/apollo-components";
 import { BookingStack, HiringStock } from "./ProviderStack";
 import { nativeAuthTokenStorage } from "../lib/nativeAuthTokenStorage";
 
@@ -30,14 +30,15 @@ export const ProvidersDrawer = createDrawerNavigator(
         <Content>
           <DrawerItems {...props} />
         </Content>
-        <LogoutComponent>
-          {() => (
+        <MeComponent>
+          {({ client }) => (
             <Button
               icon
               block
               light
               onPress={async () => {
                 await nativeAuthTokenStorage.removeTokens();
+                client.resetStore();
                 props.navigation.navigate("Auth");
               }}
             >
@@ -45,7 +46,7 @@ export const ProvidersDrawer = createDrawerNavigator(
               <Text>Logout</Text>
             </Button>
           )}
-        </LogoutComponent>
+        </MeComponent>
       </SafeAreaView>
     ),
     initialRouteName: "Booking",

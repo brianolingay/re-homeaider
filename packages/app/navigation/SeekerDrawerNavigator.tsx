@@ -7,7 +7,7 @@ import {
 } from "react-navigation";
 import { StyleSheet } from "react-native";
 import { BookStack, HireStock } from "./SeekerStack";
-import { LogoutComponent } from "../components/apollo-components";
+import { MeComponent } from "../components/apollo-components";
 import { nativeAuthTokenStorage } from "../lib/nativeAuthTokenStorage";
 
 const styles = StyleSheet.create({
@@ -30,14 +30,15 @@ export const SeekersDrawer = createDrawerNavigator(
         <Content>
           <DrawerItems {...props} />
         </Content>
-        <LogoutComponent>
-          {() => (
+        <MeComponent>
+          {({ client }) => (
             <Button
               icon
               block
               light
               onPress={async () => {
                 await nativeAuthTokenStorage.removeTokens();
+                client.resetStore();
                 props.navigation.navigate("Auth");
               }}
             >
@@ -45,7 +46,7 @@ export const SeekersDrawer = createDrawerNavigator(
               <Text>Logout</Text>
             </Button>
           )}
-        </LogoutComponent>
+        </MeComponent>
       </SafeAreaView>
     ),
     initialRouteName: "Book",
