@@ -64,13 +64,17 @@ export class ServiceRequestResolver {
     try {
       await serviceRequest.save();
 
-      const newServiceRequest = serviceRequest
+      const newServiceRequest = await ServiceRequestModel.findOne({
+        _id: serviceRequest._id,
+      })
         .populate("serviceSeeker")
         .populate("provider")
         .populate({
           path: "service",
           populate: { path: "category" },
-        });
+        })
+        .lean()
+        .exec();
 
       if (newServiceRequest) {
         if (serviceRequestInput.provider) {
@@ -191,12 +195,7 @@ export class ServiceRequestResolver {
     // [TODO]: Fix results...
     const serviceRequests = await ServiceRequestModel.find({
       service: { $in: input.services },
-      provider: null,
-      canceledAt: null,
       accepted: false,
-      startedAt: null,
-      ignoredAt: null,
-      completedAt: null,
     })
       .sort({ createdAt: -1 })
       .populate("serviceSeeker")
@@ -270,11 +269,6 @@ export class ServiceRequestResolver {
       ServiceRequestProgressPayload,
       ServiceRequestProgressArgs
     >) => {
-      console.log(typeof payload.serviceRequestId);
-      console.log(payload.serviceRequestId);
-      console.log(typeof args.serviceRequestId);
-      console.log(args.serviceRequestId);
-      console.log(payload.serviceRequestId === args.serviceRequestId);
       return payload.serviceRequestId === args.serviceRequestId;
     },
   })
@@ -298,22 +292,27 @@ export class ServiceRequestResolver {
       NewBookingServiceRequestPayload,
       NewBookingServiceRequestArgs
     >) => {
-      return Boolean(
-        args.input.services &&
-          args.input.services.filter(
-            item =>
-              item === payload.serviceRequest.service._id &&
-              !payload.serviceRequest.accepted &&
-              !payload.serviceRequest.canceledAt
-          ).length
+      return (
+        Boolean(args.input.services) &&
+        Boolean(
+          args.input.services!.filter(item => {
+            console.log(
+              item.toString() === payload.serviceRequest.service._id.toString()
+            );
+            return (
+              item.toString() ===
+                payload.serviceRequest.service._id.toString() &&
+              !payload.serviceRequest.accepted
+            );
+          }).length
+        )
       );
     },
   })
   newBookingServiceRequest(
     @Root() newServiceRequest: NewBookingServiceRequestPayload,
-    @Args() args: NewBookingServiceRequestArgs
+    @Args() _: NewBookingServiceRequestArgs
   ): ServiceRequest {
-    console.log(args);
     const { serviceRequest } = newServiceRequest;
 
     return serviceRequest;

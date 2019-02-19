@@ -3,6 +3,7 @@ import { AvailableBookingRequestComponent } from "../apollo-components";
 import { newBookingServiceRequestSubscription } from "../../graphql/serviceRequest/subscriptions/newBookingServiceRequest";
 import { List, ListItem, Body, Text, Right } from "native-base";
 import { AppLoading } from "expo";
+import { shallowCompare } from "../../utils/shouldComponentUpdateMixin";
 
 type Props = {
   type: string;
@@ -10,8 +11,44 @@ type Props = {
   navigation: any;
 };
 
-export class AvailableBookings extends React.PureComponent<Props> {
+interface State {
+  timer: NodeJS.Timeout | null;
+  counter: number;
+}
+
+export class AvailableBookings extends React.PureComponent<Props, State> {
   unsubscribe: (() => void) | undefined;
+  refetch: () => void | undefined;
+
+  state = {
+    timer: null,
+    counter: 0,
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (shallowCompare(this, prevProps, prevState)) {
+      if (this.refetch) {
+        this.refetch();
+      }
+    }
+  }
+
+  componentDidMount() {
+    let timer = setInterval(this.tick, 5000);
+    this.setState({ timer });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.timer);
+    this.unsubscribe();
+  }
+
+  tick = () => {
+    this.setState({
+      counter: this.state.counter + 1,
+    });
+  };
+
   render() {
     const { type, user, navigation } = this.props;
 
@@ -25,15 +62,27 @@ export class AvailableBookings extends React.PureComponent<Props> {
           data: { availableBookingRequest },
           loading,
           subscribeToMore,
+          refetch,
         }) => {
           if (loading) {
             return <AppLoading />;
           }
+          this.refetch = refetch;
           this.unsubscribe = subscribeToMore({
             document: newBookingServiceRequestSubscription,
             variables: { input: { services } },
             updateQuery: (prev, { subscriptionData }) => {
               if (!subscriptionData.data) {
+                return prev;
+              }
+
+              const newArr = prev.availableBookingRequest.filter(
+                item =>
+                  item._id ===
+                  (subscriptionData.data as any).newBookingServiceRequest._id
+              );
+
+              if (newArr.length) {
                 return prev;
               }
 

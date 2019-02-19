@@ -33,16 +33,8 @@ export class UserResolver {
 
   @Authorized()
   @Mutation(() => Boolean)
-  async logout(
-    @Ctx()
-    ctx: MyContext
-  ) {
-    return await new Promise(res =>
-      ctx.req.session!.destroy((err: any) => {
-        console.log(err);
-        res(!err);
-      })
-    );
+  async logout() {
+    return true;
   }
 
   @Query(() => User, { nullable: true })

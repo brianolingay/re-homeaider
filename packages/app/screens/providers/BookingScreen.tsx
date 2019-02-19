@@ -10,6 +10,7 @@ import {
   Right,
   Content,
 } from "native-base";
+
 import { AvailableBookings } from "../../components/providers/AvailableBookings";
 import { DrawerActions } from "react-navigation";
 import { MeComponent } from "../../components/apollo-components";
