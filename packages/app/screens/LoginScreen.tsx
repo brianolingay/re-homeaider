@@ -48,7 +48,7 @@ export class LoginScreen extends React.PureComponent<Props> {
 
   onFormSubmit = (mutate) => (input, { setErrors, setSubmitting }) => {
     const { navigation } = this.props;
-    const isAdmin = false;
+    const isAdmin = true;
     return mutate({
       variables: { isAdmin, input },
       update: async (store, { data }) => {

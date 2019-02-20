@@ -11,7 +11,9 @@ import { NormalizedCacheObject, ApolloClient } from "apollo-boost";
 // import { MeQuery } from "./components/apollo-components";
 import { nativeAuthTokenStorage } from "./lib/nativeAuthTokenStorage";
 
-const host = "192.168.1.17:4000";
+// const host = "192.168.43.95:4000";
+// const host = "192.168.1.17:4000";
+const host = "192.168.1.36:4000";
 
 const SERVER_LINK_OPTIONS = {
   uri: `http://${host}/graphql`,
