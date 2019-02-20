@@ -46,6 +46,42 @@ export class LoginScreen extends React.PureComponent<Props> {
     ),
   });
 
+  onFormSubmit = (mutate) => (input, { setErrors, setSubmitting }) => {
+    const { navigation } = this.props;
+    const isAdmin = true;
+    return mutate({
+      variables: { isAdmin, input },
+      update: async (store, { data }) => {
+        if (!data || !data.login.user) {
+          return;
+        }
+        await nativeAuthTokenStorage.setTokens(data.login.tokens);
+        store.writeQuery({
+          query: meQuery,
+          data: {
+            me: data.login.user,
+          },
+        });
+      }
+    }).then(response => {
+      console.log({response});
+      if (
+        response &&
+        response.data &&
+        response.data.login.errors &&
+        response.data.login.errors.length
+      ) {
+        setSubmitting(false);
+        return setErrors(normalizeErrors(response.data.login.errors));
+      } else {
+        const { services, role: { name } } = (response as any).data.login.user;
+        const isServiceSeeker = name === "service_seeker";
+        const location = isServiceSeeker ? "Seekers" : services ? "Providers" : "Profile";
+        navigation.navigate(location);
+      }
+    });
+  };
+
   render() {
     return (
       <Container>
@@ -57,51 +93,7 @@ export class LoginScreen extends React.PureComponent<Props> {
                   email: "charlie@homeaider.com",
                   password: "homeaider",
                 }}
-                onSubmit={async (input, { setErrors, setSubmitting }) => {
-                  const { navigation } = this.props;
-                  const isAdmin = false;
-                  const response = await mutate({
-                    variables: { isAdmin, input },
-                    update: async (store, { data }) => {
-                      if (!data || !data.login.user) {
-                        return;
-                      }
-
-                      await nativeAuthTokenStorage.setTokens(data.login.tokens);
-
-                      store.writeQuery({
-                        query: meQuery,
-                        data: {
-                          me: data.login.user,
-                        },
-                      });
-                    },
-                  });
-
-                  console.log(response);
-
-                  if (
-                    response &&
-                    response.data &&
-                    response.data.login.errors &&
-                    response.data.login.errors.length
-                  ) {
-                    setSubmitting(false);
-                    return setErrors(
-                      normalizeErrors(response.data.login.errors)
-                    );
-                  } else {
-                    const {
-                      role: { name },
-                      services,
-                    } = (response as any).data.login.user;
-                    const location =
-                      name === "service_seeker" ? "Seekers" : "Providers";
-                    // ? "Providers"
-                    // : "Profile";
-                    navigation.navigate(location);
-                  }
-                }}
+                onSubmit={this.onFormSubmit(mutate)}
                 validateOnBlur={false}
                 validateOnChange={false}
               >

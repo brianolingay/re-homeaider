@@ -35,6 +35,11 @@ export class LandingScreen extends React.PureComponent<{
   };
 
   render() {
+
+    const navigateTo = (name: string, opt?: {}) => () => {
+      this.props.navigation.navigate(name, opt)
+    };
+
     return (
       <Container>
         <Content padder>
@@ -60,7 +65,7 @@ export class LandingScreen extends React.PureComponent<{
             block
             primary
             style={{ marginTop: 5 }}
-            onPress={() => this.props.navigation.navigate("Login")}
+            onPress={navigateTo("Login")}
           >
             <Text>Login</Text>
           </Button>
@@ -69,11 +74,7 @@ export class LandingScreen extends React.PureComponent<{
             block
             primary
             style={{ marginTop: 5 }}
-            onPress={() =>
-              this.props.navigation.navigate("Register", {
-                role: "service_seeker",
-              })
-            }
+            onPress={navigateTo("Register", { role: "service_seeker"})}
           >
             <Text>Register as Seeker</Text>
           </Button>
@@ -81,13 +82,17 @@ export class LandingScreen extends React.PureComponent<{
             block
             primary
             style={{ marginTop: 5 }}
-            onPress={() =>
-              this.props.navigation.navigate("Register", {
-                role: "provider",
-              })
-            }
+            onPress={navigateTo("Register", { role: "provider" })}
           >
             <Text>Register as Provider</Text>
+          </Button>
+          <Button
+            block
+            primary
+            style={{ marginTop: 5 }}
+            onPress={navigateTo("Profile")}
+          >
+            <Text>Profile</Text>
           </Button>
         </Content>
       </Container>
