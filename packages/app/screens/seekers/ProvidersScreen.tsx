@@ -1,8 +1,5 @@
 import * as React from "react";
-import {
-  ProvidersByServiceComponent,
-  UserInfoFragment,
-} from "../../components/apollo-components";
+import { ProvidersByServiceComponent } from "../../components/apollo-components";
 import {
   Header,
   Left,
@@ -78,9 +75,9 @@ export class ProvidersScreen extends React.PureComponent<Props> {
                       >
                         <Body>
                           <Text>
-                            {item.firstName} {item.lastName}
+                            {item.user.firstName} {item.user.lastName}
                           </Text>
-                          <Text note>Email: {item.email}</Text>
+                          <Text note>Email: {item.user.email}</Text>
                         </Body>
                         <Right>
                           <Text>Proceed</Text>

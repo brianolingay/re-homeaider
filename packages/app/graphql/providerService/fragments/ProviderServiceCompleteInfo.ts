@@ -3,7 +3,7 @@ import { serviceInfoFragment } from "../../service/fragments/ServiceInfo";
 import { userBasicInfoFragment } from "./../../user/fragments/UserBasicInfo";
 
 export const providerServiceInfoFragment = gql`
-  fragment ProviderServiceInfo on ProviderServiceWithUser {
+  fragment ProviderServiceInfo on ProviderService {
     _id
     description
     certificates {

@@ -173,19 +173,25 @@ export class ServiceResolver {
       },
       {
         $lookup: {
-          from: "users",
+          from: "providerservices",
           localField: "_id",
-          foreignField: "services",
-          as: "users_doc",
+          foreignField: "service",
+          as: "pc_doc",
         },
       },
-      { $match: { users_doc: { $ne: [] } } },
+      { $match: { pc_doc: { $ne: [] } } },
       {
         $project: {
           _id: 1,
           name: 1,
           totalUsers: {
-            $size: "$users_doc",
+            $size: {
+              $filter: {
+                input: "$pc_doc",
+                as: "pc",
+                cond: { $eq: ["$$pc.approved", true] },
+              },
+            },
           },
         },
       },

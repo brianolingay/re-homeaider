@@ -5,8 +5,8 @@ import { certificateSchema, CertificateInterface } from "./Certificate";
 
 export interface ProviderServiceInterface extends Document {
   description: string | null;
-  user: UserInterface;
-  service: ServiceInterface;
+  user: UserInterface | null;
+  service: ServiceInterface | null;
   certificates: CertificateInterface[];
   approved: boolean;
   createdAt: Date | null;

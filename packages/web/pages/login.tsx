@@ -3,7 +3,6 @@ import { Button, Form, Card, Container } from "semantic-ui-react";
 import { Formik, Field } from "formik";
 import { Mutation } from "react-apollo";
 import Router from "next/router";
-import axios from "axios";
 
 import { InputField } from "../components/formik-fields/InputField";
 import { ErrorMessage } from "../components/ErrorMessage";
@@ -71,7 +70,6 @@ export default class Login extends React.PureComponent<{
                           }
 
                           const { token, refreshToken } = data.login.tokens;
-                          await axios.post("/tokens", { token, refreshToken });
                           await authTokenStore.setTokens(token, refreshToken);
 
                           store.writeQuery({
@@ -82,6 +80,15 @@ export default class Login extends React.PureComponent<{
                           });
                         },
                       });
+
+                      if (
+                        response &&
+                        response.errors &&
+                        response.errors.length
+                      ) {
+                        setSubmitting(false);
+                        return;
+                      }
 
                       if (
                         response &&
@@ -102,25 +109,27 @@ export default class Login extends React.PureComponent<{
                     validateOnChange={false}
                   >
                     {({ errors, handleSubmit, isSubmitting }) => (
-                      <Form onSubmit={handleSubmit}>
-                        <Field
-                          name="email"
-                          label="Email"
-                          placeholder="Email"
-                          component={InputField}
-                        />
-                        <Field
-                          name="password"
-                          label="Password"
-                          placeholder="Password"
-                          component={InputField}
-                          type="password"
-                        />
-                        <ErrorMessage errors={errors} />
-                        <Button disabled={isSubmitting} type="submit">
-                          Login
-                        </Button>
-                      </Form>
+                      <Container>
+                        {errors && <ErrorMessage errors={errors} />}
+                        <Form onSubmit={handleSubmit}>
+                          <Field
+                            name="email"
+                            label="Email"
+                            placeholder="Email"
+                            component={InputField}
+                          />
+                          <Field
+                            name="password"
+                            label="Password"
+                            placeholder="Password"
+                            component={InputField}
+                            type="password"
+                          />
+                          <Button disabled={isSubmitting} type="submit">
+                            Login
+                          </Button>
+                        </Form>
+                      </Container>
                     )}
                   </Formik>
                 )}

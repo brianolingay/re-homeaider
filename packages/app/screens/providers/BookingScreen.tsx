@@ -11,40 +11,15 @@ import {
   Content,
 } from "native-base";
 import { AvailableBookings } from "../../components/providers/AvailableBookings";
-import { meQuery } from "../../graphql/user/queries/me";
 import { DrawerActions } from "react-navigation";
+import { MeComponent } from "../../components/apollo-components";
+import { AppLoading } from "expo";
 
 type Props = {
-  user: any;
   navigation: any;
 };
 
 export class BookingScreen extends React.PureComponent<Props> {
-  static async getInitialProps({ apolloClient, navigation }: any) {
-    const { data: user } = await apolloClient.query({
-      query: meQuery,
-    });
-
-    // if (user && user.me) {
-    //   const {
-    //     role: { name },
-    //     services,
-    //   } = user.me;
-    //   navigation.navigate(
-    //     services.lenght
-    //       ? "Profile"
-    //       : name === "service_seeker"
-    //       ? "Seekers"
-    //       : "Providers"
-    //   );
-    // }
-
-    return {
-      navigation,
-      user,
-    };
-  }
-
   static navigationOptions = ({ navigation }) => ({
     header: (
       <Header>
@@ -65,10 +40,25 @@ export class BookingScreen extends React.PureComponent<Props> {
   });
 
   render() {
+    const { navigation } = this.props;
     return (
       <Container>
         <Content padder>
-          <AvailableBookings {...this.props} type="Booking" />
+          <MeComponent>
+            {({ loading, data: { me } }) => {
+              if (loading) {
+                return <AppLoading />;
+              }
+
+              return (
+                <AvailableBookings
+                  user={me}
+                  navigation={navigation}
+                  type="Booking"
+                />
+              );
+            }}
+          </MeComponent>
         </Content>
       </Container>
     );

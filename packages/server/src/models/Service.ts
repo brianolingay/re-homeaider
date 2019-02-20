@@ -4,7 +4,7 @@ import { CateogryInterface } from "./Category";
 export interface ServiceInterface extends Document {
   name: string;
   description: string | null;
-  category: CateogryInterface;
+  category: CateogryInterface | null;
   createdAt: Date | null;
   updatedAt: Date | null;
 }

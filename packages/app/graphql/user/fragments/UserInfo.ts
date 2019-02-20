@@ -5,7 +5,7 @@ import { serviceInfoFragment } from "../../service/fragments/ServiceInfo";
 import { userSubscriptionInfoFragment } from "../../userSubscription/fragments/UserSubscriptionInfo";
 
 export const userInfoFragment = gql`
-  fragment UserInfo on UserDetailed {
+  fragment UserInfo on User {
     _id
     email
     firstName

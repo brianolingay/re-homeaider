@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 import { ServiceRequest } from "./../../types/objects/ServiceRequest";
 
 export interface ServiceRequestProgressPayload {
-  serviceRequestId: ObjectId;
+  serviceRequestId: string;
   serviceRequest: ServiceRequest;
 }
 

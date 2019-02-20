@@ -27,12 +27,18 @@ function create(
   const authLink = setContext(async (_, { headers }) => {
     const tokens = await getTokens();
 
+    if (tokens.token && tokens.refreshToken) {
+      return {
+        headers: {
+          ...headers,
+          ["x-token"]: tokens.token,
+          ["x-refresh_token"]: tokens.refreshToken,
+        },
+      };
+    }
+
     return {
-      headers: {
-        ...headers,
-        ["x-token"]: tokens.token,
-        ["x-refresh_token"]: tokens.refreshToken,
-      },
+      ...headers,
     };
   });
 
@@ -54,15 +60,15 @@ function create(
     })
   );
 
-  // const errorLink = onError(({ networkError, graphQLErrors }) => {
-  //   if (graphQLErrors)
-  //     graphQLErrors.map(({ message, locations, path }) =>
-  //       console.log(
-  //         `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-  //       )
-  //     );
-  //   if (networkError) console.log(`[Network error]: ${networkError}`);
-  // });
+  const errorLink = onError(({ networkError, graphQLErrors }) => {
+    if (graphQLErrors)
+      graphQLErrors.map(({ message, locations, path }) =>
+        console.log(
+          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+        )
+      );
+    if (networkError) console.log(`[Network error]: ${networkError}`);
+  });
 
   // Create a WebSocket link:
   const wsLink = new WebSocketLink({
@@ -79,7 +85,7 @@ function create(
   });
 
   const httpLinkWithMiddleware = from([
-    // errorLink,
+    errorLink,
     afterwareLink,
     authLink,
     httpLink,

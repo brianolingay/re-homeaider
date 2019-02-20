@@ -2,6 +2,12 @@ import { ObjectId } from "mongodb";
 import { InputType, Field } from "type-graphql";
 
 @InputType()
+export class AvailableBookingInput {
+  @Field(() => [ObjectId], { nullable: true })
+  services: ObjectId[] | null;
+}
+
+@InputType()
 export class ServiceRequestInput {
   @Field(() => ObjectId, { nullable: true })
   service: ObjectId;

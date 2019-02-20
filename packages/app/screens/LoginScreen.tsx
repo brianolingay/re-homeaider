@@ -90,7 +90,7 @@ export class LoginScreen extends React.PureComponent<Props> {
             {mutate => (
               <Formik<FormValues>
                 initialValues={{
-                  email: "archie@homeaider.com",
+                  email: "charlie@homeaider.com",
                   password: "homeaider",
                 }}
                 onSubmit={this.onFormSubmit(mutate)}

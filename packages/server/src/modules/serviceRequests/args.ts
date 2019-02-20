@@ -1,16 +1,17 @@
 import { ObjectId } from "mongodb";
-import { Field, ArgsType } from "type-graphql";
+import { Field, ArgsType, ID } from "type-graphql";
+import { AvailableBookingInput } from "./input";
 
 @ArgsType()
 export class ServiceRequestProgressArgs {
-  @Field()
-  serviceRequestId: ObjectId;
+  @Field(() => ID)
+  serviceRequestId: string;
 }
 
 @ArgsType()
 export class NewBookingServiceRequestArgs {
-  @Field(() => [ObjectId])
-  serviceIds: ObjectId[];
+  @Field(() => AvailableBookingInput)
+  input: AvailableBookingInput;
 }
 
 @ArgsType()

@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "nodemon server/index.ts",
-    "build": "rimraf dist && next build && tsc --project tsconfig.server.json",
-    "start": "NODE_ENV=development && node dist/index.js",
+    "build": "next build",
+    "start": "next start -p $PORT",
+    "heroku-postbuild": "next build",
     "type-check": "tsc",
     "generate": "gql-gen"
   },

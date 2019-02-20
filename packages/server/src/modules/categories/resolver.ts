@@ -115,15 +115,13 @@ export class CategoryResolver {
       .populate({ path: "services", populate: { path: "category" } })
       .exec();
 
-    console.log(categories);
-
     return categories;
   }
 
   @Authorized()
   @Query(() => [AvailableCategorieResponse], { nullable: true })
   async availableCategories(): Promise<AvailableCategorieResponse[]> {
-    const categories = await CategoryModel.aggregate([
+    const aggregate = [
       {
         $lookup: {
           from: "services",
@@ -140,10 +138,10 @@ export class CategoryResolver {
       },
       {
         $lookup: {
-          from: "users",
+          from: "providerservices",
           localField: "services_doc._id",
-          foreignField: "services",
-          as: "services_doc.users_doc",
+          foreignField: "service",
+          as: "services_doc.ps_doc",
         },
       },
       {
@@ -164,13 +162,26 @@ export class CategoryResolver {
               $filter: {
                 input: "$services",
                 as: "sd",
-                cond: { $ne: ["$$sd.users_doc", []] },
+                cond: {
+                  $ne: [
+                    {
+                      $filter: {
+                        input: "$$sd.ps_doc",
+                        as: "ps",
+                        cond: { $eq: ["$$ps.approved", true] },
+                      },
+                    },
+                    [],
+                  ],
+                },
               },
             },
           },
         },
       },
-    ]);
+    ];
+
+    const categories = await CategoryModel.aggregate(aggregate);
 
     return categories;
   }

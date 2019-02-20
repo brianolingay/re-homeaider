@@ -10,28 +10,52 @@ import {
 } from "./apollo-components";
 
 type Props = {
-  serviceRequestProgress: ServiceRequestInfoFragment;
   me: UserInfoFragment;
   navigation: any;
+  serviceRequestProgress: ServiceRequestInfoFragment;
+  unsubscribe: () => void;
 };
 
-interface State {
-  amount: number;
-  rating: number;
-}
-
 export class UpdateServiceRequestProcessContainer extends React.PureComponent<
-  Props,
-  State
+  Props
 > {
-  static state = {
+  state = {
     amount: 0,
     rating: 0,
+    isVisible: false,
+    isThankYouVisible: false, // [TODO]: Later add a Thank You Overlay
   };
 
+  componentDidUpdate() {
+    const { me, serviceRequestProgress, unsubscribe } = this.props;
+    if (
+      (me.role.name === "service_seeker" &&
+        serviceRequestProgress.completedAt &&
+        serviceRequestProgress.rating === 0) ||
+      (me.role.name === "provider" &&
+        !serviceRequestProgress.startedAt &&
+        serviceRequestProgress.arrivedAt &&
+        serviceRequestProgress.accepted)
+    ) {
+      this.setState({ isVisible: true });
+    }
+
+    if (
+      (me.role.name === "service_seeker" &&
+        serviceRequestProgress.rating > 0) ||
+      (me.role.name === "provider" && serviceRequestProgress.amount > 0)
+    ) {
+      unsubscribe();
+      this.setState({ isVisible: false });
+    }
+
+    console.log(`Is Visible: ${this.state.isVisible}`);
+  }
+
   render() {
-    const { serviceRequestProgress, me, navigation } = this.props;
+    const { serviceRequestProgress, me, navigation, unsubscribe } = this.props;
     const type = navigation.getParam("type");
+    // [TODO]: Fix button alignment, font size in overlay,
     return (
       <View>
         {me.role.name === "provider" ? (
@@ -41,6 +65,7 @@ export class UpdateServiceRequestProcessContainer extends React.PureComponent<
                 {!serviceRequestProgress.accepted && (
                   <View
                     style={{
+                      flex: 1,
                       justifyContent: "space-between",
                       alignItems: "center",
                     }}
@@ -125,60 +150,58 @@ export class UpdateServiceRequestProcessContainer extends React.PureComponent<
                       <Text>Complete</Text>
                     </Button>
                   )}
-                {!serviceRequestProgress.startedAt &&
-                  serviceRequestProgress.arrivedAt !== null &&
-                  serviceRequestProgress.accepted && (
-                    <Overlay isVisible={true}>
-                      <View>
-                        <Text
-                          style={{
-                            fontSize: 24,
-                            fontWeight: "500",
-                            marginBottom: 15,
-                          }}
-                        >
-                          After you've done surveying, provide the needed amount
-                          to be paid.
-                        </Text>
+                <Overlay
+                  isVisible={
+                    me.role.name === "provider" && this.state.isVisible
+                  }
+                >
+                  <View>
+                    <Text
+                      style={{
+                        fontSize: 24,
+                        fontWeight: "500",
+                        marginBottom: 15,
+                      }}
+                    >
+                      After you've done surveying, provide the needed amount to
+                      be paid.
+                    </Text>
 
-                        <Item>
-                          <Icon active type="FontAwesome" name="dollar" />
-                          <Input
-                            placeholder="Amount To Pay"
-                            keyboardType="decimal-pad"
-                            onChangeText={value => {
-                              this.setState({
-                                amount: parseFloat(value),
-                              });
-                            }}
-                          />
-                        </Item>
+                    <Item>
+                      <Icon active type="FontAwesome" name="dollar" />
+                      <Input
+                        placeholder="Amount To Pay"
+                        keyboardType="decimal-pad"
+                        onChangeText={value => {
+                          this.setState({
+                            amount: parseFloat(value),
+                          });
+                        }}
+                      />
+                    </Item>
 
-                        <Button
-                          iconLeft
-                          primary
-                          onPress={async () => {
-                            await mutate({
-                              variables: {
-                                input: {
-                                  amount: this.state.amount,
-                                  startedAt: dayjs().format("YYYY-MM-DD"),
-                                },
-                                serviceRequestId: serviceRequestProgress._id,
-                              },
-                            });
-                          }}
-                        >
-                          <Icon
-                            type="FontAwesome"
-                            name="check"
-                            color="#ffffff"
-                          />
-                          <Text>Proceed</Text>
-                        </Button>
-                      </View>
-                    </Overlay>
-                  )}
+                    <Button
+                      iconLeft
+                      primary
+                      onPress={async () => {
+                        await mutate({
+                          variables: {
+                            input: {
+                              amount: this.state.amount,
+                              startedAt: dayjs().format("YYYY-MM-DD"),
+                            },
+                            serviceRequestId: serviceRequestProgress._id,
+                          },
+                        });
+
+                        this.setState({ isVisible: false });
+                      }}
+                    >
+                      <Icon type="FontAwesome" name="check" color="#ffffff" />
+                      <Text>Proceed</Text>
+                    </Button>
+                  </View>
+                </Overlay>
               </View>
             )}
           </UpdateServiceRequestComponent>
@@ -208,71 +231,86 @@ export class UpdateServiceRequestProcessContainer extends React.PureComponent<
                     <Text>Cancel</Text>
                   </Button>
                 )}
-                {serviceRequestProgress.completedAt !== null && (
-                  <Overlay isVisible={true}>
-                    <View>
-                      <Text
-                        style={{
-                          fontSize: 24,
-                          fontWeight: "500",
-                          marginBottom: 15,
-                        }}
-                      >
-                        Please Rate My Performance
-                      </Text>
+                <Overlay
+                  isVisible={
+                    me.role.name === "service_seeker" && this.state.isVisible
+                  }
+                >
+                  <View>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: "500",
+                        marginBottom: 15,
+                      }}
+                    >
+                      Please Rate My Performance
+                    </Text>
 
-                      <Rating
-                        showRating
-                        type="star"
-                        fractions={1}
-                        ratingCount={5}
-                        startingValue={this.state.rating}
-                        imageSize={30}
-                        onFinishRating={rating => {
-                          this.setState({
-                            rating,
-                          });
-                        }}
-                        style={{ paddingVertical: 10 }}
-                      />
+                    <Rating
+                      showRating
+                      type="star"
+                      fractions={1}
+                      ratingCount={5}
+                      startingValue={this.state.rating}
+                      imageSize={30}
+                      onFinishRating={rating => {
+                        this.setState({
+                          rating,
+                        });
+                      }}
+                      style={{ paddingVertical: 10 }}
+                    />
 
-                      <View
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          justifyContent: "space-evenly",
-                          alignItems: "center",
-                        }}
-                      >
-                        {this.state.rating === 0 && (
-                          <Button
-                            light
-                            onPress={() => navigation.navigate(type)}
-                          >
-                            <Text>Not Now</Text>
-                          </Button>
-                        )}
-                        {this.state.rating > 0 && (
-                          <Button
-                            primary
-                            onPress={async () => {
-                              await mutate({
-                                variables: {
-                                  input: { rating: this.state.rating },
-                                  serviceRequestId: serviceRequestProgress._id,
-                                },
-                              });
+                    <View
+                      style={{
+                        display: "flex",
+                        flex: 1,
+                        flexDirection: "row",
+                        justifyContent: "space-evenly",
+                        alignItems: "center",
+                      }}
+                    >
+                      {this.state.rating === 0 && (
+                        <Button
+                          light
+                          onPress={async () => {
+                            this.setState({ isVisible: false });
+                            await mutate({
+                              variables: {
+                                input: { rating: 0.1 },
+                                serviceRequestId: serviceRequestProgress._id,
+                              },
+                            });
 
-                              navigation.navigate(type);
-                            }}
-                          >
-                            <Text>Submit</Text>
-                          </Button>
-                        )}
-                      </View>
+                            navigation.navigate(type);
+                          }}
+                        >
+                          <Text>Not Now</Text>
+                        </Button>
+                      )}
+                      {this.state.rating > 0 && (
+                        <Button
+                          primary
+                          onPress={async () => {
+                            this.setState({ isVisible: false });
+
+                            await mutate({
+                              variables: {
+                                input: { rating: this.state.rating },
+                                serviceRequestId: serviceRequestProgress._id,
+                              },
+                            });
+
+                            navigation.navigate(type);
+                          }}
+                        >
+                          <Text>Submit</Text>
+                        </Button>
+                      )}
                     </View>
-                  </Overlay>
-                )}
+                  </View>
+                </Overlay>
               </View>
             )}
           </UpdateServiceRequestComponent>

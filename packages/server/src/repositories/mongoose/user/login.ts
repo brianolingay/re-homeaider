@@ -6,6 +6,7 @@ import { UserModel } from "./../../../models/User";
 import { LoginInput } from "./../../../modules/users/login/createInput";
 import { invalidLogin } from "./../../../modules/users/login/constants";
 import { createToken } from "../../../utils/jwtAuth";
+import { LoginResponse } from "./../../../modules/users/login/createResponse";
 
 const errorResponse = [
   {
@@ -14,7 +15,10 @@ const errorResponse = [
   },
 ];
 
-export const login = async (isAdmin: Boolean, loginInput: LoginInput) => {
+export const login = async (
+  isAdmin: Boolean,
+  loginInput: LoginInput
+): Promise<LoginResponse> => {
   try {
     await loginSchema.validate(loginInput, { abortEarly: false });
   } catch (err) {
@@ -25,11 +29,16 @@ export const login = async (isAdmin: Boolean, loginInput: LoginInput) => {
   const user = await UserModel.findOne({ email })
     .populate("role")
     .populate({
-      path: "services",
-      populate: { path: "category" },
+      path: "providerServices",
+      populate: {
+        path: "service",
+        populate: { path: "category" },
+      },
     })
     .lean()
     .exec();
+
+  console.log(user);
 
   if (!user) {
     return { errors: errorResponse, user: null, tokens: null };

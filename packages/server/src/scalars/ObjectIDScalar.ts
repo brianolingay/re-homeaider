@@ -8,7 +8,7 @@ export const ObjectIdScalar = new GraphQLScalarType({
     return new ObjectId(value); // value from the client input variables
   },
   serialize(value: ObjectId) {
-    return value.toHexString(); // value sent to the client
+    return value.toString(); // value sent to the client
   },
   parseLiteral(ast) {
     if (ast.kind === Kind.STRING) {

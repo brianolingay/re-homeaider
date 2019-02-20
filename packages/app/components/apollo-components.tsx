@@ -1,5 +1,9 @@
 export type Maybe<T> = T | null;
 
+export interface AvailableBookingInput {
+  services?: Maybe<ObjectId[]>;
+}
+
 export interface CategoryInput {
   name: string;
 
@@ -202,7 +206,9 @@ export type UpdateServiceRequestErrors = {
   message: string;
 };
 
-export type AvailableBookingRequestVariables = {};
+export type AvailableBookingRequestVariables = {
+  input: AvailableBookingInput;
+};
 
 export type AvailableBookingRequestQuery = {
   __typename?: "Query";
@@ -237,7 +243,7 @@ export type ViewServiceRequestQuery = {
 export type ViewServiceRequestViewServiceRequest = ServiceRequestInfoFragment;
 
 export type NewBookingServiceRequestVariables = {
-  serviceIds: ObjectId[];
+  input: AvailableBookingInput;
 };
 
 export type NewBookingServiceRequestSubscription = {
@@ -261,7 +267,7 @@ export type NewHiringServiceRequestSubscription = {
 export type NewHiringServiceRequestNewHiringServiceRequest = ServiceRequestInfoFragment;
 
 export type ServiceRequestProgressVariables = {
-  serviceRequestId: ObjectId;
+  serviceRequestId: string;
 };
 
 export type ServiceRequestProgressSubscription = {
@@ -410,7 +416,7 @@ export type LocationInfoFragment = {
 };
 
 export type ProviderServiceBasicInfoFragment = {
-  __typename?: "ProviderServiceWithService";
+  __typename?: "ProviderService";
 
   _id: ObjectId;
 
@@ -420,7 +426,7 @@ export type ProviderServiceBasicInfoFragment = {
 
   approved: boolean;
 
-  service: ProviderServiceBasicInfoService;
+  service: Maybe<ProviderServiceBasicInfoService>;
 };
 
 export type ProviderServiceBasicInfoCertificates = {
@@ -446,7 +452,7 @@ export type ProviderServiceBasicInfoImages = {
 export type ProviderServiceBasicInfoService = ServiceInfoFragment;
 
 export type ProviderServiceInfoFragment = {
-  __typename?: "ProviderServiceWithUser";
+  __typename?: "ProviderService";
 
   _id: ObjectId;
 
@@ -456,9 +462,9 @@ export type ProviderServiceInfoFragment = {
 
   approved: boolean;
 
-  service: ProviderServiceInfoService;
+  service: Maybe<ProviderServiceInfoService>;
 
-  user: ProviderServiceInfoUser;
+  user: Maybe<ProviderServiceInfoUser>;
 };
 
 export type ProviderServiceInfoCertificates = {
@@ -514,7 +520,7 @@ export type ServiceInfoFragment = {
 
   description: Maybe<string>;
 
-  category: ServiceInfoCategory;
+  category: Maybe<ServiceInfoCategory>;
 };
 
 export type ServiceInfoCategory = CategoryInfoFragment;
@@ -538,15 +544,15 @@ export type ServiceRequestInfoFragment = {
 
   accepted: boolean;
 
-  arrivedAt: Maybe<DateTime>;
+  arrivedAt: Maybe<string>;
 
-  startedAt: Maybe<DateTime>;
+  startedAt: Maybe<string>;
 
-  canceledAt: Maybe<DateTime>;
+  canceledAt: Maybe<string>;
 
-  completedAt: Maybe<DateTime>;
+  completedAt: Maybe<string>;
 
-  ignoredAt: Maybe<DateTime>;
+  ignoredAt: Maybe<string>;
 
   feedBack: Maybe<string>;
 
@@ -592,7 +598,7 @@ export type UserBasicInfoFragment = {
 };
 
 export type UserInfoFragment = {
-  __typename?: "UserDetailed";
+  __typename?: "User";
 
   _id: ObjectId;
 
@@ -626,9 +632,9 @@ export type UserInfoFragment = {
 export type UserInfoUserSubscription = UserSubscriptionInfoFragment;
 
 export type UserInfoProviderServices = {
-  __typename?: "ProviderServiceWithService";
+  __typename?: "ProviderService";
 
-  service: UserInfoService;
+  service: Maybe<UserInfoService>;
 } & ProviderServiceBasicInfoFragment;
 
 export type UserInfoService = ServiceInfoFragment;
@@ -711,7 +717,7 @@ export const UserBasicInfoFragmentDoc = gql`
 `;
 
 export const ProviderServiceInfoFragmentDoc = gql`
-  fragment ProviderServiceInfo on ProviderServiceWithUser {
+  fragment ProviderServiceInfo on ProviderService {
     _id
     description
     certificates {
@@ -792,7 +798,7 @@ export const UserSubscriptionInfoFragmentDoc = gql`
 `;
 
 export const ProviderServiceBasicInfoFragmentDoc = gql`
-  fragment ProviderServiceBasicInfo on ProviderServiceWithService {
+  fragment ProviderServiceBasicInfo on ProviderService {
     _id
     description
     certificates {
@@ -822,7 +828,7 @@ export const RoleInfoFragmentDoc = gql`
 `;
 
 export const UserInfoFragmentDoc = gql`
-  fragment UserInfo on UserDetailed {
+  fragment UserInfo on User {
     _id
     email
     firstName
@@ -1168,8 +1174,8 @@ export function UpdateServiceRequestHOC<TProps, TChildProps = any>(
   >(UpdateServiceRequestDocument, operationOptions);
 }
 export const AvailableBookingRequestDocument = gql`
-  query AvailableBookingRequest {
-    availableBookingRequest {
+  query AvailableBookingRequest($input: AvailableBookingInput!) {
+    availableBookingRequest(input: $input) {
       ...ServiceRequestInfo
     }
   }
@@ -1318,8 +1324,8 @@ export function ViewServiceRequestHOC<TProps, TChildProps = any>(
   >(ViewServiceRequestDocument, operationOptions);
 }
 export const NewBookingServiceRequestDocument = gql`
-  subscription NewBookingServiceRequest($serviceIds: [ObjectId!]!) {
-    newBookingServiceRequest(serviceIds: $serviceIds) {
+  subscription NewBookingServiceRequest($input: AvailableBookingInput!) {
+    newBookingServiceRequest(input: $input) {
       ...ServiceRequestInfo
     }
   }
@@ -1424,7 +1430,7 @@ export function NewHiringServiceRequestHOC<TProps, TChildProps = any>(
   >(NewHiringServiceRequestDocument, operationOptions);
 }
 export const ServiceRequestProgressDocument = gql`
-  subscription ServiceRequestProgress($serviceRequestId: ObjectId!) {
+  subscription ServiceRequestProgress($serviceRequestId: ID!) {
     serviceRequestProgress(serviceRequestId: $serviceRequestId) {
       ...ServiceRequestInfo
     }

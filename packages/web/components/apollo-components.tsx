@@ -628,7 +628,7 @@ export type ServiceInfoFragment = {
 
   description: Maybe<string>;
 
-  category: ServiceInfoCategory;
+  category: Maybe<ServiceInfoCategory>;
 };
 
 export type ServiceInfoCategory = {
@@ -648,7 +648,7 @@ export type ErrorInfoFragment = {
 };
 
 export type UserInfoFragment = {
-  __typename?: "UserDetailed";
+  __typename?: "User";
 
   _id: ObjectId;
 
@@ -732,7 +732,7 @@ export const ErrorInfoFragmentDoc = gql`
 `;
 
 export const UserInfoFragmentDoc = gql`
-  fragment UserInfo on UserDetailed {
+  fragment UserInfo on User {
     _id
     email
     firstName

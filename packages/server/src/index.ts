@@ -43,10 +43,7 @@ const startServer = async () => {
   app.use(
     cors({
       credentials: true,
-      origin:
-        process.env.NODE_ENV === "production"
-          ? "https://homeaider.herokuapp.com"
-          : `http://localhost:${port}`,
+      origin: process.env.FRONTEND_HOST,
     })
   );
 
@@ -79,6 +76,7 @@ const startServer = async () => {
       authChecker: ({ context }) => {
         return context.user; // or false if access denied
       },
+      validate: false,
     }),
     context: ({ req, connection }: any) => ({
       req,
@@ -87,10 +85,10 @@ const startServer = async () => {
     subscriptions: {
       path: "/subscriptions",
       onConnect: async ({ token, refreshToken }: any) => {
+        console.log({ check: "Checking for token", token, refreshToken });
         if (token && refreshToken) {
           try {
-            const { user } = await verifyToken(token);
-            return { user };
+            return await verifyToken(token);
           } catch (err) {
             const newTokens = await refreshTokens(refreshToken);
             return { user: newTokens.user };
@@ -128,6 +126,7 @@ const startServer = async () => {
     console.log(
       `🚀 Server ready at http://localhost:${port}${server.graphqlPath}`
     );
+    console.log(process.env.FRONTEND_HOST);
   });
 };
 

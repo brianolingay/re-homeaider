@@ -29,20 +29,20 @@ export class ServiceRequest {
   @Field(() => Boolean)
   accepted: boolean;
 
-  @Field(() => Date, { nullable: true })
-  arrivedAt: Date | null;
+  @Field(() => String, { nullable: true })
+  arrivedAt: string | null;
 
-  @Field(() => Date, { nullable: true })
-  startedAt: Date | null;
+  @Field(() => String, { nullable: true })
+  startedAt: string | null;
 
-  @Field(() => Date, { nullable: true })
-  canceledAt: Date | null;
+  @Field(() => String, { nullable: true })
+  canceledAt: string | null;
 
-  @Field(() => Date, { nullable: true })
-  completedAt: Date | null;
+  @Field(() => String, { nullable: true })
+  completedAt: string | null;
 
-  @Field(() => Date, { nullable: true })
-  ignoredAt: Date | null;
+  @Field(() => String, { nullable: true })
+  ignoredAt: string | null;
 
   @Field(() => String, { nullable: true })
   feedBack: string | null;

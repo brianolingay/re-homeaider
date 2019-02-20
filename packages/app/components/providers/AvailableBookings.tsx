@@ -14,8 +14,12 @@ export class AvailableBookings extends React.PureComponent<Props> {
   unsubscribe: (() => void) | undefined;
   render() {
     const { type, user, navigation } = this.props;
+
+    const services = user.providerServices
+      .filter(item => item.service !== null && typeof item.service !== "string")
+      .map(item => item.service._id);
     return (
-      <AvailableBookingRequestComponent>
+      <AvailableBookingRequestComponent variables={{ input: { services } }}>
         {({
           error,
           data: { availableBookingRequest },
@@ -25,29 +29,23 @@ export class AvailableBookings extends React.PureComponent<Props> {
           if (loading) {
             return <AppLoading />;
           }
+          this.unsubscribe = subscribeToMore({
+            document: newBookingServiceRequestSubscription,
+            variables: { input: { services } },
+            updateQuery: (prev, { subscriptionData }) => {
+              if (!subscriptionData.data) {
+                return prev;
+              }
 
-          console.log(error);
-
-          if (user && user.me) {
-            const services = user.me.services.map(item => item._id);
-            this.unsubscribe = subscribeToMore({
-              document: newBookingServiceRequestSubscription,
-              variables: { serviceIds: services },
-              updateQuery: (prev, { subscriptionData }) => {
-                if (!subscriptionData.data) {
-                  return prev;
-                }
-
-                return {
-                  ...prev,
-                  availableBookingRequest: [
-                    (subscriptionData.data as any).newBookingServiceRequest,
-                    ...prev.availableBookingRequest,
-                  ],
-                };
-              },
-            });
-          }
+              return {
+                ...prev,
+                availableBookingRequest: [
+                  (subscriptionData.data as any).newBookingServiceRequest,
+                  ...prev.availableBookingRequest,
+                ],
+              };
+            },
+          });
 
           return (
             <List>

@@ -13,8 +13,8 @@ export class Service {
   @Field(() => String, { nullable: true })
   description: string | null;
 
-  @Field(() => Category)
-  category: Category;
+  @Field(() => Category, { nullable: true })
+  category: Category | null;
 
   @Field(() => Date, { nullable: true })
   createdAt: Date | null;

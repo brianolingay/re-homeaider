@@ -10,11 +10,11 @@ export interface ServiceRequestInterface extends Document {
   address: string;
   coordinates: number[];
   accepted: boolean;
-  arrivedAt: Date | null;
-  startedAt: Date | null;
-  canceledAt: Date | null;
-  completedAt: Date | null;
-  ignoredAt: Date | null;
+  arrivedAt: string | null;
+  startedAt: string | null;
+  canceledAt: string | null;
+  completedAt: string | null;
+  ignoredAt: string | null;
   feedBack: string | null;
   rating: number;
 }

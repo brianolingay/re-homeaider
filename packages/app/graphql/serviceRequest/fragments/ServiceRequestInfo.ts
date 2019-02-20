@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 import { serviceInfoFragment } from "../../service/fragments/ServiceInfo";
-import { userBasicInfoFragment } from "../../user/fragments/UserInfo";
+import { userBasicInfoFragment } from "../../user/fragments/UserBasicInfo";
 
 export const serviceRequestInfoFragment = gql`
   fragment ServiceRequestInfo on ServiceRequest {
