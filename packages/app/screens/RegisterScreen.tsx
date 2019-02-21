@@ -1,23 +1,12 @@
 import * as React from "react";
-import {
-  Button,
-  Container,
-  Content,
-  Form,
-  Text,
-  Header,
-  Left,
-  Icon,
-  Body,
-  Title,
-  Right,
-} from "native-base";
+import { Button, Container, Content, Form, Text } from "native-base";
 import { Formik, Field } from "formik";
 import { validUserSchema } from "@homeaider/common";
 
 import { InputField } from "../components/formik-fields/InputField";
 import { RegisterComponent } from "../components/apollo-components";
 import { normalizeErrors } from "../utils/normalizeErrors";
+import SwitchHeader from "../components/SwitchHeader";
 
 interface FormValues {
   email: string;
@@ -33,26 +22,15 @@ type Props = {
 };
 
 export class RegisterScreen extends React.PureComponent<Props> {
-  static navigationOptions = ({ navigation }) => ({
-    header: (
-      <Header>
-        <Left>
-          <Button transparent onPress={() => navigation.goBack()}>
-            <Icon name="arrow-back" />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Register</Title>
-        </Body>
-        <Right />
-      </Header>
-    ),
-  });
-
+  static navigationOptions = {
+    header: null,
+  };
   render() {
-    const role = this.props.navigation.getParam("role");
+    const { navigation } = this.props;
+    const role = navigation.getParam("role");
     return (
       <Container>
+        <SwitchHeader navigation={navigation} title="Register" />
         <Content>
           <RegisterComponent>
             {mutate => (

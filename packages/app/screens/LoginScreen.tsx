@@ -1,17 +1,5 @@
 import * as React from "react";
-import {
-  Button,
-  Container,
-  Content,
-  Form,
-  Text,
-  Header,
-  Left,
-  Body,
-  Title,
-  Right,
-  Icon,
-} from "native-base";
+import { Button, Container, Content, Form, Text } from "native-base";
 import { Formik, Field } from "formik";
 
 import { InputField } from "../components/formik-fields/InputField";
@@ -19,6 +7,7 @@ import { normalizeErrors } from "../utils/normalizeErrors";
 import { LoginComponent } from "../components/apollo-components";
 import { meQuery } from "../graphql/user/queries/me";
 import { nativeAuthTokenStorage } from "../lib/nativeAuthTokenStorage";
+import SwitchHeader from "../components/SwitchHeader";
 
 interface FormValues {
   email: string;
@@ -30,25 +19,12 @@ type Props = {
 };
 
 export class LoginScreen extends React.PureComponent<Props> {
-  static navigationOptions = ({ navigation }) => ({
-    header: (
-      <Header>
-        <Left>
-          <Button transparent onPress={() => navigation.goBack()}>
-            <Icon name="arrow-back" />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Login</Title>
-        </Body>
-        <Right />
-      </Header>
-    ),
-  });
-
-  onFormSubmit = (mutate) => (input, { setErrors, setSubmitting }) => {
+  static navigationOptions = {
+    header: null,
+  };
+  onFormSubmit = mutate => (input, { setErrors, setSubmitting }) => {
     const { navigation } = this.props;
-    const isAdmin = true;
+    const isAdmin = false;
     return mutate({
       variables: { isAdmin, input },
       update: async (store, { data }) => {
@@ -62,9 +38,9 @@ export class LoginScreen extends React.PureComponent<Props> {
             me: data.login.user,
           },
         });
-      }
+      },
     }).then(response => {
-      console.log({response});
+      console.log({ response });
       if (
         response &&
         response.data &&
@@ -74,23 +50,32 @@ export class LoginScreen extends React.PureComponent<Props> {
         setSubmitting(false);
         return setErrors(normalizeErrors(response.data.login.errors));
       } else {
-        const { services, role: { name } } = (response as any).data.login.user;
+        const {
+          services,
+          role: { name },
+        } = (response as any).data.login.user;
         const isServiceSeeker = name === "service_seeker";
-        const location = isServiceSeeker ? "Seekers" : services ? "Providers" : "Profile";
+        const location = isServiceSeeker
+          ? "Seekers"
+          : services
+          ? "Providers"
+          : "Profile";
         navigation.navigate(location);
       }
     });
   };
 
   render() {
+    const { navigation } = this.props;
     return (
       <Container>
+        <SwitchHeader navigation={navigation} title="Login" />
         <Content>
           <LoginComponent>
             {mutate => (
               <Formik<FormValues>
                 initialValues={{
-                  email: "charlie@homeaider.com",
+                  email: "archie@homeaider.com",
                   password: "homeaider",
                 }}
                 onSubmit={this.onFormSubmit(mutate)}

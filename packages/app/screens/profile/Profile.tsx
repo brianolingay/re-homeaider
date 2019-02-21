@@ -1,36 +1,26 @@
 import * as React from "react";
-import {
-  Container,
-  Content,
-  Header,
-  Left,
-  Body,
-  Title,
-  Right,
-  Text,
-  View
-} from "native-base";
+import { Container, Content, Text, View } from "native-base";
 
 import {
   ImageBackground,
-  ListView,
   Platform,
   ScrollView,
   StyleSheet,
-  Image
-} from 'react-native';
+  Image,
+} from "react-native";
 
+import MyInfo from "./MyInfo";
+import Separator from "./Separator";
+import { Card } from "react-native-elements";
+import { MeComponent } from "../../components/apollo-components";
+import { AppLoading } from "expo";
+import DrawerHeader from "../../components/DrawerHeader";
 
-import Email from './Email';
-import Tel from './Tel';
-import Separator from './Separator';
-import { Icon, Card } from 'react-native-elements';
-
-const mainColor = '#01C89E';
+const mainColor = "#01C89E";
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderWidth: 0,
     flex: 1,
     margin: 0,
@@ -40,7 +30,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   emailContainer: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     flex: 1,
     paddingTop: 30,
   },
@@ -50,42 +40,29 @@ const styles = StyleSheet.create({
   },
   headerContainer: {},
   headerColumn: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     ...Platform.select({
       ios: {
-        alignItems: 'center',
+        alignItems: "center",
         elevation: 1,
         marginTop: -1,
       },
       android: {
-        alignItems: 'center',
+        alignItems: "center",
       },
     }),
   } as any,
   placeIcon: {
-    color: 'white',
+    color: "white",
     fontSize: 26,
   },
   scroll: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
   },
-  telContainer: {
-    backgroundColor: '#FFF',
+  infoContainer: {
+    backgroundColor: "#FFF",
     flex: 1,
     paddingTop: 30,
-  },
-  userAddressRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  userCityRow: {
-    backgroundColor: 'transparent',
-  },
-  userCityText: {
-    color: '#A5A5A5',
-    fontSize: 15,
-    fontWeight: '600',
-    textAlign: 'center',
   },
   userImage: {
     borderColor: mainColor,
@@ -96,48 +73,21 @@ const styles = StyleSheet.create({
     width: 170,
   },
   userNameText: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     paddingBottom: 8,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
-
-const telDS =  [
-  { "id": 1, "name": "Mobile", "number": "+66 (089)-928-2134" },
-  { "id": 2, "name": "Work", "number": "+41 (112)-435-9887" }
-];
-
-const emails = [
-  { "id": 1, "name": "Personal", "email": "elsie-goodman@mail.com" },
-  { "id": 2, "name": "Work", "email": "elsie@work.com" }
-];
 
 export default class Profile extends React.PureComponent<{
   navigation?: any;
 }> {
   static navigationOptions = {
-    header: (
-      <Header>
-        <Left />
-        <Body />
-        <Right />
-      </Header>
-    )
+    header: null,
   };
-
-  state = {
-    telDS: new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    }).cloneWithRows(telDS),
-    emailDS: new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    }).cloneWithRows(emails),
-  };
-
-  renderHeader = () => {
-
+  renderHeader = ({ firstName, lastName, address, city, country }) => {
     return (
       <View style={styles.headerContainer}>
         <ImageBackground
@@ -154,78 +104,66 @@ export default class Profile extends React.PureComponent<{
                 uri: `https://pbs.twimg.com/profile_images/909953369694859265/BOakwKQY_400x400.jpg`,
               }}
             />
-            <Text style={styles.userNameText}>Teofilo Makatawtaw</Text>
-            <View style={styles.userAddressRow}>
-              <View>
-                <Icon
-                  name="place"
-                  underlayColor="transparent"
-                  iconStyle={styles.placeIcon}
-                  // onPress={this.onPressPlace}
-                />
-              </View>
-              <View style={styles.userCityRow}>
-                <Text style={styles.userCityText}>
-                  Tokyo tokyo tempura, Japan
-                </Text>
-              </View>
-            </View>
+            <Text
+              style={styles.userNameText}
+            >{`${firstName} ${lastName}`}</Text>
           </View>
         </ImageBackground>
       </View>
-    )
+    );
   };
 
-  renderTel = () => (
-    <ListView
-      contentContainerStyle={styles.telContainer}
-      dataSource={this.state.telDS}
-      renderRow={({ id, name, number }, _, k) => {
-        return (
-          <Tel
-            key={`tel-${id}`}
-            index={k}
-            name={name}
-            number={number}
-            // onPressSms={this.onPressSms}
-            // onPressTel={this.onPressTel}
-          />
-        )
-      }}
-    />
-  );
-
-  renderEmail = () => (
-    <ListView
-      contentContainerStyle={styles.emailContainer}
-      dataSource={this.state.emailDS}
-      renderRow={({ email, id, name }, _, k) => {
-        return (
-          <Email
-            key={`email-${id}`}
-            index={k}
-            name={name}
-            email={email}
-            // onPressEmail={this.onPressEmail}
-          />
-        )
-      }}
-    />
-  );
-
   render() {
+    const { navigation } = this.props;
     return (
       <Container>
+        <DrawerHeader navigation={navigation} title="Profile" />
         <Content padder>
           <ScrollView style={styles.scroll}>
-            <View style={styles.container}>
-              <Card containerStyle={styles.cardContainer}>
-                {this.renderHeader()}
-                {this.renderTel()}
-                {Separator()}
-                {this.renderEmail()}
-              </Card>
-            </View>
+            <MeComponent>
+              {({ data: { me }, loading }) => {
+                if (loading) {
+                  return <AppLoading />;
+                }
+
+                return (
+                  <View style={styles.container}>
+                    <Card containerStyle={styles.cardContainer}>
+                      {this.renderHeader(me)}
+                      <MyInfo
+                        containerStyle={styles.infoContainer}
+                        icon={{ name: "email" }}
+                        note="Email"
+                        value={me.email}
+                      />
+                      <MyInfo
+                        containerStyle={styles.infoContainer}
+                        icon={{ name: "call" }}
+                        note="Mobile"
+                        value={me.mobile}
+                      />
+                      {Boolean(me.phone) && (
+                        <MyInfo
+                          containerStyle={styles.infoContainer}
+                          icon={{ name: "call" }}
+                          note="Phone"
+                          value={me.phone}
+                        />
+                      )}
+                      <Separator />
+                      {Boolean(me.address) && (
+                        <MyInfo
+                          containerStyle={styles.infoContainer}
+                          icon={{ name: "home" }}
+                          note="Address/City/Country"
+                          value={`${me.address}, ${me.city}, ${me.country}`}
+                        />
+                      )}
+                    </Card>
+                  </View>
+                );
+              }}
+            </MeComponent>
           </ScrollView>
         </Content>
       </Container>

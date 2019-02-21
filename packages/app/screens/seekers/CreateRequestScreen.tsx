@@ -4,22 +4,12 @@ import {
   CreateServiceRequestComponent,
   ObjectId,
 } from "../../components/apollo-components";
-import {
-  Container,
-  Content,
-  Header,
-  Left,
-  Button,
-  Icon,
-  Body,
-  Title,
-  Right,
-  Text,
-} from "native-base";
+import { Container, Content, Button, Icon, Text } from "native-base";
 import { View, Dimensions } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { MapViewContainer } from "../../components/MapViewContainer";
 import { AppLoading } from "expo";
+import SwitchHeader from "../../components/SwitchHeader";
 
 const height = Dimensions.get("window").height / 1.5;
 
@@ -28,22 +18,9 @@ type Props = {
 };
 
 export class CreateRequestScreen extends React.PureComponent<Props> {
-  static navigationOptions = ({ navigation }) => ({
-    header: (
-      <Header>
-        <Left>
-          <Button transparent onPress={() => navigation.goBack()}>
-            <Icon name="arrow-back" />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Services</Title>
-        </Body>
-        <Right />
-      </Header>
-    ),
-  });
-
+  static navigationOptions = {
+    header: null,
+  };
   state = {
     address: "",
     coordinates: [],
@@ -68,6 +45,10 @@ export class CreateRequestScreen extends React.PureComponent<Props> {
               {mutate => {
                 return (
                   <Container>
+                    <SwitchHeader
+                      navigation={navigation}
+                      title="Create Request"
+                    />
                     <Content>
                       <View style={{ marginTop: 10 }}>
                         <GooglePlacesAutocomplete

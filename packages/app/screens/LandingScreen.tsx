@@ -25,19 +25,12 @@ export class LandingScreen extends React.PureComponent<{
   navigation: any;
 }> {
   static navigationOptions = {
-    header: (
-      <Header>
-        <Left />
-        <Body />
-        <Right />
-      </Header>
-    ),
+    header: null,
   };
 
   render() {
-
     const navigateTo = (name: string, opt?: {}) => () => {
-      this.props.navigation.navigate(name, opt)
+      this.props.navigation.navigate(name, opt);
     };
 
     return (
@@ -74,7 +67,7 @@ export class LandingScreen extends React.PureComponent<{
             block
             primary
             style={{ marginTop: 5 }}
-            onPress={navigateTo("Register", { role: "service_seeker"})}
+            onPress={navigateTo("Register", { role: "service_seeker" })}
           >
             <Text>Register as Seeker</Text>
           </Button>
@@ -86,14 +79,14 @@ export class LandingScreen extends React.PureComponent<{
           >
             <Text>Register as Provider</Text>
           </Button>
-          <Button
+          {/* <Button
             block
             primary
             style={{ marginTop: 5 }}
             onPress={navigateTo("Profile")}
           >
             <Text>Profile</Text>
-          </Button>
+          </Button> */}
         </Content>
       </Container>
     );

@@ -9,6 +9,7 @@ import { StyleSheet } from "react-native";
 import { BookStack, HireStock } from "./SeekerStack";
 import { MeComponent } from "../components/apollo-components";
 import { nativeAuthTokenStorage } from "../lib/nativeAuthTokenStorage";
+import Profile from "../screens/profile/Profile";
 
 const styles = StyleSheet.create({
   container: {
@@ -20,6 +21,7 @@ export const SeekersDrawer = createDrawerNavigator(
   {
     Book: { screen: BookStack },
     Hire: { screen: HireStock },
+    Profile: { screen: Profile },
   },
   {
     contentComponent: props => (

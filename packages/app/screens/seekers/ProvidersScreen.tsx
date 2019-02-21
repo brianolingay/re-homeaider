@@ -1,12 +1,9 @@
 import * as React from "react";
 import { ProvidersByServiceComponent } from "../../components/apollo-components";
 import {
-  Header,
-  Left,
   Button,
   Icon,
   Body,
-  Title,
   Right,
   Container,
   Content,
@@ -17,28 +14,16 @@ import {
   CardItem,
 } from "native-base";
 import { AppLoading } from "expo";
+import SwitchHeader from "../../components/SwitchHeader";
 
 type Props = {
   navigation: any;
 };
 
 export class ProvidersScreen extends React.PureComponent<Props> {
-  static navigationOptions = ({ navigation }) => ({
-    header: (
-      <Header>
-        <Left>
-          <Button transparent onPress={() => navigation.goBack()}>
-            <Icon name="arrow-back" />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Providers</Title>
-        </Body>
-        <Right />
-      </Header>
-    ),
-  });
-
+  static navigationOptions = {
+    header: null,
+  };
   state = {
     provider: null,
   };
@@ -58,6 +43,10 @@ export class ProvidersScreen extends React.PureComponent<Props> {
 
           return (
             <Container>
+              <SwitchHeader
+                navigation={navigation}
+                title="Available Providers"
+              />
               <Content>
                 {!this.state.provider ? (
                   <List>

@@ -1,47 +1,23 @@
 import * as React from "react";
-import {
-  Container,
-  Header,
-  Left,
-  Button,
-  Icon,
-  Body,
-  Title,
-  Right,
-  Content,
-} from "native-base";
+import { Container, Content } from "native-base";
 import { AvailableCategories } from "../../components/seekers/AvaialbleCategories";
-import { DrawerActions } from "react-navigation";
+import DrawerHeader from "../../components/DrawerHeader";
 
 type Props = {
   navigation: any;
 };
 
 export class HireScreen extends React.PureComponent<Props> {
-  static navigationOptions = ({ navigation }) => ({
-    header: (
-      <Header>
-        <Left>
-          <Button
-            transparent
-            onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
-          >
-            <Icon name="menu" />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Hire</Title>
-        </Body>
-        <Right />
-      </Header>
-    ),
-  });
-
+  static navigationOptions = {
+    header: null,
+  };
   render() {
+    const { navigation } = this.props;
     return (
       <Container>
+        <DrawerHeader navigation={navigation} title="Hire By Category" />
         <Content padder>
-          <AvailableCategories type="Hire" navigation={this.props.navigation} />
+          <AvailableCategories type="Hire" navigation={navigation} />
         </Content>
       </Container>
     );

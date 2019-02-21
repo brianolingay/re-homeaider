@@ -1,12 +1,7 @@
 import * as React from "react";
 import { FindServicesByCategoryComponent } from "../../components/apollo-components";
 import {
-  Header,
-  Left,
-  Button,
-  Icon,
   Body,
-  Title,
   Right,
   Container,
   Content,
@@ -15,27 +10,16 @@ import {
   Text,
 } from "native-base";
 import { AppLoading } from "expo";
+import SwitchHeader from "../../components/SwitchHeader";
 
 type Props = {
   navigation: any;
 };
 
 export class ServicesScreen extends React.PureComponent<Props> {
-  static navigationOptions = ({ navigation }) => ({
-    header: (
-      <Header>
-        <Left>
-          <Button transparent onPress={() => navigation.goBack()}>
-            <Icon name="arrow-back" />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Services</Title>
-        </Body>
-        <Right />
-      </Header>
-    ),
-  });
+  static navigationOptions = {
+    header: null,
+  };
   render() {
     const { navigation } = this.props;
     const type = navigation.getParam("type");
@@ -50,6 +34,10 @@ export class ServicesScreen extends React.PureComponent<Props> {
           }
           return (
             <Container>
+              <SwitchHeader
+                navigation={navigation}
+                title="Available Services"
+              />
               <Content>
                 <List>
                   {findServicesByCategory.map(item => (
@@ -57,7 +45,9 @@ export class ServicesScreen extends React.PureComponent<Props> {
                       key={`service-${item._id}`}
                       onPress={() => {
                         const screen =
-                          type === "Book" ? "CreateRequest" : "Providers";
+                          type === "Book"
+                            ? "CreateRequest"
+                            : "ProvidersByService";
                         navigation.navigate(screen, {
                           type,
                           serviceId: item._id,

@@ -1,45 +1,21 @@
 import * as React from "react";
-import {
-  Container,
-  Header,
-  Left,
-  Button,
-  Icon,
-  Body,
-  Title,
-  Right,
-  Content,
-} from "native-base";
+import { Container, Content } from "native-base";
 import { AvailableCategories } from "../../components/seekers/AvaialbleCategories";
-import { DrawerActions } from "react-navigation";
+import DrawerHeader from "../../components/DrawerHeader";
 
 type Props = {
   navigation: any;
 };
 
 export class BookScreen extends React.PureComponent<Props> {
-  static navigationOptions = ({ navigation }) => ({
-    header: (
-      <Header>
-        <Left>
-          <Button
-            transparent
-            onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
-          >
-            <Icon name="menu" />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Book</Title>
-        </Body>
-        <Right />
-      </Header>
-    ),
-  });
-
+  static navigationOptions = {
+    header: null,
+  };
   render() {
+    const { navigation } = this.props;
     return (
       <Container>
+        <DrawerHeader navigation={navigation} title="Book By Category" />
         <Content padder>
           <AvailableCategories type="Book" navigation={this.props.navigation} />
         </Content>

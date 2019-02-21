@@ -1,14 +1,13 @@
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { AuthStack } from "./AuthStack";
-import ProfileStack from './ProfileStack';
-// import { SeekersDrawer } from "./SeekerDrawerNavigator";
-// import { ProvidersDrawer } from "./PorivderDrawerNavigator";
+import { SeekersDrawer } from "./SeekerDrawerNavigator";
+import { ProvidersDrawer } from "./PorivderDrawerNavigator";
 
 export const AppNavigator = createAppContainer(
   createSwitchNavigator({
     Auth: AuthStack,
-    Profile: ProfileStack,
-    // Seekers: SeekersDrawer,
-    // Providers: ProvidersDrawer,
+    // Profile: ProfileStack,
+    Seekers: SeekersDrawer,
+    Providers: ProvidersDrawer,
   })
 );

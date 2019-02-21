@@ -1,22 +1,12 @@
 import * as React from "react";
-import {
-  Container,
-  Header,
-  Left,
-  Button,
-  Icon,
-  Body,
-  Title,
-  Right,
-  Content,
-} from "native-base";
+import { Container, Content } from "native-base";
 import {
   UserInfoFragment,
   MeComponent,
 } from "../../components/apollo-components";
 import { AvailableHiring } from "../../components/providers/AvailableHiring";
-import { DrawerActions } from "react-navigation";
 import { AppLoading } from "expo";
+import DrawerHeader from "../../components/DrawerHeader";
 
 type Props = {
   me: UserInfoFragment;
@@ -24,27 +14,14 @@ type Props = {
 };
 
 export class HiringScreen extends React.PureComponent<Props> {
-  static navigationOptions = ({ navigation }) => ({
-    header: (
-      <Header>
-        <Left>
-          <Button
-            transparent
-            onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
-          >
-            <Icon name="menu" />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Hirings</Title>
-        </Body>
-        <Right />
-      </Header>
-    ),
-  });
+  static navigationOptions = {
+    header: null,
+  };
   render() {
+    const { navigation } = this.props;
     return (
       <Container>
+        <DrawerHeader navigation={navigation} title="Hiring" />
         <Content padder>
           <MeComponent>
             {({ data: { me }, loading }) => {
