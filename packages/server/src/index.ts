@@ -82,6 +82,10 @@ const startServer = async () => {
       req,
       user: connection ? connection.context.user : req.user,
     }),
+    uploads: {
+      maxFileSize: 10000,
+      maxFiles: 20,
+    },
     subscriptions: {
       path: "/subscriptions",
       onConnect: async ({ token, refreshToken }: any) => {
@@ -114,7 +118,7 @@ const startServer = async () => {
       return response;
     },
     playground: process.env.NODE_ENV !== "production",
-    debug: true,
+    debug: process.env.NODE_ENV !== "production",
   });
 
   server.applyMiddleware({ app, cors: false }); // app is from an existing express app
