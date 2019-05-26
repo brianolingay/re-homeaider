@@ -1,9 +1,6 @@
 import * as React from "react";
 import { FieldProps } from "formik";
 import {
-  Input,
-  Item as FormItem,
-  Label,
   View,
   List,
   ListItem,
@@ -12,6 +9,8 @@ import {
   Text,
   Body,
   Right,
+  Button,
+  Icon,
 } from "native-base";
 import { Permissions, ImagePicker } from "expo";
 import { ReactNativeFile } from "extract-files";
@@ -23,6 +22,7 @@ export class InputField extends React.Component<any & FieldProps<any>> {
     description: "",
     certificates: [],
   };
+
   onPress = async () => {
     const { status } = await Permissions.getAsync(Permissions.CAMERA_ROLL);
     if (status !== "granted") {
@@ -63,13 +63,13 @@ export class InputField extends React.Component<any & FieldProps<any>> {
                   <Thumbnail source={{ uri: cert.uri }} />
                 </Left>
                 <Body>
-                  <Text>Kumar Pratik</Text>
-                  <Text note>
-                    Doing what you like will always keep you happy . .
-                  </Text>
+                  <Text>{cert.name}</Text>
+                  <Text note>Certificate Name</Text>
                 </Body>
                 <Right>
-                  <Text note>3:43 pm</Text>
+                  <Button icon transparent primary>
+                    <Icon name="trash" />
+                  </Button>
                 </Right>
               </ListItem>
             </List>
