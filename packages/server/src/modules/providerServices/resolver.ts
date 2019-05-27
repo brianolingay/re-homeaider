@@ -12,7 +12,7 @@ export class ProviderServiceResolver {
   constructor() {}
 
   @Authorized()
-  @Mutation()
+  @Mutation(() => [ProviderServiceResponse])
   async createProviderService(
     @Arg("input") providerServiceInput: ProviderServiceInput,
     @Ctx() ctx: MyContext
@@ -40,13 +40,15 @@ export class ProviderServiceResolver {
 
     try {
       await providerService.save();
-    } catch(err) {
+    } catch (err) {
       return {
-        errors: [{
-          path: "providerservices",
-          message: "Something went wrong while saving."
-        }]
-      }
+        errors: [
+          {
+            path: "providerservices",
+            message: "Something went wrong while saving.",
+          },
+        ],
+      };
     }
 
     return { errors: [] };
