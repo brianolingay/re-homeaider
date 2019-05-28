@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { InputType, Field, ObjectType } from "type-graphql";
+import { InputType, Field } from "type-graphql";
 import { GraphQLUpload } from "graphql-upload";
 import { Readable } from "stream";
 
@@ -10,12 +10,12 @@ interface Upload {
   encoding: string;
 }
 
-@ObjectType()
+@InputType()
 class CertificateObject {
   @Field()
   name: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   description: string | null;
 
   @Field(() => GraphQLUpload)
