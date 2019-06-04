@@ -1,9 +1,29 @@
 export type Maybe<T> = T | null;
 
+export interface AvailableBookingInput {
+  services?: Maybe<ObjectId[]>;
+}
+
 export interface CategoryInput {
   name: string;
 
   description?: Maybe<string>;
+}
+
+export interface ProviderServiceInput {
+  service: ObjectId;
+
+  description?: Maybe<string>;
+
+  certificates: CertificateObject[];
+}
+
+export interface CertificateObject {
+  name: string;
+
+  description?: Maybe<string>;
+
+  file: Upload;
 }
 
 export interface RoleInput {
@@ -100,6 +120,9 @@ export type ObjectId = any;
 
 /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
 export type DateTime = any;
+
+/** The `Upload` scalar type represents a file upload. */
+export type Upload = any;
 
 // ====================================================
 // Documents

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Grid, Card, List, Button, Icon } from "semantic-ui-react";
+import { Grid, Card, List, Button, Icon, Image, Ref } from "semantic-ui-react";
 import Layout from "../components/Layout";
 import { withAuth } from "../components/withAuth";
 import {
@@ -7,6 +7,8 @@ import {
   UpdateUserComponent,
 } from "../components/apollo-components";
 import { EditForm, EditFormValues } from "../components/profile/EditForm";
+
+const tmpImageSrc: String = "/static/avatar.png";
 
 interface State {
   isEditing: boolean;
@@ -22,6 +24,7 @@ type Props = {
  */
 
 class Profile extends React.PureComponent<Props, State> {
+  inputFileUploadRef = React.createRef();
   state = {
     isEditing: false,
   };
@@ -32,6 +35,7 @@ class Profile extends React.PureComponent<Props, State> {
 
   render() {
     const { me } = this.props;
+
     return (
       <Layout title={`${me.firstName} ${me.lastName} Profile`} showMenu={true}>
         <Grid>
@@ -69,6 +73,13 @@ class Profile extends React.PureComponent<Props, State> {
                 ) : (
                   <Card.Group>
                     <Card fluid color="blue">
+                      <Image src={tmpImageSrc} wrapped ui={false} />
+                      <Ref innerRef={this.inputFileUploadRef}>
+                        <input
+                          type="file"
+                          style={{ visibility: "hidden", display: "none" }}
+                        />
+                      </Ref>
                       <Card.Content>
                         <Card.Header>
                           Acount Info
