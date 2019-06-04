@@ -9,3 +9,4 @@ dist
 .env
 storybook-static/
 dump.rdb
+tsconfig.tsbuildinfo
