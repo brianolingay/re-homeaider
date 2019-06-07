@@ -19,5 +19,7 @@
     "preserveConstEnums": true,
     "sourceMap": true
   },
-  "exclude": ["dist", ".next", "out", "next.config.js"]
+  "exclude": ["dist", ".next", "out", "node_modules", "next.config.js"],
+  "include": ["**/*.ts", "**/*.tsx"],
+  "references": [{ "path": "../common" }]
 }
