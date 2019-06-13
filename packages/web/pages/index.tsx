@@ -1,17 +1,22 @@
-import React from 'react'
-import Link from 'next/link'
+import React from "react";
+import { Layout } from "antd";
+import MyLayout from "../components/MyLayout";
 
-export default () => (
-  <ul>
-    <li>
-      <Link href="/a" as="/a">
-        <a>a</a>
-      </Link>
-    </li>
-    <li>
-      <Link href="/b" as="/b">
-        <a>b</a>
-      </Link>
-    </li>
-  </ul>
-)
+const { Content } = Layout;
+
+export default () => {
+  return (
+    <MyLayout title="Homeaider">
+      <Content
+        style={{
+          background: "#fff",
+          padding: 24,
+          margin: 0,
+          minHeight: 280,
+        }}
+      >
+        Content
+      </Content>
+    </MyLayout>
+  );
+};
