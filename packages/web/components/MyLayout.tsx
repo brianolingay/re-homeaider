@@ -4,11 +4,14 @@ import HeaderNav from "../components/HeaderNav";
 import SiderNav from "../components/SiderNav";
 import Head from "next/head";
 
+const { Content } = Layout;
+
 type Props = {
   title: string;
+  containerStyle: any;
 };
 
-const MyLayout: React.SFC<Props> = ({ children, title }) => {
+const MyLayout: React.SFC<Props> = ({ children, title, containerStyle }) => {
   return (
     <Layout>
       <Head>
@@ -19,7 +22,9 @@ const MyLayout: React.SFC<Props> = ({ children, title }) => {
       <HeaderNav />
       <Layout>
         <SiderNav />
-        <Layout style={{ padding: "24px" }}>{children}</Layout>
+        <Layout style={{ padding: "24px" }}>
+          <Content style={containerStyle}>{children}</Content>
+        </Layout>
       </Layout>
     </Layout>
   );

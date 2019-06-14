@@ -1,12 +1,16 @@
 import React from "react";
+import Link from "next/link";
 import { Layout, Menu, Icon } from "antd";
-import { useMeQuery } from "./apollo-components";
+import { useMeQuery, useLogoutMutation } from "./apollo-components";
+import { useApolloClient } from "react-apollo-hooks";
 
 const { SubMenu } = Menu;
 const { Header } = Layout;
 
 export default function HeaderNav() {
+  const client = useApolloClient();
   const { data, loading } = useMeQuery();
+  const logout = useLogoutMutation();
 
   if (loading && !data && !data!.me) {
     return <p>Loading...</p>;
@@ -27,8 +31,16 @@ export default function HeaderNav() {
         }}
       >
         <Menu theme="dark" mode="horizontal" style={{ lineHeight: "64px" }}>
-          <Menu.Item key="1">Sign In</Menu.Item>
-          <Menu.Item key="2">Sign Up</Menu.Item>
+          <Menu.Item key="1">
+            <Link href="signin">
+              <span>Sign In</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="2">
+            <Link href="signup">
+              <span>Sign up</span>
+            </Link>
+          </Menu.Item>
           {data!.me && (
             <SubMenu
               key="sub1"
@@ -39,9 +51,21 @@ export default function HeaderNav() {
                 </span>
               }
             >
-              <Menu.Item key="3">Profile</Menu.Item>
+              <Menu.Item key="3">
+                <Link href="profile">
+                  <span>Profile</span>
+                </Link>
+              </Menu.Item>
               <Menu.Divider />
-              <Menu.Item key="4">Logout</Menu.Item>
+              <Menu.Item
+                key="4"
+                onClick={async () => {
+                  await logout();
+                  await client.resetStore();
+                }}
+              >
+                Logout
+              </Menu.Item>
             </SubMenu>
           )}
         </Menu>

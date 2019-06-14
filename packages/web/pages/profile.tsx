@@ -1,13 +1,13 @@
 import React from "react";
 import MyLayout from "../components/MyLayout";
 
-export default function signup() {
+export default function profile() {
   return (
     <MyLayout
-      title="Sign Up"
+      title="Profile"
       containerStyle={{ display: "flex", flex: 1, justifyContent: "center" }}
     >
-      Signup
+      Welcome
     </MyLayout>
   );
 }
