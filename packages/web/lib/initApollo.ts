@@ -22,7 +22,7 @@ interface Options {
 
 function create(initialState: any, { getToken, fetchOptions }: Options) {
   const httpLink = createHttpLink({
-    uri: "https://api.graph.cool/simple/v1/cj5geu3slxl7t0127y8sity9r",
+    uri: "http://localhost:4000/graphql",
     credentials: "same-origin",
     fetchOptions,
   });
