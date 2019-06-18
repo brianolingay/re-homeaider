@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { ObjectType, Field } from "type-graphql";
-import { Role } from "../roles/objects/Role";
+import { Role } from "../roles/RoleObject";
 // import { ProviderService } from "./ProviderService";
 // import { UserSubscription } from "./UserSubscription";
 
