@@ -1,121 +1,71 @@
-import { validUserSchema, validUpdateUserSchema } from "@homeaider/common";
-import * as bcrypt from "bcryptjs";
 import { ObjectId } from "mongodb";
-import { RoleModel } from "../../models/Role";
-import { UserModel } from "../../models/User";
-import { UserSubscriptionModel } from "../../models/UserSubscription";
-import { formatYupError } from "../../utils/formatYupError";
-import { duplicateEmail } from "./constants";
-import { UserInput } from "./UserInput";
+import { UserModel, UserInterface } from "../../models/User";
 
-export const createUser = async (role: String, input: any) => {
-  try {
-    await validUserSchema.validate({ ...input, role }, { abortEarly: false });
-  } catch (err) {
-    return { errors: formatYupError(err) };
-  }
+const createUser = async (input: any) => {
+  const user = new UserModel(input);
 
-  const subscription = await UserSubscriptionModel.findOne({
-    amount: 0,
-  }).exec();
-  // const services = Service.find();
+  return await user.save();
+};
 
-  const { email, password } = input;
+const deleteUser = async (condition: any) => {
+  return await UserModel.deleteOne(condition);
+};
 
-  const roleData = await RoleModel.findOne({ name: role }, "_id")
-    .lean()
-    .exec();
+const updateUser = async (condition: any, input: any) => {
+  return await UserModel.updateOne(condition, input);
+};
 
-  if (!roleData) {
-    return {
-      errors: [
-        {
-          path: "email",
-          message: "This role is not yet available",
-        },
-      ],
-    };
-  }
-
-  const userAlreadyExists = await UserModel.findOne({ email }, "_id", {
+const checkUserExistsBy = async (condition: any, columns: string = "_id") => {
+  const exists = await UserModel.findOne(condition, columns, {
     lean: true,
   }).exec();
 
-  if (userAlreadyExists) {
-    return {
-      errors: [
-        {
-          path: "email",
-          message: duplicateEmail,
-        },
-      ],
-    };
-  }
-
-  const user = new UserModel({
-    ...input,
-    password: await bcrypt.hash(password, bcrypt.genSaltSync(10)),
-    subscription,
-    role: roleData._id,
-  });
-
-  await user.save();
-
-  return { errors: [] };
+  return exists;
 };
 
-export const deleteUser = async (userId: ObjectId) => {
-  try {
-    await UserModel.deleteOne({ _id: userId });
-  } catch {
-    return {
-      errors: [
-        {
-          path: "subscription",
-          message: "Something went wrong!",
-        },
-      ],
-    };
-  }
+const findUserWithDetailsBy = async (
+  condition: any
+): Promise<UserInterface | null> => {
+  const user = await UserModel.findOne(condition)
+    //.populate("userSubscription")
+    .populate("role")
+    .populate({
+      path: "providerServices",
+      populate: {
+        path: "service",
+        populate: { path: "category" },
+      },
+    })
+    .lean()
+    .exec();
 
-  return { errors: [] };
+  return user;
 };
 
-export const updateUser = async (userId: ObjectId, userInput: UserInput) => {
-  try {
-    await validUpdateUserSchema.validate(userInput, { abortEarly: false });
-  } catch (err) {
-    return { errors: formatYupError(err) };
-  }
+const findAllAdminExceptCurrentUser = async (
+  userId: ObjectId
+): Promise<[UserInterface]> => {
+  const users = await UserModel.find({ _id: { $ne: userId } })
+    //.populate("userSubscription")
+    .populate("role")
+    .populate({
+      path: "providerServices",
+      populate: {
+        path: "service",
+        populate: { path: "category" },
+      },
+    })
+    .lean()
+    .exec();
 
-  const { password, ...newUserInput } = userInput;
-
-  let newUserInput2 = newUserInput;
-
-  if (password) {
-    newUserInput2 = {
-      ...newUserInput,
-      password: await bcrypt.hash(password, bcrypt.genSaltSync(10)),
-    } as any;
-  }
-
-  await UserModel.updateOne({ _id: userId }, { ...newUserInput2 });
-
-  return { errors: [] };
+  return users;
 };
 
-export const findUserBy = async (
-  condition: any,
-  populate: [] = [],
-  hidden: string = "password"
-) => {
-  let user = await UserModel.findOne(condition, `-${hidden}`);
-
-  populate.forEach(element => {
-    user = user!.populate(element);
-  });
-
-  user = user!.lean().exec();
-
-  return user ? user : null;
+export default {
+  checkUserExistsBy,
+  createUser,
+  deleteUser,
+  findAllAdminExceptCurrentUser,
+  findUserWithDetailsBy,
+  updateUser,
 };

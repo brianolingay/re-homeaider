@@ -1,20 +1,20 @@
 require("dotenv-safe").config();
-import "reflect-metadata";
-import { ApolloServer, ApolloError } from "apollo-server-express";
-import { v4 } from "uuid";
-import { GraphQLError } from "graphql";
-import * as express from "express";
-import { buildSchema } from "type-graphql";
-import { ObjectId } from "mongodb";
+import { ApolloError, ApolloServer } from "apollo-server-express";
+import * as cookieParser from "cookie-parser";
 import * as cors from "cors";
+import * as express from "express";
+import { GraphQLError } from "graphql";
 import { RedisPubSub } from "graphql-redis-subscriptions";
-
-import { createMongooseConn } from "./utils/createMongooseConn";
-import { ObjectIdScalar } from "./scalars/ObjectIDScalar";
-import { defaultUserAndRole } from "./utils/defaultUserAndRole";
-import { verifyToken, refreshTokens } from "./utils/jwtAuth";
-import { UserInfoInRequest } from "./types/Context";
 import { createServer } from "http";
+import { ObjectId } from "mongodb";
+import "reflect-metadata";
+import { buildSchema } from "type-graphql";
+import { v4 } from "uuid";
+import { ObjectIdScalar } from "./scalars/ObjectIDScalar";
+import { UserInfoInRequest } from "./types/Context";
+import { createMongooseConn } from "./utils/createMongooseConn";
+import { defaultUserAndRole } from "./utils/defaultUserAndRole";
+import { refreshTokens, verifyToken } from "./utils/jwtAuth";
 
 const port = process.env.PORT || 4000;
 
@@ -35,37 +35,56 @@ const startServer = async () => {
 
   app.set("trust proxy", 1);
 
+  app.use(cookieParser());
   app.use(
     cors({
       credentials: true,
       origin: process.env.FRONTEND_HOST,
     })
   );
-
   app.use(async (req: UserInfoInRequest, res, next) => {
-    const token = req.headers["x-token"] as string;
-    if (token) {
-      try {
-        const { user } = await verifyToken(token);
-        req.user = user;
-      } catch (err) {
-        const refreshToken = req.headers["x-refresh-token"] as any;
-        const newTokens = await refreshTokens(refreshToken);
-        if (newTokens && newTokens.token && newTokens.refreshToken) {
-          res.set("Access-Control-Expose-Headers", "x-token, x-refresh-token");
-          res.set("x-token", newTokens.token);
-          res.set("x-refresh-token", newTokens.refreshToken);
-          req.user = newTokens.user;
-        }
-      }
+    const refreshToken = req.cookies["refresh-token"];
+    const accessToken = req.cookies["access-token"];
+
+    if (!refreshToken && !accessToken) {
+      return next();
     }
+
+    try {
+      const user = verifyToken(accessToken) as any;
+      req.user = user;
+      return next();
+    } catch {}
+
+    if (!refreshToken) {
+      return next();
+    }
+
+    let user;
+
+    try {
+      user = verifyToken(refreshToken) as any;
+    } catch {
+      return next();
+    }
+
+    // token has been invalidated
+    if (!req.user || req.user!.email !== user.email) {
+      return next();
+    }
+
+    const data = await refreshToken(user);
+
+    res.cookie("refresh-token", data.refreshToken);
+    res.cookie("access-token", data.accessToken);
+    req.user = data.user;
 
     return next();
   });
 
   const server = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [__dirname + "/modules/**/resolver.*"],
+      resolvers: [__dirname + "/modules/**/*Resolver.*"],
       pubSub,
       scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }],
       authChecker: ({ context }) => {
@@ -73,7 +92,8 @@ const startServer = async () => {
       },
       validate: false,
     }),
-    context: ({ req, connection }: any) => ({
+    context: ({ res, req, connection }: any) => ({
+      res,
       req,
       user: connection ? connection.context.user : req.user,
     }),
@@ -113,7 +133,7 @@ const startServer = async () => {
       return response;
     },
     playground: process.env.NODE_ENV !== "production",
-    debug: process.env.NODE_ENV !== "production",
+    //debug: process.env.NODE_ENV !== "production",
   });
 
   server.applyMiddleware({ app, cors: false }); // app is from an existing express app

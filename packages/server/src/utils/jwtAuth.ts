@@ -1,7 +1,7 @@
-import { UserRepository } from "./../repositories/mongoose/user/index";
 import * as jwt from "jsonwebtoken";
-import { User } from "../modules/users/UserObject";
 import { TokensResponse } from "../modules/TokensReponse";
+import UserDBA from "../modules/users/UserDBA";
+import { User } from "../modules/users/UserObject";
 
 const SECRET_ONE =
   "984f611f55d16ecf21956c64ba46e3e7a09df496b69d4a4c25693cc72e27639b";
@@ -37,7 +37,7 @@ export const refreshTokens = async (
       user: { _id },
     } = jwt.decode(refreshToken) as any;
 
-    const user = await UserRepository.me(_id);
+    const user = await UserDBA.findUserWithDetailsBy({ _id });
 
     if (!user) {
       return defaultResponse;

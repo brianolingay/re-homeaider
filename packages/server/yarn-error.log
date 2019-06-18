@@ -1,5 +1,5 @@
 Arguments: 
-  /home/brian/.nvm/versions/node/v12.3.1/bin/node /home/brian/.nvm/versions/node/v12.3.1/bin/yarn
+  /home/brian/.nvm/versions/node/v12.3.1/bin/node /home/brian/.nvm/versions/node/v12.3.1/bin/yarn install
 
 PATH: 
   /home/brian/bin:/home/brian/.local/bin:/home/brian/.nvm/versions/node/v12.3.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/ProgramData/DockerDesktop/version-bin:/mnt/c/Program Files/Docker/Docker/resources/bin:/mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath_target_174463328:/mnt/c/ProgramData/Oracle/Java/javapath_target_192465578:/mnt/c/Program Files (x86)/Intel/iCLS Client:/mnt/c/Program Files/Intel/iCLS Client:/mnt/c/Windows/System32:/mnt/c/Windows:/mnt/c/Windows/System32/wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files (x86)/Intel/Intel(R) Management Engine Components/DAL:/mnt/c/Program Files/Intel/Intel(R) Management Engine Components/DAL:/mnt/c/Program Files (x86)/Intel/Intel(R) Management Engine Components/IPT:/mnt/c/Program Files/Intel/Intel(R) Management Engine Components/IPT:/mnt/c/Program Files/Git/cmd:/mnt/c/HashiCorp/Vagrant/bin:/mnt/c/Program Files/Oracle/VirtualBox:/mnt/c/Users/brian/AppData/Local/Android/Sdk/platform-tools:/mnt/c/xampp/php:/mnt/c/Windows/System32:/mnt/c/Windows:/mnt/c/Windows/System32/wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0:/mnt/c/Program Files/Genymobile/Genymotion/tools:/mnt/c/Windows/System32/OpenSSH:/mnt/c/Program Files/nodejs:/mnt/c/Users/brian/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/brian/AppData/Roaming/npm:/mnt/c/Users/brian/AppData/Local/Programs/Microsoft VS Code Insiders/bin:/snap/bin:/mnt/c/Users/brian/AppData/Local/Android/Sdk/tools:/mnt/c/Users/brian/AppData/Local/Android/Sdk/platform-tools
@@ -14,7 +14,7 @@ Platform:
   linux x64
 
 Trace: 
-  Error: ENOENT: no such file or directory, lstat '/home/brian/.cache/yarn/v4/npm-node-libs-browser-2.2.0-c72f60d9d46de08a940dedbb25f3ffa2f9bbaa77/node_modules/node-libs-browser/mock/console.js'
+  Error: ENOENT: no such file or directory, lstat '/home/brian/.cache/yarn/v4/npm-strong-log-transformer-2.1.0-0f5ed78d325e0421ac6f90f7f10e691d6ae3ae10/node_modules/strong-log-transformer/lib/logger.js'
 
 npm manifest: 
   {

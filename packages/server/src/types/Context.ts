@@ -1,10 +1,11 @@
-import { Request } from "express";
+import { Request, Response as ERes } from "express";
 // import * as DataLoader from "dataloader";
 import { User } from "../modules/users/UserObject";
 
 export interface MyContext {
+  res: ERes;
   req: Request;
-  // user: User;
+  user: User;
   // userLoader: DataLoader<string, User>;
 }
 
