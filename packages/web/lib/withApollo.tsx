@@ -31,7 +31,13 @@ export default (App: any) => {
       const apollo = initApollo(
         {},
         {
-          getToken: () => parseCookies(req).token,
+          getToken: () => {
+            const parseCookiesVal = parseCookies(req);
+            const refreshToken = parseCookiesVal["refresh-token"];
+            const accessToken = parseCookiesVal["access-token"];
+
+            return { refreshToken, accessToken };
+          },
           fetchOptions: {},
         }
       );

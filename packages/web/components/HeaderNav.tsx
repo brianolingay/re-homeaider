@@ -12,10 +12,11 @@ export default function HeaderNav() {
   const { data, loading } = useMeQuery();
   const logout = useLogoutMutation();
 
-  if (loading && !data && !data!.me) {
+  if (loading) {
     return <p>Loading...</p>;
   }
 
+  console.log(data);
   return (
     <Header
       className="header"
@@ -30,24 +31,28 @@ export default function HeaderNav() {
           justifyContent: "flex-end",
         }}
       >
-        <Menu theme="dark" mode="horizontal" style={{ lineHeight: "64px" }}>
-          <Menu.Item key="1">
-            <Link href="signin">
-              <span>Sign In</span>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="2">
-            <Link href="signup">
-              <span>Sign up</span>
-            </Link>
-          </Menu.Item>
-          {data!.me && (
+        {!data!.me && (
+          <Menu theme="dark" mode="horizontal" style={{ lineHeight: "64px" }}>
+            <Menu.Item key="1">
+              <Link href="signin">
+                <span>Sign In</span>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="2">
+              <Link href="signup">
+                <span>Sign up</span>
+              </Link>
+            </Menu.Item>
+          </Menu>
+        )}
+        {data && data.me && (
+          <Menu theme="dark" mode="horizontal" style={{ lineHeight: "64px" }}>
             <SubMenu
               key="sub1"
               title={
                 <span>
                   <Icon type="user" />
-                  <span>User Name</span>
+                  <span>{data.me.email}</span>
                 </span>
               }
             >
@@ -67,8 +72,8 @@ export default function HeaderNav() {
                 Logout
               </Menu.Item>
             </SubMenu>
-          )}
-        </Menu>
+          </Menu>
+        )}
       </div>
     </Header>
   );
