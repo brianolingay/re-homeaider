@@ -1,27 +1,8 @@
 import { ObjectId } from "mongodb";
 import { UserModel, UserInterface } from "../../models/User";
+import { DBRepository } from "../DBRepo";
 
-const createUser = async (input: any) => {
-  const user = new UserModel(input);
-
-  return await user.save();
-};
-
-const deleteUser = async (condition: any) => {
-  return await UserModel.deleteOne(condition);
-};
-
-const updateUser = async (condition: any, input: any) => {
-  return await UserModel.updateOne(condition, input);
-};
-
-const checkUserExistsBy = async (condition: any, columns: string = "_id") => {
-  const exists = await UserModel.findOne(condition, columns, {
-    lean: true,
-  }).exec();
-
-  return exists;
-};
+const dba = DBRepository(UserModel);
 
 const findUserWithDetailsBy = async (
   condition: any
@@ -62,10 +43,10 @@ const findAllAdminExceptCurrentUser = async (
 };
 
 export default {
-  checkUserExistsBy,
-  createUser,
-  deleteUser,
+  createUser: dba.create,
+  deleteUser: dba.delete,
+  updateUser: dba.update,
+  checkUserExistsBy: dba.doExists,
   findAllAdminExceptCurrentUser,
   findUserWithDetailsBy,
-  updateUser,
 };

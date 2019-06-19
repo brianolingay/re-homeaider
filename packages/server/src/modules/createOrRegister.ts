@@ -1,10 +1,10 @@
+import { validUserSchema } from "@homeaider/common";
+import * as bcrypt from "bcryptjs";
+import { formatYupError } from "../utils/formatYupError";
+import { RegisterInput } from "./auth/inputs/Register";
 import { duplicateEmail } from "./users/constants";
 import UserDBA from "./users/UserDBA";
-import * as bcrypt from "bcryptjs";
-import { validUserSchema } from "@homeaider/common";
-import { formatYupError } from "../utils/formatYupError";
-import { UserInput } from "./users/inputs/User";
-import { RegisterInput } from "./auth/inputs/Register";
+import { UserInput } from "./users/UserInput";
 
 export default async (role: String, input: UserInput | RegisterInput) => {
   try {

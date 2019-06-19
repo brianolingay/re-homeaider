@@ -1,17 +1,17 @@
 import { loginSchema } from "@homeaider/common";
 import * as bcrypt from "bcryptjs";
-import { MyContext } from "server/src/types/Context";
+import { MyContext } from "../../types/Context";
 import { formatYupError } from "../../utils/formatYupError";
 import { createToken } from "../../utils/jwtAuth";
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
 import createOrRegister from "../createOrRegister";
-import { UserResponse } from "../users/responses/User";
 import UserDBA from "../users/UserDBA";
 import { User } from "../users/UserObject";
 import { invalidLogin } from "./constants";
 import { LoginInput } from "./inputs/Login";
 import { RegisterInput } from "./inputs/Register";
 import { LoginResponse } from "./responses/Login";
+import { FormSubmitResponse } from "../FormSubmitResponse";
 
 const errorResponse = [
   {
@@ -24,11 +24,11 @@ const errorResponse = [
 export class UserResolver {
   constructor() {}
 
-  @Mutation(() => UserResponse, { nullable: true })
+  @Mutation(() => FormSubmitResponse, { nullable: true })
   async register(
     @Arg("role") role: String,
     @Arg("input") registerInput: RegisterInput
-  ): Promise<UserResponse> {
+  ): Promise<FormSubmitResponse> {
     return await createOrRegister(role, registerInput);
   }
 

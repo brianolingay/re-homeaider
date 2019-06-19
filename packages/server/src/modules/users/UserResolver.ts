@@ -1,14 +1,14 @@
 import { validUpdateUserSchema } from "@homeaider/common";
 import * as bcrypt from "bcryptjs";
 import { ObjectId } from "mongodb";
-import { formatYupError } from "../../utils/formatYupError";
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { MyContext } from "../../types/Context";
-import { UserInput } from "./inputs/User";
-import { UserResponse } from "./responses/User";
+import { formatYupError } from "../../utils/formatYupError";
+import createOrRegister from "../createOrRegister";
+import { FormSubmitResponse } from "../FormSubmitResponse";
+import { UserInput } from "./UserInput";
 import UserDBA from "./UserDBA";
 import { User } from "./UserObject";
-import createOrRegister from "../createOrRegister";
 
 @Resolver(User)
 export class UserResolver {
@@ -37,18 +37,20 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Mutation(() => UserResponse, { nullable: true })
-  async createUser(@Arg("input") userInput: UserInput): Promise<UserResponse> {
+  @Mutation(() => FormSubmitResponse, { nullable: true })
+  async createUser(
+    @Arg("input") userInput: UserInput
+  ): Promise<FormSubmitResponse> {
     const role = "admin";
     return await createOrRegister(role, userInput);
   }
 
   @Authorized()
-  @Mutation(() => UserResponse, { nullable: true })
+  @Mutation(() => FormSubmitResponse, { nullable: true })
   async updateUser(
     @Arg("userId") userId: ObjectId,
     @Arg("input") userInput: UserInput
-  ): Promise<UserResponse> {
+  ): Promise<FormSubmitResponse> {
     try {
       await validUpdateUserSchema.validate(userInput, { abortEarly: false });
     } catch (err) {
@@ -76,8 +78,10 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Mutation(() => UserResponse, { nullable: true })
-  async deleteUser(@Arg("userId") userId: ObjectId): Promise<UserResponse> {
+  @Mutation(() => FormSubmitResponse, { nullable: true })
+  async deleteUser(
+    @Arg("userId") userId: ObjectId
+  ): Promise<FormSubmitResponse> {
     try {
       await UserDBA.deleteUser({ _id: userId });
     } catch {

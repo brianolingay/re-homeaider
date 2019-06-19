@@ -2,21 +2,20 @@ import { validRoleSchema } from "@homeaider/common";
 import { ObjectId } from "mongodb";
 import { Arg, Authorized, Mutation, Query, Resolver } from "type-graphql";
 import { formatYupError } from "../../utils/formatYupError";
+import { FormSubmitResponse } from "../FormSubmitResponse";
 import RoleDBA from "./RoleDBA";
 import { RoleInput } from "./RoleInput";
 import { Role } from "./RoleObject";
-import { RoleResponse } from "./RoleResponse";
-
 
 @Resolver(Role)
 export class RoleResolver {
   constructor() {}
 
   @Authorized()
-  @Mutation(() => RoleResponse, { nullable: true })
+  @Mutation(() => FormSubmitResponse, { nullable: true })
   async createRole(
     @Arg("input") roleInput: RoleInput
-  ): Promise<RoleResponse | null> {
+  ): Promise<FormSubmitResponse | null> {
     try {
       await validRoleSchema.validate(roleInput, { abortEarly: false });
     } catch (err) {
@@ -48,11 +47,11 @@ export class RoleResolver {
   }
 
   @Authorized()
-  @Mutation(() => RoleResponse, { nullable: true })
+  @Mutation(() => FormSubmitResponse, { nullable: true })
   async updateRole(
     @Arg("roleId") roleId: ObjectId,
     @Arg("input") roleInput: RoleInput
-  ): Promise<RoleResponse | null> {
+  ): Promise<FormSubmitResponse | null> {
     try {
       await validRoleSchema.validate(roleInput, { abortEarly: false });
     } catch (err) {
@@ -87,10 +86,10 @@ export class RoleResolver {
   }
 
   @Authorized()
-  @Mutation(() => RoleResponse, { nullable: true })
+  @Mutation(() => FormSubmitResponse, { nullable: true })
   async deleteRole(
     @Arg("roleId") roleId: ObjectId
-  ): Promise<RoleResponse | null> {
+  ): Promise<FormSubmitResponse | null> {
     try {
       await RoleDBA.deleteRole({ _id: roleId });
     } catch {

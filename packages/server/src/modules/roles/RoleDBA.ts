@@ -1,24 +1,7 @@
-import { RoleModel } from "server/src/models/Role";
+import { RoleModel } from "../../models/Role";
+import { DBRepository } from "../DBRepo";
 
-const createRole = async (input: any) => {
-  const role = new RoleModel(input);
-
-  await role.save();
-};
-
-const checkRoleExists = async (condition: any, columns: string = "_id") => {
-  return await RoleModel.findOne(condition, columns, {
-    lean: true,
-  }).exec();
-};
-
-const updateRole = async (condition: any, input: any) => {
-  return await RoleModel.updateOne(condition, input);
-};
-
-const deleteRole = async (condition: any) => {
-  return await RoleModel.deleteOne(condition);
-};
+const dba = DBRepository(RoleModel);
 
 const findAll = async (condition: any = {}) => {
   return await RoleModel.find(condition)
@@ -27,9 +10,9 @@ const findAll = async (condition: any = {}) => {
 };
 
 export default {
-  checkRoleExists,
-  createRole,
-  deleteRole,
+  createRole: dba.create,
+  deleteRole: dba.delete,
+  updateRole: dba.update,
+  checkRoleExists: dba.doExists,
   findAll,
-  updateRole,
 };
