@@ -24,7 +24,7 @@ export class RoleResolver {
 
     const { name } = roleInput;
 
-    const roleAlreadyExists = await RoleDBA.checkRoleExists({ name });
+    const roleAlreadyExists = await RoleDBA.doExists({ name });
 
     if (roleAlreadyExists) {
       return {
@@ -38,7 +38,7 @@ export class RoleResolver {
     }
 
     try {
-      await RoleDBA.createRole(roleInput);
+      await RoleDBA.create(roleInput);
     } catch (error) {
       throw error;
     }
@@ -60,7 +60,7 @@ export class RoleResolver {
 
     const { name } = roleInput;
 
-    const roleAlreadyExists = await RoleDBA.checkRoleExists({
+    const roleAlreadyExists = await RoleDBA.doExists({
       name,
       _id: { $ne: roleId },
     });
@@ -77,7 +77,7 @@ export class RoleResolver {
     }
 
     try {
-      await RoleDBA.updateRole({ _id: roleId }, { ...roleInput });
+      await RoleDBA.update({ _id: roleId }, { ...roleInput });
     } catch (error) {
       throw error;
     }
@@ -91,7 +91,7 @@ export class RoleResolver {
     @Arg("roleId") roleId: ObjectId
   ): Promise<FormSubmitResponse | null> {
     try {
-      await RoleDBA.deleteRole({ _id: roleId });
+      await RoleDBA.delete({ _id: roleId });
     } catch {
       return {
         errors: [

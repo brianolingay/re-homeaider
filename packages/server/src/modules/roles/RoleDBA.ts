@@ -10,9 +10,6 @@ const findAll = async (condition: any = {}) => {
 };
 
 export default {
-  createRole: dba.create,
-  deleteRole: dba.delete,
-  updateRole: dba.update,
-  checkRoleExists: dba.doExists,
+  ...dba,
   findAll,
 };

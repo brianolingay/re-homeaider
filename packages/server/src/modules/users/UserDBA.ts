@@ -43,10 +43,7 @@ const findAllAdminExceptCurrentUser = async (
 };
 
 export default {
-  createUser: dba.create,
-  deleteUser: dba.delete,
-  updateUser: dba.update,
-  checkUserExistsBy: dba.doExists,
+  ...dba,
   findAllAdminExceptCurrentUser,
   findUserWithDetailsBy,
 };

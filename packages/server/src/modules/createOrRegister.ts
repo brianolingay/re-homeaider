@@ -35,7 +35,7 @@ export default async (role: String, input: UserInput | RegisterInput) => {
   //   };
   // }
 
-  const userAlreadyExists = await UserDBA.checkUserExistsBy({ email });
+  const userAlreadyExists = await UserDBA.doExists({ email });
 
   if (userAlreadyExists) {
     return {
@@ -49,7 +49,7 @@ export default async (role: String, input: UserInput | RegisterInput) => {
   }
 
   try {
-    await UserDBA.createUser({
+    await UserDBA.create({
       ...input,
       password: await bcrypt.hash(password, bcrypt.genSaltSync(10)),
       // subscription,

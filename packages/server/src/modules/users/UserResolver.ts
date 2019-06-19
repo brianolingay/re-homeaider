@@ -69,7 +69,7 @@ export class UserResolver {
     }
 
     try {
-      await UserDBA.updateUser({ _id: userId }, { ...newUserInput2 });
+      await UserDBA.update({ _id: userId }, { ...newUserInput2 });
     } catch (error) {
       throw error;
     }
@@ -83,7 +83,7 @@ export class UserResolver {
     @Arg("userId") userId: ObjectId
   ): Promise<FormSubmitResponse> {
     try {
-      await UserDBA.deleteUser({ _id: userId });
+      await UserDBA.delete({ _id: userId });
     } catch {
       return {
         errors: [
