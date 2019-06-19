@@ -6,9 +6,6 @@ export const DBRepository = (model: any) => ({
   async delete(condition: any) {
     return await model.deleteOne(condition);
   },
-  async update(condition: any, input: any) {
-    return await model.updateOne(condition, input);
-  },
   async doExists(condition: any, columns: string = "_id") {
     const exists = await model
       .findOne(condition, columns, {
@@ -17,5 +14,8 @@ export const DBRepository = (model: any) => ({
       .exec();
 
     return exists;
+  },
+  async update(condition: any, input: any) {
+    return await model.updateOne(condition, input);
   },
 });

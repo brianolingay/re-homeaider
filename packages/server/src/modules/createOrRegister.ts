@@ -5,6 +5,8 @@ import { RegisterInput } from "./auth/inputs/Register";
 import { duplicateEmail } from "./users/constants";
 import UserDBA from "./users/UserDBA";
 import { UserInput } from "./users/UserInput";
+import RoleDBA from "./roles/RoleDBA";
+import UserSubscriptionDBA from "./userSubscriptions/UserSubscriptionDBA";
 
 export default async (role: String, input: UserInput | RegisterInput) => {
   try {
@@ -13,27 +15,25 @@ export default async (role: String, input: UserInput | RegisterInput) => {
     return { errors: formatYupError(err) };
   }
 
-  // const subscription = await UserSubscriptionModel.findOne({
-  //   amount: 0,
-  // }).exec();
+  const subscription = await UserSubscriptionDBA.get({
+    amount: 0,
+  });
   // const services = Service.find();
 
   const { email, password } = input;
 
-  // const roleData = await RoleModel.findOne({ name: role }, "_id")
-  //   .lean()
-  //   .exec();
+  const roleData = await RoleDBA.doExists({ name: role });
 
-  // if (!roleData) {
-  //   return {
-  //     errors: [
-  //       {
-  //         path: "email",
-  //         message: "This role is not yet available",
-  //       },
-  //     ],
-  //   };
-  // }
+  if (!roleData) {
+    return {
+      errors: [
+        {
+          path: "email",
+          message: "This role is not yet available",
+        },
+      ],
+    };
+  }
 
   const userAlreadyExists = await UserDBA.doExists({ email });
 
@@ -52,8 +52,8 @@ export default async (role: String, input: UserInput | RegisterInput) => {
     await UserDBA.create({
       ...input,
       password: await bcrypt.hash(password, bcrypt.genSaltSync(10)),
-      // subscription,
-      // role: roleData._id,
+      subscription,
+      role: roleData._id,
     });
   } catch (error) {
     throw error;
