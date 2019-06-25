@@ -8,4 +8,7 @@ export class ServiceInput implements Partial<Service> {
 
   @Field({ nullable: true })
   description: string;
+
+  @Field()
+  statement: string;
 }
