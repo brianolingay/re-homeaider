@@ -39,9 +39,9 @@ export class UserResolver {
   @Authorized()
   @Mutation(() => FormSubmitResponse, { nullable: true })
   async createUser(
+    @Arg("role") role: String,
     @Arg("input") userInput: UserInput
   ): Promise<FormSubmitResponse> {
-    const role = "admin";
     return await createOrRegister(role, userInput);
   }
 
