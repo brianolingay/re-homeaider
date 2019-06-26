@@ -5,7 +5,7 @@ import React from "react";
 import { useLoginMutation } from "../components/apollo-components";
 import { InputField } from "../components/formik-fields/IconedInputField";
 import MyLayout from "../components/MyLayout";
-import { meQuery } from "../graphql/auth/queries/me";
+import { meQuery } from "../graphql/user/queries/me";
 import checkLoggedIn from "../lib/checkLoggedIn";
 import redirect from "../lib/redirect";
 import { normalizeErrors } from "../utils/normalizeErrors";
