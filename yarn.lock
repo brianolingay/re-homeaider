@@ -4181,7 +4181,7 @@ file-entry-cache@^2.0.0:
     flat-cache "^1.2.1"
     object-assign "^4.0.1"
 
-file-loader@3.0.1, file-loader@^3.0.1:
+file-loader@3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/file-loader/-/file-loader-3.0.1.tgz#f8e0ba0b599918b51adfe45d66d1e771ad560faa"
   dependencies:
@@ -4803,7 +4803,7 @@ graphql-upload@^8.0.6:
     http-errors "^1.7.2"
     object-path "^0.11.4"
 
-graphql@^14.0.2:
+graphql@14.0.2, graphql@^14.0.2:
   version "14.0.2"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.0.2.tgz#7dded337a4c3fd2d075692323384034b357f5650"
   integrity sha512-gUC4YYsaiSJT1h40krG3J+USGlwhzNTXSb4IOZljn9ag5Tj+RkoXrWp+Kh7WyE3t1NCfab5kzCuxBIvOMERMXw==
@@ -6142,8 +6142,9 @@ lodash.max@^4.0.1:
   resolved "https://registry.yarnpkg.com/lodash.max/-/lodash.max-4.0.1.tgz#8735566c618b35a9f760520b487ae79658af136a"
 
 lodash.merge@^4.6.0:
-  version "4.6.1"
-  resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.1.tgz#adc25d9cb99b9391c59624f379fbba60d7111d54"
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
+  integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
 
 lodash.noop@^3.0.1:
   version "3.0.1"
@@ -6719,14 +6720,6 @@ negotiator@0.6.1:
 neo-async@^2.5.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
-
-next-images@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/next-images/-/next-images-1.1.1.tgz#f756de42234908ce4af038a310689be7ab0666dd"
-  integrity sha512-m236wa7eJgxcDNba8JZZXfm/qtLB3mRkJq2Zms1ksGt3SmskW7fWYynu4+BnOXkR4ld3fcu+o1K2Egep29ApoA==
-  dependencies:
-    file-loader "^3.0.1"
-    url-loader "^1.1.2"
 
 next-routes@1.4.2:
   version "1.4.2"
@@ -9439,7 +9432,7 @@ urix@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/urix/-/urix-0.1.0.tgz#da937f7a62e21fec1fd18d49b35c2935067a6c72"
 
-url-loader@1.1.2, url-loader@^1.1.2:
+url-loader@1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/url-loader/-/url-loader-1.1.2.tgz#b971d191b83af693c5e3fea4064be9e1f2d7f8d8"
   dependencies:
