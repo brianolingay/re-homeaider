@@ -10,7 +10,7 @@
     "build:web": "lerna run build --scope={@homeaider/common,@homeaider/web}"
   },
   "resolutions": {
-    "graphql": "14.0.2"
+    "graphql": "14.3.1"
   },
   "devDependencies": {
     "lerna": "^3.10.7"

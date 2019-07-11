@@ -16,23 +16,25 @@ if (!isBrowser) {
 }
 
 interface Options {
-  getToken: () => string;
+  getToken: () => any;
   fetchOptions: any;
 }
 
 function create(initialState: any, { getToken, fetchOptions }: Options) {
   const httpLink = createHttpLink({
     uri: "http://localhost:4000/graphql",
-    credentials: "same-origin",
+    credentials: "include",
     fetchOptions,
   });
 
   const authLink = setContext((_, { headers }) => {
-    const token = getToken();
+    const tokens = getToken();
     return {
       headers: {
         ...headers,
-        authorization: token ? `Bearer ${token}` : "",
+        cookie: tokens
+          ? `refresh-token=${tokens.refreshToken}; access-token=${tokens.accessToken}`
+          : "",
       },
     };
   });

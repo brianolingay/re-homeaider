@@ -7,5 +7,10 @@ export const validServiceSchema = yup.object().shape({
     .min(3, nameNotLongEnough)
     .max(255)
     .required(),
-  category: yup.string().required()
+  statement: yup
+    .string()
+    .min(3, nameNotLongEnough)
+    .max(255)
+    .required(),
+  category: yup.string().required(),
 });

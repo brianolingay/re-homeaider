@@ -1,8 +1,8 @@
 import * as React from "react";
-import { NextContextWithApollo } from "../types/NextContextWithApollo";
-import { meQuery } from "../graphql/auth/queries/me";
-import { MeQuery } from "./apollo-components";
+import { meQuery } from "../graphql/user/queries/me";
 import redirect from "../lib/redirect";
+import { NextContextWithApollo } from "../types/NextContextWithApollo";
+import { MeQuery } from "./apollo-components";
 
 export const withAuth = <T extends object>(C: React.ComponentClass<T>) => {
   return class AuthComponent extends React.Component<T> {

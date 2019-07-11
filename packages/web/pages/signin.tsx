@@ -1,10 +1,13 @@
-import React from "react";
-import { Card, Button, Form } from "antd";
+import { Button, Card, Form } from "antd";
 import { Field, Formik, FormikProps } from "formik";
-import MyLayout from "../components/MyLayout";
-import { InputField } from "../components/formik-fields/IconedInputField";
+import Router from "next/router";
+import React from "react";
 import { useLoginMutation } from "../components/apollo-components";
-import { meQuery } from "../graphql/auth/queries/me";
+import { InputField } from "../components/formik-fields/IconedInputField";
+import MyLayout from "../components/MyLayout";
+import { meQuery } from "../graphql/user/queries/me";
+import checkLoggedIn from "../lib/checkLoggedIn";
+import redirect from "../lib/redirect";
 import { normalizeErrors } from "../utils/normalizeErrors";
 
 interface FormValues {
@@ -12,7 +15,7 @@ interface FormValues {
   password: string;
 }
 
-export default function signin() {
+function signin() {
   const login = useLoginMutation();
   return (
     <MyLayout
@@ -23,9 +26,8 @@ export default function signin() {
         <Formik<FormValues>
           initialValues={{ email: "", password: "" }}
           onSubmit={async (input, { setErrors, setSubmitting }) => {
-            const isAdmin = true;
             const response = await login({
-              variables: { isAdmin, input },
+              variables: { input },
               update: async (store, { data }) => {
                 if (!data || !data.login.user) {
                   return;
@@ -98,3 +100,18 @@ export default function signin() {
     </MyLayout>
   );
 }
+
+signin.getInitialProps = async (ctx: any) => {
+  const { loggedInUser } = await checkLoggedIn(ctx);
+
+  if (loggedInUser!.me) {
+    // Already signed in? No need to continue.
+    // Throw them back to the main page
+
+    redirect(ctx, "/");
+  }
+
+  return {};
+};
+
+export default signin;
