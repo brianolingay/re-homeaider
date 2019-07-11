@@ -32,12 +32,12 @@ export default function HeaderNav() {
       >
         <Menu theme="dark" mode="horizontal" style={{ lineHeight: "64px" }}>
           <Menu.Item key="1">
-            <Link href="signin">
+            <Link href="/signin">
               <span>Sign In</span>
             </Link>
           </Menu.Item>
           <Menu.Item key="2">
-            <Link href="signup">
+            <Link href="/provider/signup">
               <span>Sign up</span>
             </Link>
           </Menu.Item>
