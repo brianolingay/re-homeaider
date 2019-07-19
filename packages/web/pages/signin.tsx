@@ -1,5 +1,5 @@
-import { Button, Card } from "antd";
-import { Field, Form, Formik, FormikProps } from "formik";
+import { Button, Card, Form } from "antd";
+import { Field, Formik, FormikProps } from "formik";
 import Router from "next/router";
 import React from "react";
 import { useLoginMutation } from "../components/apollo-components";
@@ -63,8 +63,12 @@ function signin() {
           validateOnBlur={false}
           validateOnChange={false}
         >
-          {({ isSubmitting }: FormikProps<FormValues>) => (
-            <Form>
+          {({ handleSubmit, isSubmitting }: FormikProps<FormValues>) => (
+            <Form
+              labelCol={{ span: 7 }}
+              wrapperCol={{ span: 16 }}
+              onSubmit={handleSubmit}
+            >
               <Field
                 name="email"
                 label="Email"
@@ -78,14 +82,17 @@ function signin() {
                 placeholder="******"
                 component={InputField}
               />
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="login-form-button"
-                disabled={isSubmitting}
-              >
-                Sign in
-              </Button>
+
+              <Form.Item wrapperCol={{ span: 16, offset: 7 }}>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className="login-form-button"
+                  disabled={isSubmitting}
+                >
+                  Sign in
+                </Button>
+              </Form.Item>
             </Form>
           )}
         </Formik>

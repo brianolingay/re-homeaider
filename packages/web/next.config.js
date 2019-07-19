@@ -1,10 +1,23 @@
 const withTypescript = require("@zeit/next-typescript");
-const withCss = require("@zeit/next-css");
+const withLess = require("@zeit/next-less");
+const lessToJS = require("less-vars-to-js");
+const fs = require("fs");
+const path = require("path");
 
-const wCss = withCss({
+console.log(path.resolve(__dirname, "./assets/homeaider.less"));
+// Where your antd-custom.less file lives
+const themeVariables = lessToJS(
+  fs.readFileSync(path.resolve(__dirname, "./assets/homeaider.less"), "utf8")
+);
+
+const wLess = withLess({
+  lessLoaderOptions: {
+    javascriptEnabled: true,
+    modifyVars: themeVariables, // make your antd custom effective
+  },
   webpack: (config, { isServer }) => {
     if (isServer) {
-      const antStyles = /antd\/.*?\/style\/css.*?/;
+      const antStyles = /antd\/.*?\/style.*?/;
       const origExternals = [...config.externals];
       config.externals = [
         (context, request, callback) => {
@@ -33,4 +46,4 @@ const wCss = withCss({
   },
 });
 
-module.exports = withTypescript({ ...wCss });
+module.exports = withTypescript({ ...wLess });
