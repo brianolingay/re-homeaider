@@ -20,8 +20,8 @@ export class Service {
   @Field(() => Category, { nullable: true })
   category: Category | null;
 
-  @Field(() => [ServiceAction])
-  serviceActions: [ServiceAction];
+  @Field(() => [ServiceAction], { nullable: true })
+  serviceActions: [ServiceAction] | null;
 
   @Field(() => Date, { nullable: true })
   createdAt: Date | null;

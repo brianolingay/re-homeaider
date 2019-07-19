@@ -7,7 +7,7 @@ export interface ServiceInterface extends Document {
   description: string | null;
   statement: string | null;
   category: CateogryInterface | null;
-  serviceActions: [ServiceActionInterface];
+  serviceActions: ServiceActionInterface[] | null;
   createdAt: Date | null;
   updatedAt: Date | null;
 }
