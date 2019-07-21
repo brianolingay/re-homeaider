@@ -21,7 +21,7 @@ export class Service {
   category: Category | null;
 
   @Field(() => [ServiceAction], { nullable: true })
-  serviceActions: [ServiceAction] | null;
+  serviceActions: ServiceAction[] | null;
 
   @Field(() => Date, { nullable: true })
   createdAt: Date | null;

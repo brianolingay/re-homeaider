@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { ServiceModel } from "server/src/models/Service";
+import { ServiceModel } from "../../models/Service";
 import { DBRepository } from "../DBRepo";
 
 const dba = DBRepository(ServiceModel);

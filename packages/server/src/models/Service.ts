@@ -5,7 +5,7 @@ import { ServiceActionInterface } from "./ServiceAction";
 export interface ServiceInterface extends Document {
   name: string;
   description: string | null;
-  statement: string | null;
+  statement: string;
   category: CateogryInterface | null;
   serviceActions: ServiceActionInterface[] | null;
   createdAt: Date | null;
