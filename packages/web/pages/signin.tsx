@@ -1,4 +1,4 @@
-import { Button, Card, Form } from "antd";
+import { Button, Card, Form, Icon } from "antd";
 import { Field, Formik, FormikProps } from "formik";
 import Router from "next/router";
 import React from "react";
@@ -73,6 +73,9 @@ function signin() {
                 name="email"
                 label="Email"
                 type="email"
+                prefix={
+                  <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
+                }
                 component={InputField}
               />
               <Field
@@ -80,6 +83,9 @@ function signin() {
                 type="password"
                 label="Password"
                 placeholder="******"
+                prefix={
+                  <Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />
+                }
                 component={InputField}
               />
 
