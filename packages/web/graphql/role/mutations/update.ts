@@ -2,7 +2,7 @@ import gql from "graphql-tag";
 import { errorInfoFragment } from "../../shared/fragments/ErrorInfo";
 
 export const updateRoleMutation = gql`
-  mutation UpdateRole($roleId: ObjectId!, $input: LoginInput!) {
+  mutation UpdateRole($roleId: ObjectId!, $input: RoleInput!) {
     updateRole(roleId: $roleId, input: $input) {
       errors {
         ...ErrorInfo
