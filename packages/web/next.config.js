@@ -4,7 +4,6 @@ const lessToJS = require("less-vars-to-js");
 const fs = require("fs");
 const path = require("path");
 
-console.log(path.resolve(__dirname, "./assets/homeaider.less"));
 // Where your antd-custom.less file lives
 const themeVariables = lessToJS(
   fs.readFileSync(path.resolve(__dirname, "./assets/homeaider.less"), "utf8")

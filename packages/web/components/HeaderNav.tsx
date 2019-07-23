@@ -9,9 +9,10 @@ const { Header } = Layout;
 
 export default function HeaderNav() {
   const client = useApolloClient();
-  const { data, loading } = useMeQuery();
+  const { data, loading } = useMeQuery({ fetchPolicy: "network-only" });
   const logout = useLogoutMutation();
 
+  console.log(loading);
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -31,7 +32,7 @@ export default function HeaderNav() {
           justifyContent: "flex-end",
         }}
       >
-        {!data!.me && (
+        {data && !data!.me && (
           <Menu theme="dark" mode="horizontal" style={{ lineHeight: "64px" }}>
             <Menu.Item key="1">
               <Link href="signin">
@@ -45,7 +46,7 @@ export default function HeaderNav() {
             </Menu.Item>
           </Menu>
         )}
-        {data && data.me && (
+        {!loading && data!.me && (
           <Menu theme="dark" mode="horizontal" style={{ lineHeight: "64px" }}>
             <SubMenu
               key="sub1"
@@ -65,7 +66,7 @@ export default function HeaderNav() {
               <Menu.Item
                 key="4"
                 onClick={async () => {
-                  await logout();
+                  //await logout();
                   await client.resetStore();
                 }}
               >

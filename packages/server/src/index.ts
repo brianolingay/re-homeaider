@@ -133,7 +133,7 @@ const startServer = async () => {
       return response;
     },
     playground: process.env.NODE_ENV !== "production",
-    //debug: process.env.NODE_ENV !== "production",
+    debug: process.env.NODE_ENV !== "production",
   });
 
   server.applyMiddleware({ app, cors: false }); // app is from an existing express app

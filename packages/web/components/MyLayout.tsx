@@ -22,7 +22,7 @@ const MyLayout: React.SFC<Props> = ({ children, title, containerStyle }) => {
       <HeaderNav />
       <Layout>
         <SiderNav />
-        <Layout style={{ padding: "24px" }}>
+        <Layout>
           <Content style={containerStyle}>{children}</Content>
         </Layout>
       </Layout>

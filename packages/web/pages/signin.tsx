@@ -20,7 +20,12 @@ function signin() {
   return (
     <MyLayout
       title="Sign In"
-      containerStyle={{ display: "flex", flex: 1, justifyContent: "center" }}
+      containerStyle={{
+        padding: "24px 0",
+        display: "flex",
+        flex: 1,
+        justifyContent: "center",
+      }}
     >
       <Card title="Sign In">
         <Formik<FormValues>
@@ -110,11 +115,8 @@ function signin() {
 signin.getInitialProps = async (ctx: any) => {
   const { loggedInUser } = await checkLoggedIn(ctx);
 
-  if (loggedInUser!.me) {
-    // Already signed in? No need to continue.
-    // Throw them back to the main page
-
-    redirect(ctx, "/");
+  if (loggedInUser && loggedInUser.me) {
+    //redirect(ctx, "/");
   }
 
   return {};
