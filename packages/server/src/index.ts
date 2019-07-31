@@ -1,21 +1,26 @@
 require("dotenv-safe").config();
 import { ApolloError, ApolloServer } from "apollo-server-express";
-import * as cookieParser from "cookie-parser";
+import * as connectRedis from "connect-redis";
 import * as cors from "cors";
 import * as express from "express";
+import * as session from "express-session";
 import { GraphQLError } from "graphql";
 import { RedisPubSub } from "graphql-redis-subscriptions";
 import { createServer } from "http";
 import { ObjectId } from "mongodb";
+import { RedisClient } from "redis";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { v4 } from "uuid";
+import { redis } from "./redis";
 import { ObjectIdScalar } from "./scalars/ObjectIDScalar";
-import { UserInfoInRequest } from "./types/Context";
 import { createMongooseConn } from "./utils/createMongooseConn";
 import { defaultUserAndRole } from "./utils/defaultUserAndRole";
 import { refreshTokens, verifyToken } from "./utils/jwtAuth";
 
+const RedisStore = connectRedis(session);
+
+const SESSION_SECRET = process.env.SESSION_SECRET;
 const port = process.env.PORT || 4000;
 
 const startServer = async () => {
@@ -35,52 +40,29 @@ const startServer = async () => {
 
   app.set("trust proxy", 1);
 
-  app.use(cookieParser());
   app.use(
     cors({
       credentials: true,
       origin: process.env.FRONTEND_HOST,
     })
   );
-  app.use(async (req: UserInfoInRequest, res, next) => {
-    const refreshToken = req.cookies["refresh-token"];
-    const accessToken = req.cookies["access-token"];
 
-    if (!refreshToken && !accessToken) {
-      return next();
-    }
+  const sessionOption: session.SessionOptions = {
+    store: new RedisStore({
+      client: (redis as unknown) as RedisClient,
+    }),
+    name: "qid",
+    secret: SESSION_SECRET || "",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 1000 * 60 * 60 * 24 * 7 * 365, // 7 years
+    },
+  };
 
-    try {
-      const user = verifyToken(accessToken) as any;
-      req.user = user;
-      return next();
-    } catch {}
-
-    if (!refreshToken) {
-      return next();
-    }
-
-    let user;
-
-    try {
-      user = verifyToken(refreshToken) as any;
-    } catch {
-      return next();
-    }
-
-    // token has been invalidated
-    if (!req.user || req.user!.email !== user.email) {
-      return next();
-    }
-
-    const data = await refreshToken(user);
-
-    res.cookie("refresh-token", data.refreshToken);
-    res.cookie("access-token", data.accessToken);
-    req.user = data.user;
-
-    return next();
-  });
+  app.use(session(sessionOption));
 
   const server = new ApolloServer({
     schema: await buildSchema({

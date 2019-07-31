@@ -21,7 +21,7 @@ const errorResponse = [
 ];
 
 @Resolver(User)
-export class UserResolver {
+export class AuthResolver {
   constructor() {}
 
   @Mutation(() => FormSubmitResponse, { nullable: true })
