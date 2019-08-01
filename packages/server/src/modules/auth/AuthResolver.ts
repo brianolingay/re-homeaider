@@ -21,7 +21,7 @@ const errorResponse = [
   },
 ];
 
-const loginResponse = { errors: [], sessionId: undefined, userId: null };
+const loginResponse = { errors: [], sessionId: undefined, user: null };
 
 @Resolver(User)
 export class AuthResolver {
@@ -71,7 +71,7 @@ export class AuthResolver {
       );
     }
 
-    return { ...loginResponse, sessionId: ctx.req.sessionID, userId: user._id };
+    return { ...loginResponse, user: user };
   }
 
   @Authorized()
