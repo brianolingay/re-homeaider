@@ -16,7 +16,7 @@ import { redis } from "./redis";
 import { ObjectIdScalar } from "./scalars/ObjectIDScalar";
 import { createMongooseConn } from "./utils/createMongooseConn";
 import { defaultUserAndRole } from "./utils/defaultUserAndRole";
-import { refreshTokens, verifyToken } from "./utils/jwtAuth";
+import { redisSessionPrefix } from "./constants";
 
 const RedisStore = connectRedis(session);
 
@@ -50,6 +50,7 @@ const startServer = async () => {
   const sessionOption: session.SessionOptions = {
     store: new RedisStore({
       client: (redis as unknown) as RedisClient,
+      prefix: redisSessionPrefix,
     }),
     name: "qid",
     secret: SESSION_SECRET || "",
@@ -57,7 +58,7 @@ const startServer = async () => {
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      //secure: process.env.NODE_ENV === "production",
       maxAge: 1000 * 60 * 60 * 24 * 7 * 365, // 7 years
     },
   };
@@ -70,35 +71,37 @@ const startServer = async () => {
       pubSub,
       scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }],
       authChecker: ({ context }) => {
-        return context.user; // or false if access denied
+        return context.session.userId; // or false if access denied
       },
       validate: false,
     }),
     context: ({ res, req, connection }: any) => ({
+      redis,
       res,
       req,
+      session: req.session || undefined,
       user: connection ? connection.context.user : req.user,
     }),
     uploads: {
       maxFileSize: 10000,
       maxFiles: 20,
     },
-    subscriptions: {
-      path: "/subscriptions",
-      onConnect: async ({ token, refreshToken }: any) => {
-        console.log({ check: "Checking for token", token, refreshToken });
-        if (token && refreshToken) {
-          try {
-            return await verifyToken(token);
-          } catch (err) {
-            const newTokens = await refreshTokens(refreshToken);
-            return { user: newTokens.user };
-          }
-        }
+    // subscriptions: {
+    //   path: "/subscriptions",
+    //   onConnect: async ({ token, refreshToken }: any) => {
+    //     console.log({ check: "Checking for token", token, refreshToken });
+    //     if (token && refreshToken) {
+    //       try {
+    //         return await verifyToken(token);
+    //       } catch (err) {
+    //         const newTokens = await refreshTokens(refreshToken);
+    //         return { user: newTokens.user };
+    //       }
+    //     }
 
-        return { user: null };
-      },
-    },
+    //     return { user: null };
+    //   },
+    // },
     formatError: (error: GraphQLError) => {
       if (error.originalError instanceof ApolloError) {
         return error;
@@ -115,7 +118,7 @@ const startServer = async () => {
       return response;
     },
     playground: process.env.NODE_ENV !== "production",
-    debug: process.env.NODE_ENV !== "production",
+    // debug: process.env.NODE_ENV !== "production",
   });
 
   server.applyMiddleware({ app, cors: false }); // app is from an existing express app

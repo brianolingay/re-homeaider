@@ -19,10 +19,11 @@ export class UserResolver {
     @Ctx()
     ctx: MyContext
   ): Promise<User | null> {
-    if (!ctx.user) {
+    const { userId } = ctx.session;
+    if (!userId) {
       return null;
     }
-    return await UserDBA.findUserWithDetailsBy(ctx.user._id);
+    return await UserDBA.findUserWithDetailsBy({ _id: userId });
   }
 
   @Authorized()
@@ -31,9 +32,13 @@ export class UserResolver {
     @Ctx()
     ctx: MyContext
   ): Promise<User[]> {
-    const { _id } = ctx.user;
+    const { userId } = ctx.session;
 
-    return await UserDBA.findAllAdminExceptCurrentUser(_id);
+    if (!userId) {
+      return [];
+    }
+
+    return await UserDBA.findAllAdminExceptCurrentUser(userId);
   }
 
   @Authorized()
