@@ -12,12 +12,6 @@ export default function HeaderNav() {
   const { data, loading } = useMeQuery({ fetchPolicy: "network-only" });
   const logout = useLogoutMutation();
 
-  console.log(loading);
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  console.log(data);
   return (
     <Header
       className="header"
@@ -66,7 +60,7 @@ export default function HeaderNav() {
               <Menu.Item
                 key="4"
                 onClick={async () => {
-                  //await logout();
+                  await logout();
                   await client.resetStore();
                 }}
               >

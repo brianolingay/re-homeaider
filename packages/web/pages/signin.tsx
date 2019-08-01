@@ -113,10 +113,11 @@ function signin() {
 }
 
 signin.getInitialProps = async (ctx: any) => {
-  const { loggedInUser } = await checkLoggedIn(ctx);
+  const loggedInUser = await checkLoggedIn(ctx);
 
   if (loggedInUser && loggedInUser.me) {
-    //redirect(ctx, "/");
+    redirect(ctx, "/");
+    return {};
   }
 
   return {};

@@ -16,7 +16,7 @@ if (!isBrowser) {
 }
 
 interface Options {
-  getToken: () => any;
+  getToken: () => string;
   fetchOptions: any;
 }
 
@@ -28,13 +28,11 @@ function create(initialState: any, { getToken, fetchOptions }: Options) {
   });
 
   const authLink = setContext((_, { headers }) => {
-    const tokens = getToken();
+    const token = getToken();
     return {
       headers: {
         ...headers,
-        cookie: tokens
-          ? `refresh-token=${tokens.refreshToken}; access-token=${tokens.accessToken}`
-          : "",
+        authorization: token ? `Bearer ${token}` : "",
       },
     };
   });

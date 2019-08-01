@@ -7,5 +7,5 @@ export default async ({ apolloClient }: NextContextWithApollo) => {
     query: meQuery,
   });
 
-  return loggedInUser ? { loggedInUser } : {};
+  return loggedInUser;
 };
