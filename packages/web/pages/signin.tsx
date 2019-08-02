@@ -15,7 +15,7 @@ interface FormValues {
   password: string;
 }
 
-function signin() {
+function Signin(): JSX.Element {
   const login = useLoginMutation();
   return (
     <MyLayout
@@ -112,15 +112,14 @@ function signin() {
   );
 }
 
-signin.getInitialProps = async (ctx: any) => {
-  const loggedInUser = await checkLoggedIn(ctx);
+Signin.getInitialProps = async (ctx: any) => {
+  const { loggedInUser } = await checkLoggedIn(ctx);
 
   if (loggedInUser && loggedInUser.me) {
     redirect(ctx, "/");
-    return {};
   }
 
   return {};
 };
 
-export default signin;
+export default Signin;

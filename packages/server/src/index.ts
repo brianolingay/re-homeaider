@@ -47,6 +47,19 @@ const startServer = async () => {
     })
   );
 
+  app.use((req, _, next) => {
+    const authorization = req.headers.authorization;
+
+    if (authorization) {
+      try {
+        const qid = authorization.split(" ")[1];
+        req.headers.cookie = `qid=${qid}`;
+      } catch {}
+    }
+
+    return next();
+  });
+
   const sessionOption: session.SessionOptions = {
     store: new RedisStore({
       client: (redis as unknown) as RedisClient,
