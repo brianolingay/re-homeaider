@@ -10,7 +10,7 @@ export default function SiderNav() {
     return null;
   }
 
-  if (data!.me!.role!.name === "admin") {
+  if (data!.me!.role!.key === "admin") {
     return <AdminSider />;
   }
 

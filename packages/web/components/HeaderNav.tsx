@@ -9,7 +9,7 @@ const { Header } = Layout;
 
 export default function HeaderNav() {
   const client = useApolloClient();
-  const { data, loading } = useMeQuery({ fetchPolicy: "network-only" });
+  const { data } = useMeQuery();
   const logout = useLogoutMutation();
 
   return (
@@ -29,18 +29,18 @@ export default function HeaderNav() {
         {data && !data!.me && (
           <Menu theme="dark" mode="horizontal" style={{ lineHeight: "64px" }}>
             <Menu.Item key="1">
-              <Link href="signin">
+              <Link href="/signin">
                 <span>Sign In</span>
               </Link>
             </Menu.Item>
             <Menu.Item key="2">
-              <Link href="signup">
+              <Link href="/signup">
                 <span>Sign up</span>
               </Link>
             </Menu.Item>
           </Menu>
         )}
-        {!loading && data!.me && (
+        {data && data!.me && (
           <Menu theme="dark" mode="horizontal" style={{ lineHeight: "64px" }}>
             <SubMenu
               key="sub1"
@@ -52,7 +52,7 @@ export default function HeaderNav() {
               }
             >
               <Menu.Item key="3">
-                <Link href="profile">
+                <Link href="/profile">
                   <span>Profile</span>
                 </Link>
               </Menu.Item>

@@ -1,12 +1,12 @@
+import { loginSchema } from "@homeaider/common";
 import { Button, Card, Form, Icon } from "antd";
 import { Field, Formik, FormikProps } from "formik";
 import Router from "next/router";
 import React from "react";
 import { useLoginMutation } from "../components/apollo-components";
-import { InputField } from "../components/formik-fields/IconedInputField";
+import { InputField } from "../components/formik-fields/InputField";
 import MyLayout from "../components/MyLayout";
 import { meQuery } from "../graphql/user/queries/me";
-import checkLoggedIn from "../lib/checkLoggedIn";
 import redirect from "../lib/redirect";
 import { normalizeErrors } from "../utils/normalizeErrors";
 
@@ -65,6 +65,7 @@ function Signin(): JSX.Element {
               setSubmitting(false);
             }
           }}
+          validationSchema={loginSchema}
           validateOnBlur={false}
           validateOnChange={false}
         >
@@ -113,9 +114,7 @@ function Signin(): JSX.Element {
 }
 
 Signin.getInitialProps = async (ctx: any) => {
-  const { loggedInUser } = await checkLoggedIn(ctx);
-
-  if (loggedInUser && loggedInUser.me) {
+  if (ctx.me) {
     redirect(ctx, "/");
   }
 

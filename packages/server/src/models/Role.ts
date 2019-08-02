@@ -2,6 +2,7 @@ import { Document, Schema, model } from "mongoose";
 
 export interface RoleInterface extends Document {
   name: string;
+  key: string;
   description: string | null;
 }
 
@@ -13,6 +14,10 @@ const roleSchema: Schema = new Schema(
       maxlength: 60,
       trim: true,
       unique: true,
+    },
+    key: {
+      type: String,
+      trim: true,
     },
     description: {
       type: String,

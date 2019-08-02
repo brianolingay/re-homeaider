@@ -4,6 +4,7 @@ export const roleInfoFragment = gql`
   fragment RoleInfo on Role {
     _id
     name
+    key
     description
   }
 `;

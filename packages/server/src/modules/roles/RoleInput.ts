@@ -6,6 +6,9 @@ export class RoleInput implements Partial<Role> {
   @Field()
   name: string;
 
+  @Field()
+  key: string;
+
   @Field({ nullable: true })
   description: string;
 }

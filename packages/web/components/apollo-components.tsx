@@ -208,11 +208,13 @@ export type Role = {
   __typename?: "Role";
   _id: Scalars["ObjectId"];
   name: Scalars["String"];
+  key: Scalars["String"];
   description?: Maybe<Scalars["String"]>;
 };
 
 export type RoleInput = {
   name: Scalars["String"];
+  key: Scalars["String"];
   description?: Maybe<Scalars["String"]>;
 };
 
@@ -330,7 +332,7 @@ export type RegisterMutation = { __typename?: "Mutation" } & {
 
 export type RoleInfoFragment = { __typename?: "Role" } & Pick<
   Role,
-  "_id" | "name" | "description"
+  "_id" | "name" | "key" | "description"
 >;
 
 export type CreateRoleMutationVariables = {
@@ -390,7 +392,7 @@ export type ErrorInfoFragment = { __typename?: "ErrorResponse" } & Pick<
 export type UserInfoFragment = { __typename?: "User" } & Pick<
   User,
   "_id" | "email" | "firstName" | "lastName" | "mobile"
-> & { role: Maybe<{ __typename?: "Role" } & Pick<Role, "_id" | "name">> };
+> & { role: Maybe<{ __typename?: "Role" } & RoleInfoFragment> };
 
 export type CreateUserMutationVariables = {
   role: Scalars["String"];
@@ -449,17 +451,18 @@ export type MeQueryVariables = {};
 export type MeQuery = { __typename?: "Query" } & {
   me: Maybe<{ __typename?: "User" } & UserInfoFragment>;
 };
-export const RoleInfoFragmentDoc = gql`
-  fragment RoleInfo on Role {
-    _id
-    name
-    description
-  }
-`;
 export const ErrorInfoFragmentDoc = gql`
   fragment ErrorInfo on ErrorResponse {
     path
     message
+  }
+`;
+export const RoleInfoFragmentDoc = gql`
+  fragment RoleInfo on Role {
+    _id
+    name
+    key
+    description
   }
 `;
 export const UserInfoFragmentDoc = gql`
@@ -470,10 +473,10 @@ export const UserInfoFragmentDoc = gql`
     lastName
     mobile
     role {
-      _id
-      name
+      ...RoleInfo
     }
   }
+  ${RoleInfoFragmentDoc}
 `;
 export const LoginDocument = gql`
   mutation Login($input: LoginInput!) {

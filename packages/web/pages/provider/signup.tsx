@@ -1,7 +1,7 @@
 import { Button, Card, Form, Row, Col } from "antd";
 import { Field, Formik, FormikProps } from "formik";
 import React from "react";
-import { InputField } from "../../components/formik-fields/IconedInputField";
+import { InputField } from "../../components/formik-fields/InputField";
 import MyLayout from "../../components/MyLayout";
 import { normalizeErrors } from "../../utils/normalizeErrors";
 

@@ -9,6 +9,9 @@ export class Role {
   @Field()
   name: string;
 
+  @Field()
+  key: string;
+
   @Field(() => String, { nullable: true })
   description: string | null;
 }

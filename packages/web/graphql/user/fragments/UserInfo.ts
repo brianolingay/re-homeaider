@@ -1,4 +1,5 @@
 import gql from "graphql-tag";
+import { roleInfoFragment } from "../../role/fragments/RoleInfo";
 
 export const userInfoFragment = gql`
   fragment UserInfo on User {
@@ -8,8 +9,9 @@ export const userInfoFragment = gql`
     lastName
     mobile
     role {
-      _id
-      name
+      ...RoleInfo
     }
   }
+
+  ${roleInfoFragment}
 `;

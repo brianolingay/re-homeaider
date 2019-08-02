@@ -6,5 +6,5 @@ export const validRoleSchema = yup.object().shape({
     .string()
     .min(3, nameNotLongEnough)
     .max(255)
-    .required()
+    .required(),
 });
