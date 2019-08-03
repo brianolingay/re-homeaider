@@ -4,37 +4,33 @@ import React from "react";
 import {
   AllRolesQuery,
   useUpdateRoleMutation,
-  RoleInfoFragment,
 } from "../../components/apollo-components";
 import { RoleModal, RoleFormValues } from "./RoleModal";
+import { getRoleKey } from "./helper";
 
 interface Props {
   showEditRoleModal: boolean;
-  handleEditRoleModal: () => void;
+  handleEditRoleModal: (role: any) => void;
   refetch: () => Promise<ApolloQueryResult<AllRolesQuery>>;
-  role: RoleInfoFragment;
+  role: any;
 }
 
-export const CreateRoleModal = ({
+export const EditRoleModal = ({
   showEditRoleModal,
   handleEditRoleModal,
   refetch,
   role,
 }: Props) => {
-  const udpateRole = useUpdateRoleMutation;
+  const udpateRole = useUpdateRoleMutation();
   return (
     <RoleModal
+      modalName="Edit Role"
       submit={async ({ roleId, ...input }: RoleFormValues) => {
-        // make key of the role name.
-        let roleKey = input.name.toLowerCase();
-        const arrRoleKeyVal = roleKey.match(/\S+/g);
-
-        if (arrRoleKeyVal && arrRoleKeyVal.length > 1) {
-          roleKey = arrRoleKeyVal.join("_");
-        }
-
         return await udpateRole({
-          variables: { roleId, input: { ...input, key: roleKey } },
+          variables: {
+            roleId,
+            input: { ...input, key: getRoleKey(input.name) },
+          },
         });
       }}
       method="udpateRole"

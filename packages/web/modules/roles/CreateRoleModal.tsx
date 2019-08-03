@@ -6,6 +6,7 @@ import {
   useCreateRoleMutation,
 } from "../../components/apollo-components";
 import { RoleModal, RoleFormValues } from "./RoleModal";
+import { getRoleKey } from "./helper";
 
 interface Props {
   showCreateRoleModal: boolean;
@@ -21,17 +22,10 @@ export const CreateRoleModal = ({
   const createRole = useCreateRoleMutation();
   return (
     <RoleModal
+      modalName="New Role"
       submit={async ({ roleId, ...input }: RoleFormValues) => {
-        // make key of the role name.
-        let roleKey = input.name.toLowerCase();
-        const arrRoleKeyVal = roleKey.match(/\S+/g);
-
-        if (arrRoleKeyVal && arrRoleKeyVal.length > 1) {
-          roleKey = arrRoleKeyVal.join("_");
-        }
-
         return await createRole({
-          variables: { input: { ...input, key: roleKey } },
+          variables: { input: { ...input, key: getRoleKey(input.name) } },
         });
       }}
       method="createRole"

@@ -2,26 +2,25 @@ import { Button, Form, Modal } from "antd";
 import { ApolloQueryResult } from "apollo-boost";
 import { Field, Formik, FormikProps } from "formik";
 import React from "react";
-import {
-  AllRolesQuery,
-} from "../../components/apollo-components";
+import { AllRolesQuery } from "../../components/apollo-components";
 import { InputField } from "../../components/formik-fields/InputField";
 import { TextAreaField } from "../../components/formik-fields/TextAreaField";
 
 export interface RoleFormValues {
-  roleId: string,
+  roleId: string;
   name: string;
   description: string;
 }
 
 interface Props {
-  showModal: boolean;
-  handleRoleModal: () => void;
-  refetch: () => Promise<ApolloQueryResult<AllRolesQuery>>;
-  submit: any;
-  validationSchema: any;
   role: any | null;
   method: string;
+  modalName: string;
+  showModal: boolean;
+  handleRoleModal: (role?: any) => void;
+  refetch: () => Promise<ApolloQueryResult<AllRolesQuery>>;
+  validationSchema: any;
+  submit: any;
 }
 
 const defaultInitialValue = {
@@ -36,15 +35,7 @@ export const RoleModal = (props: Props) => {
     <Formik<RoleFormValues>
       initialValues={initialValues}
       onSubmit={async (input, { setErrors, setSubmitting, resetForm }) => {
-
-
-
         const response = await props.submit(input);
-
-        if (response && response.errors && response.errors.length) {
-          setSubmitting(false);
-          return;
-        }
 
         if (
           response &&
@@ -57,7 +48,7 @@ export const RoleModal = (props: Props) => {
         } else {
           resetForm();
           await props.refetch();
-          props.handleRoleModal();
+          props.handleRoleModal(null);
           setSubmitting(false);
         }
       }}
@@ -67,12 +58,12 @@ export const RoleModal = (props: Props) => {
     >
       {({ handleSubmit, isSubmitting }: FormikProps<RoleFormValues>) => (
         <Modal
-          title="New Role"
+          title={props.modalName}
           visible={props.showModal}
           onOk={handleSubmit}
-          onCancel={props.handleRoleModal}
+          onCancel={() => props.handleRoleModal(null)}
           footer={[
-            <Button key="back" onClick={props.handleRoleModal}>
+            <Button key="back" onClick={() => props.handleRoleModal(null)}>
               Cancel
             </Button>,
             <Button
@@ -81,7 +72,7 @@ export const RoleModal = (props: Props) => {
               loading={isSubmitting}
               onClick={handleSubmit}
             >
-              {{props.buttonName}}
+              Submit
             </Button>,
           ]}
         >

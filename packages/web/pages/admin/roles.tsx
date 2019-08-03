@@ -1,19 +1,62 @@
+import { Button, Divider, Table, Modal, message } from "antd";
 import React, { useState } from "react";
+import {
+  useAllRolesQuery,
+  useDeleteRoleMutation,
+} from "../../components/apollo-components";
 import MyLayout from "../../components/MyLayout";
-import { useAllRolesQuery } from "../../components/apollo-components";
-import { Table, Button } from "antd";
 import { CreateRoleModal } from "../../modules/roles/CreateRoleModal";
+import { EditRoleModal } from "../../modules/roles/EditRoleModal";
+
+const { confirm } = Modal;
 
 const initialState = {
   showCreateModal: false,
   showEditModal: false,
-  showDeleteConfirm: false,
+  role: null,
 };
 
 function Roles() {
   const { data, loading, refetch } = useAllRolesQuery();
 
+  const deleteRole = useDeleteRoleMutation();
+
   const [state, setstate] = useState(initialState);
+
+  const handleCreateRoleModal = () => {
+    const newState = { ...state, showCreateModal: !state.showCreateModal };
+    setstate(newState);
+  };
+
+  const handleEditRoleModal = (role: any) => {
+    const newState = { ...state, showEditModal: !state.showEditModal, role };
+    setstate(newState);
+  };
+
+  const handleDeleteComfirmation = (callback: any) => {
+    confirm({
+      title: "Are you sure delete this role?",
+      content:
+        "Some user might using this, please be sure no one is assign for this role.",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      async onOk() {
+        const response = await callback();
+
+        if (response && response.data && !response.data.deleteRole) {
+          message.success("Deleted Successfully");
+          await refetch();
+          Modal.destroyAll();
+        } else {
+          message.error(response.data.errors[0].message);
+        }
+      },
+      onCancel() {
+        console.log("NO!");
+      },
+    });
+  };
 
   const columns = [
     {
@@ -26,6 +69,30 @@ function Roles() {
       dataIndex: "description",
       key: "description",
     },
+    {
+      title: "Action",
+      key: "action",
+      render: (text, record) => (
+        <span>
+          <Button type="primary" onClick={() => handleEditRoleModal(record)}>
+            Edit
+          </Button>
+          <Divider type="vertical" />
+          <Button
+            type="primary"
+            onClick={() =>
+              handleDeleteComfirmation(async () => {
+                return await deleteRole({
+                  variables: { roleId: record._id },
+                });
+              })
+            }
+          >
+            Delete
+          </Button>
+        </span>
+      ),
+    },
   ];
 
   let newData: any = [];
@@ -35,21 +102,6 @@ function Roles() {
       return { ...item, key: item._id };
     });
   }
-
-  const handleCreateRoleModal = () => {
-    const newState = { ...state, showCreateModal: !state.showCreateModal };
-    setstate(newState);
-  };
-
-  const handleEditRoleModal = () => {
-    const newState = { ...state, showEditModal: !state.showEditModal };
-    setstate(newState);
-  };
-
-  const handleDeleteComfirmation = () => {
-    const newState = { ...state, showDeleteConfirm: !state.showDeleteConfirm };
-    setstate(newState);
-  };
 
   return (
     <MyLayout
@@ -70,6 +122,14 @@ function Roles() {
         handleCreateRoleModal={handleCreateRoleModal}
         refetch={refetch}
       />
+      {state.role && (
+        <EditRoleModal
+          showEditRoleModal={state.showEditModal}
+          handleEditRoleModal={handleEditRoleModal}
+          refetch={refetch}
+          role={state.role}
+        />
+      )}
     </MyLayout>
   );
 }
