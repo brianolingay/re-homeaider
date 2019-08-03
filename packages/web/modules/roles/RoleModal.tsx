@@ -1,15 +1,14 @@
-import { Button, Form, Modal } from "antd";
+import { Form } from "antd";
 import { ApolloQueryResult } from "apollo-boost";
-import { Field, Formik, FormikProps } from "formik";
+import { Field } from "formik";
 import React from "react";
-import { AllRolesQuery } from "../../components/apollo-components";
+import { AllRolesQuery, RoleInput } from "../../components/apollo-components";
 import { InputField } from "../../components/formik-fields/InputField";
 import { TextAreaField } from "../../components/formik-fields/TextAreaField";
+import { FormModal } from "../../components/formik-modal/FormModal";
 
-export interface RoleFormValues {
+export interface RoleFormValues extends RoleInput {
   roleId: string;
-  name: string;
-  description: string;
 }
 
 interface Props {
@@ -29,65 +28,29 @@ const defaultInitialValue = {
   description: "",
 };
 
-export const RoleModal = (props: Props) => {
+export const RoleFormModal = (props: Props) => {
   const initialValues = props.role ? props.role : defaultInitialValue;
   return (
-    <Formik<RoleFormValues>
+    <FormModal
       initialValues={initialValues}
-      onSubmit={async (input, { setErrors, setSubmitting, resetForm }) => {
-        const response = await props.submit(input);
-
-        if (
-          response &&
-          response.data &&
-          response.data[props.method].errors &&
-          response.data[props.method].errors.length
-        ) {
-          setSubmitting(false);
-          return setErrors(normalizeErrors(response.data[props.method].errors));
-        } else {
-          resetForm();
-          await props.refetch();
-          props.handleRoleModal(null);
-          setSubmitting(false);
-        }
-      }}
+      method={props.method}
+      modalName={props.modalName}
+      showModal={props.showModal}
+      handleModal={props.handleRoleModal}
+      refetch={props.refetch}
       validationSchema={props.validationSchema}
-      validateOnBlur={false}
-      validateOnChange={false}
+      submit={props.submit}
     >
-      {({ handleSubmit, isSubmitting }: FormikProps<RoleFormValues>) => (
-        <Modal
-          title={props.modalName}
-          visible={props.showModal}
-          onOk={handleSubmit}
-          onCancel={() => props.handleRoleModal(null)}
-          footer={[
-            <Button key="back" onClick={() => props.handleRoleModal(null)}>
-              Cancel
-            </Button>,
-            <Button
-              key="submit"
-              type="primary"
-              loading={isSubmitting}
-              onClick={handleSubmit}
-            >
-              Submit
-            </Button>,
-          ]}
-        >
-          <Form labelCol={{ span: 7 }} wrapperCol={{ span: 16 }}>
-            <Field name="name" label="Name" component={InputField} />
-            <Field
-              name="description"
-              label="Description"
-              autosize={false}
-              rows={3}
-              component={TextAreaField}
-            />
-          </Form>
-        </Modal>
-      )}
-    </Formik>
+      <Form labelCol={{ span: 7 }} wrapperCol={{ span: 16 }}>
+        <Field name="name" label="Name" component={InputField} />
+        <Field
+          name="description"
+          label="Description"
+          autosize={false}
+          rows={3}
+          component={TextAreaField}
+        />
+      </Form>
+    </FormModal>
   );
 };

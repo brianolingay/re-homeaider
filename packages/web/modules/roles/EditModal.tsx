@@ -5,7 +5,7 @@ import {
   AllRolesQuery,
   useUpdateRoleMutation,
 } from "../../components/apollo-components";
-import { RoleModal, RoleFormValues } from "./RoleModal";
+import { RoleFormModal, RoleFormValues } from "./RoleModal";
 import { getRoleKey } from "./helper";
 
 interface Props {
@@ -21,19 +21,19 @@ export const EditModal = ({
   refetch,
   role,
 }: Props) => {
-  const udpateRole = useUpdateRoleMutation();
+  const updateRole = useUpdateRoleMutation();
   return (
-    <RoleModal
+    <RoleFormModal
       modalName="Edit Role"
       submit={async ({ roleId, ...input }: RoleFormValues) => {
-        return await udpateRole({
+        return await updateRole({
           variables: {
             roleId,
             input: { ...input, key: getRoleKey(input.name) },
           },
         });
       }}
-      method="udpateRole"
+      method="updateRole"
       refetch={refetch}
       showModal={showEditRoleModal}
       handleRoleModal={handleEditRoleModal}

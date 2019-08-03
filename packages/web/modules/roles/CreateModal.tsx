@@ -5,7 +5,7 @@ import {
   AllRolesQuery,
   useCreateRoleMutation,
 } from "../../components/apollo-components";
-import { RoleModal, RoleFormValues } from "./RoleModal";
+import { RoleFormModal, RoleFormValues } from "./RoleModal";
 import { getRoleKey } from "./helper";
 
 interface Props {
@@ -21,7 +21,7 @@ export const CreateModal = ({
 }: Props) => {
   const createRole = useCreateRoleMutation();
   return (
-    <RoleModal
+    <RoleFormModal
       modalName="New Role"
       submit={async ({ roleId, ...input }: RoleFormValues) => {
         return await createRole({
