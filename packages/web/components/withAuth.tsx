@@ -21,6 +21,7 @@ export const withAuth = <T extends object>(C: React.ComponentClass<T>) => {
 
       return {
         me: response.data.me,
+        pathname: ctx.pathname,
       };
     }
 

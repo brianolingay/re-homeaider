@@ -2,8 +2,9 @@ import React from "react";
 
 import AdminSider from "./AdminSider";
 import { useMeQuery } from "./apollo-components";
+import { NavProps } from "./HeaderNav";
 
-export default function SiderNav() {
+export default function SiderNav(props: NavProps) {
   const { data, loading } = useMeQuery();
 
   if (loading || !data!.me) {
@@ -11,7 +12,7 @@ export default function SiderNav() {
   }
 
   if (data!.me!.role!.key === "admin") {
-    return <AdminSider />;
+    return <AdminSider {...props} />;
   }
 
   return null;

@@ -7,7 +7,11 @@ import { useApolloClient } from "react-apollo-hooks";
 const { SubMenu } = Menu;
 const { Header } = Layout;
 
-export default function HeaderNav() {
+export type NavProps = {
+  pathname: string;
+};
+
+export default function HeaderNav({ pathname }: NavProps) {
   const client = useApolloClient();
   const { data } = useMeQuery();
   const logout = useLogoutMutation();
@@ -27,13 +31,18 @@ export default function HeaderNav() {
         }}
       >
         {data && !data!.me && (
-          <Menu theme="dark" mode="horizontal" style={{ lineHeight: "64px" }}>
-            <Menu.Item key="1">
+          <Menu
+            theme="dark"
+            mode="horizontal"
+            style={{ lineHeight: "64px" }}
+            selectedKeys={[pathname]}
+          >
+            <Menu.Item key="/signin">
               <Link href="/signin">
                 <span>Sign In</span>
               </Link>
             </Menu.Item>
-            <Menu.Item key="2">
+            <Menu.Item key="/signup">
               <Link href="/signup">
                 <span>Sign up</span>
               </Link>
@@ -41,7 +50,12 @@ export default function HeaderNav() {
           </Menu>
         )}
         {data && data!.me && (
-          <Menu theme="dark" mode="horizontal" style={{ lineHeight: "64px" }}>
+          <Menu
+            theme="dark"
+            mode="horizontal"
+            style={{ lineHeight: "64px" }}
+            selectedKeys={[pathname]}
+          >
             <SubMenu
               key="sub1"
               title={
@@ -51,7 +65,7 @@ export default function HeaderNav() {
                 </span>
               }
             >
-              <Menu.Item key="3">
+              <Menu.Item key="/profile">
                 <Link href="/profile">
                   <span>Profile</span>
                 </Link>

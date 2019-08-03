@@ -34,6 +34,7 @@ export default function signup() {
     <MyLayout
       title="Sign Up"
       containerStyle={{ display: "flex", flex: 1, justifyContent: "center" }}
+      pathname="/provider/signup"
     >
       <Card title="Sign In">
         <Formik<FormValues>

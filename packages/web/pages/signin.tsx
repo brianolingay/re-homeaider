@@ -16,7 +16,7 @@ interface FormValues {
   password: string;
 }
 
-function Signin(): JSX.Element {
+function Signin({ pathname }: any): JSX.Element {
   const login = useLoginMutation();
   return (
     <MyLayout
@@ -27,6 +27,7 @@ function Signin(): JSX.Element {
         flex: 1,
         justifyContent: "center",
       }}
+      pathname={pathname}
     >
       <Card title="Sign In">
         <Formik<FormValues>
@@ -62,7 +63,9 @@ function Signin(): JSX.Element {
               setSubmitting(false);
               return setErrors(normalizeErrors(response.data.login.errors));
             } else {
-              Router.push("/");
+              const goto =
+                data.login.user.role.name === "Admin" ? "/admin" : "/";
+              Router.push(goto);
               setSubmitting(false);
             }
           }}
@@ -116,12 +119,12 @@ function Signin(): JSX.Element {
 
 Signin.getInitialProps = async (ctx: any) => {
   const { loggedInUser } = await checkLoggedIn(ctx);
-
+  const { pathname } = ctx;
   if (loggedInUser && loggedInUser.me) {
     redirect(ctx, "/");
   }
 
-  return {};
+  return { pathname };
 };
 
 export default Signin;

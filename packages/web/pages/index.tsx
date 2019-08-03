@@ -11,6 +11,7 @@ export default () => {
         margin: 0,
         minHeight: 280,
       }}
+      pathname="/"
     >
       Content
     </MyLayout>

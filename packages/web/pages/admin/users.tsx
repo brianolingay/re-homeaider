@@ -9,6 +9,7 @@ import {
 import MyLayout from "../../components/MyLayout";
 import { CreateModal } from "../../modules/users/CreateModal";
 import { EditModal } from "../../modules/users/EditModal";
+import { withAuth } from "../../components/withAuth";
 
 const { confirm } = Modal;
 
@@ -18,7 +19,7 @@ const initialState = {
   user: null,
 };
 
-function Users() {
+function Users(props: any) {
   const { data, loading, refetch } = useAllAdminExceptCurrentUserQuery();
 
   const { data: rolesData } = useAllRolesQuery();
@@ -149,6 +150,7 @@ function Users() {
         padding: "24px",
         flex: 1,
       }}
+      pathname={props.pathname}
     >
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
         <Button type="primary" onClick={handleCreateUserModal}>
@@ -175,4 +177,4 @@ function Users() {
   );
 }
 
-export default Users;
+export default withAuth(Users);

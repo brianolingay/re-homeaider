@@ -6,6 +6,7 @@ export default function profile() {
     <MyLayout
       title="Profile"
       containerStyle={{ display: "flex", flex: 1, justifyContent: "center" }}
+      pathname="/profile"
     >
       Welcome
     </MyLayout>

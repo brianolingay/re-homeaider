@@ -1,33 +1,34 @@
 import React from "react";
 import { Layout, Menu } from "antd";
 import Link from "next/link";
+import { NavProps } from "./HeaderNav";
 
 const { Sider } = Layout;
 
-const AdminSider = () => {
+const AdminSider = ({ pathname }: NavProps) => {
   return (
     <Sider width={200} style={{ background: "#fff" }}>
       <Menu
         mode="inline"
-        defaultSelectedKeys={["1"]}
+        selectedKeys={[pathname]}
         style={{ height: "100%", borderRight: 0 }}
       >
-        <Menu.Item key="1">
+        <Menu.Item key="/admin">
           <Link href="/admin">
             <span>Categories</span>
           </Link>
         </Menu.Item>
-        <Menu.Item key="2">
+        <Menu.Item key="/admin/services">
           <Link href="/admin/services">
             <span>Services</span>
           </Link>
         </Menu.Item>
-        <Menu.Item key="3">
+        <Menu.Item key="/admin/roles">
           <Link href="/admin/roles">
             <span>Roles</span>
           </Link>
         </Menu.Item>
-        <Menu.Item key="4">
+        <Menu.Item key="/admin/users">
           <Link href="/admin/users">
             <span>Users</span>
           </Link>

@@ -7,6 +7,7 @@ import {
 import MyLayout from "../../components/MyLayout";
 import { CreateModal } from "../../modules/roles/CreateModal";
 import { EditModal } from "../../modules/roles/EditModal";
+import { withAuth } from "../../components/withAuth";
 
 const { confirm } = Modal;
 
@@ -16,7 +17,7 @@ const initialState = {
   role: null,
 };
 
-function Roles() {
+function Roles(props: any) {
   const { data, loading, refetch } = useAllRolesQuery();
 
   const deleteRole = useDeleteRoleMutation();
@@ -108,6 +109,7 @@ function Roles() {
         padding: "24px",
         flex: 1,
       }}
+      pathname={props.pathname}
     >
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
         <Button type="primary" onClick={handleCreateRoleModal}>
@@ -132,4 +134,4 @@ function Roles() {
   );
 }
 
-export default Roles;
+export default withAuth(Roles);
