@@ -7,6 +7,7 @@ import { useLoginMutation } from "../components/apollo-components";
 import { InputField } from "../components/formik-fields/InputField";
 import MyLayout from "../components/MyLayout";
 import { meQuery } from "../graphql/user/queries/me";
+import checkLoggedIn from "../lib/checkLoggedIn";
 import redirect from "../lib/redirect";
 import { normalizeErrors } from "../utils/normalizeErrors";
 
@@ -114,7 +115,9 @@ function Signin(): JSX.Element {
 }
 
 Signin.getInitialProps = async (ctx: any) => {
-  if (ctx.me) {
+  const { loggedInUser } = await checkLoggedIn(ctx);
+
+  if (loggedInUser && loggedInUser.me) {
     redirect(ctx, "/");
   }
 

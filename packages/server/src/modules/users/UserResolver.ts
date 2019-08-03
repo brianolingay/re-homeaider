@@ -54,6 +54,7 @@ export class UserResolver {
   @Mutation(() => FormSubmitResponse, { nullable: true })
   async updateUser(
     @Arg("userId") userId: ObjectId,
+    @Arg("role") role: ObjectId,
     @Arg("input") userInput: UserInput
   ): Promise<FormSubmitResponse> {
     try {
@@ -74,7 +75,7 @@ export class UserResolver {
     }
 
     try {
-      await UserDBA.update({ _id: userId }, { ...newUserInput2 });
+      await UserDBA.update({ _id: userId }, { ...newUserInput2, role });
     } catch (error) {
       throw error;
     }

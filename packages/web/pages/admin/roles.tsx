@@ -5,8 +5,8 @@ import {
   useDeleteRoleMutation,
 } from "../../components/apollo-components";
 import MyLayout from "../../components/MyLayout";
-import { CreateRoleModal } from "../../modules/roles/CreateRoleModal";
-import { EditRoleModal } from "../../modules/roles/EditRoleModal";
+import { CreateModal } from "../../modules/roles/CreateModal";
+import { EditModal } from "../../modules/roles/EditModal";
 
 const { confirm } = Modal;
 
@@ -98,9 +98,7 @@ function Roles() {
   let newData: any = [];
 
   if (data && data.roles) {
-    newData = data.roles.map(item => {
-      return { ...item, key: item._id };
-    });
+    newData = data.roles.map(item => ({ ...item, key: item._id }));
   }
 
   return (
@@ -113,17 +111,17 @@ function Roles() {
     >
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
         <Button type="primary" onClick={handleCreateRoleModal}>
-          Create Role
+          Add Role
         </Button>
       </div>
       <Table columns={columns} dataSource={newData} loading={loading} />
-      <CreateRoleModal
+      <CreateModal
         showCreateRoleModal={state.showCreateModal}
         handleCreateRoleModal={handleCreateRoleModal}
         refetch={refetch}
       />
       {state.role && (
-        <EditRoleModal
+        <EditModal
           showEditRoleModal={state.showEditModal}
           handleEditRoleModal={handleEditRoleModal}
           refetch={refetch}

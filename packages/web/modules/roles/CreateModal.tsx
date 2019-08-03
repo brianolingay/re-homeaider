@@ -14,7 +14,7 @@ interface Props {
   refetch: () => Promise<ApolloQueryResult<AllRolesQuery>>;
 }
 
-export const CreateRoleModal = ({
+export const CreateModal = ({
   showCreateRoleModal,
   handleCreateRoleModal,
   refetch,

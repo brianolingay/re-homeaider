@@ -151,6 +151,7 @@ export type MutationCreateUserArgs = {
 
 export type MutationUpdateUserArgs = {
   input: UserInput;
+  role: Scalars["ObjectId"];
   userId: Scalars["ObjectId"];
 };
 
@@ -425,6 +426,7 @@ export type DeleteUserMutation = { __typename?: "Mutation" } & {
 
 export type UpdateUserMutationVariables = {
   userId: Scalars["ObjectId"];
+  role: Scalars["ObjectId"];
   input: UserInput;
 };
 
@@ -703,8 +705,12 @@ export function useDeleteUserMutation(
   >(DeleteUserDocument, baseOptions);
 }
 export const UpdateUserDocument = gql`
-  mutation UpdateUser($userId: ObjectId!, $input: UserInput!) {
-    updateUser(userId: $userId, input: $input) {
+  mutation UpdateUser(
+    $userId: ObjectId!
+    $role: ObjectId!
+    $input: UserInput!
+  ) {
+    updateUser(userId: $userId, role: $role, input: $input) {
       errors {
         ...ErrorInfo
       }

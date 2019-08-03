@@ -15,7 +15,7 @@ interface Props {
   role: any;
 }
 
-export const EditRoleModal = ({
+export const EditModal = ({
   showEditRoleModal,
   handleEditRoleModal,
   refetch,

@@ -22,13 +22,13 @@ export default async (role: String, input: UserInput | RegisterInput) => {
 
   const { email, password } = input;
 
-  const roleData = await RoleDBA.doExists({ name: role });
+  const roleData = await RoleDBA.doExists({ _id: role });
 
   if (!roleData) {
     return {
       errors: [
         {
-          path: "email",
+          path: "role",
           message: "This role is not yet available",
         },
       ],
