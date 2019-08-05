@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Layout, Menu, Icon } from "antd";
 import { useMeQuery, useLogoutMutation } from "./apollo-components";
 import { useApolloClient } from "react-apollo-hooks";
+import { useRouter } from "next/router";
 
 const { SubMenu } = Menu;
 const { Header } = Layout;
@@ -15,6 +16,12 @@ export default function HeaderNav({ pathname }: NavProps) {
   const client = useApolloClient();
   const { data } = useMeQuery();
   const logout = useLogoutMutation();
+
+  const router = useRouter();
+
+  const handleNav = (e: any) => {
+    router.push(e.key);
+  };
 
   return (
     <Header
@@ -37,15 +44,11 @@ export default function HeaderNav({ pathname }: NavProps) {
             style={{ lineHeight: "64px" }}
             selectedKeys={[pathname]}
           >
-            <Menu.Item key="/signin">
-              <Link href="/signin">
-                <span>Sign In</span>
-              </Link>
+            <Menu.Item key="/signin" onClick={handleNav}>
+              <span>Sign In</span>
             </Menu.Item>
-            <Menu.Item key="/signup">
-              <Link href="/signup">
-                <span>Sign up</span>
-              </Link>
+            <Menu.Item key="/signup" onClick={handleNav}>
+              <span>Sign up</span>
             </Menu.Item>
           </Menu>
         )}
@@ -65,10 +68,8 @@ export default function HeaderNav({ pathname }: NavProps) {
                 </span>
               }
             >
-              <Menu.Item key="/profile">
-                <Link href="/profile">
-                  <span>Profile</span>
-                </Link>
+              <Menu.Item key="/profile" onClick={handleNav}>
+                <span>Profile</span>
               </Menu.Item>
               <Menu.Divider />
               <Menu.Item
