@@ -63,8 +63,7 @@ function Signin({ pathname }: any): JSX.Element {
               setSubmitting(false);
               return setErrors(normalizeErrors(response.data.login.errors));
             } else {
-              const goto =
-                data.login.user.role.name === "Admin" ? "/admin" : "/";
+              const goto = response.data.login.user.role.name === "Admin" ? "/admin" : "/";
               Router.push(goto);
               setSubmitting(false);
             }
