@@ -73,6 +73,7 @@ function Roles(props: any) {
     {
       title: "Action",
       key: "action",
+      align: "right",
       render: (text, record) => (
         <span>
           <Button type="primary" onClick={() => handleEditRoleModal(record)}>

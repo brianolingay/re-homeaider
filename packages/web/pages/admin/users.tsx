@@ -19,6 +19,11 @@ const initialState = {
   user: null,
 };
 
+interface UserRecord extends UserInfoFragment {
+  fullName: string;
+  key: string;
+}
+
 function Users(props: any) {
   const { data, loading, refetch } = useAllAdminExceptCurrentUserQuery();
 
@@ -97,9 +102,10 @@ function Users(props: any) {
     {
       title: "Action",
       key: "action",
+      align: "right",
       render: (
         _text: string,
-        { __typename, _id, role, fullName, key, ...record }: UserInfoFragment
+        { __typename, _id, role, fullName, key, ...record }: UserRecord
       ) => (
         <span>
           <Button
