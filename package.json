@@ -10,7 +10,9 @@
     "build:web": "lerna run build --scope={@homeaider/common,@homeaider/web}"
   },
   "resolutions": {
-    "graphql": "14.3.1"
+    "graphql": "14.3.1",
+    "@types/react": "16.8.20",
+    "@types/react-dom": "16.8.4"
   },
   "devDependencies": {
     "lerna": "^3.10.7"
