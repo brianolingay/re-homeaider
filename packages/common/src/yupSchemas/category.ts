@@ -6,5 +6,6 @@ export const validCategorySchema = yup.object().shape({
     .string()
     .min(3, nameNotLongEnough)
     .max(255)
-    .required()
+    .required(),
+  service: yup.string().required(),
 });

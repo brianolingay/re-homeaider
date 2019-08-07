@@ -13,8 +13,14 @@ export class Category {
   @Field(() => String, { nullable: true })
   description: string | null;
 
-  @Field(() => [Service], { nullable: true })
-  services: Service[] | null;
+  @Field(() => Service)
+  service: Service;
+
+  @Field()
+  statement: string;
+
+  @Field()
+  details: (string | number | object)[];
 
   @Field(() => Date, { nullable: true })
   createdAt: Date | null;

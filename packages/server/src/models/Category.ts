@@ -4,7 +4,9 @@ import { ServiceInterface } from "./Service";
 export interface CateogryInterface extends Document {
   name: string;
   description: string | null;
-  services: ServiceInterface[] | null;
+  service: ServiceInterface;
+  statement: string;
+  details: [];
   createdAt: Date | null;
   updatedAt: Date | null;
 }
@@ -22,7 +24,13 @@ export const categorySchema: Schema = new Schema(
       type: String,
       trim: true,
     },
-    services: [{ type: Schema.Types.ObjectId, ref: "Service" }],
+    service: { type: Schema.Types.ObjectId, ref: "Service" },
+    statement: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    details: [Schema.Types.Mixed],
   },
   { autoIndex: false }
 );

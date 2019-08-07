@@ -1,13 +1,10 @@
 import { Document, Schema, model } from "mongoose";
 import { CateogryInterface } from "./Category";
-import { ServiceActionInterface } from "./ServiceAction";
 
 export interface ServiceInterface extends Document {
   name: string;
   description: string | null;
-  statement: string;
-  category: CateogryInterface | null;
-  serviceActions: ServiceActionInterface[] | null;
+  categories: [CateogryInterface] | null;
   createdAt: Date | null;
   updatedAt: Date | null;
 }
@@ -26,13 +23,7 @@ export const serviceSchema: Schema = new Schema(
       type: String,
       trim: true,
     },
-    statement: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    category: { type: Schema.Types.ObjectId, ref: "Category" },
-    serviceActions: [{ type: Schema.Types.ObjectId, ref: "ServiceAction" }],
+    categories: [{ type: Schema.Types.ObjectId, ref: "Category" }],
   },
   { autoIndex: false }
 );

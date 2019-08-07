@@ -15,17 +15,21 @@ export class CategoryResolver {
   @Authorized()
   @Mutation(() => FormSubmitResponse, { nullable: true })
   async createCategory(
+    @Arg("service") service: ObjectId,
     @Arg("input") categoryInput: CategoryInput
   ): Promise<FormSubmitResponse> {
     try {
-      await validCategorySchema.validate(categoryInput, { abortEarly: false });
+      await validCategorySchema.validate(
+        { ...categoryInput, service },
+        { abortEarly: false }
+      );
     } catch (err) {
       return { errors: formatYupError(err) };
     }
 
     const { name } = categoryInput;
 
-    const categoryAlreadyExists = await CategoryDBA.doExists({ name });
+    const categoryAlreadyExists = await CategoryDBA.doExists({ name, service });
 
     if (categoryAlreadyExists) {
       return {
@@ -39,7 +43,7 @@ export class CategoryResolver {
     }
 
     try {
-      await CategoryDBA.create(categoryInput);
+      await CategoryDBA.create({ ...categoryInput, service });
     } catch (error) {
       throw error;
     }
@@ -50,11 +54,15 @@ export class CategoryResolver {
   @Authorized()
   @Mutation(() => FormSubmitResponse, { nullable: true })
   async updateCategory(
+    @Arg("service") service: ObjectId,
     @Arg("categoryId") categoryId: ObjectId,
     @Arg("input") categoryInput: CategoryInput
   ): Promise<FormSubmitResponse> {
     try {
-      await validCategorySchema.validate(categoryInput, { abortEarly: false });
+      await validCategorySchema.validate(
+        { ...categoryInput, service },
+        { abortEarly: false }
+      );
     } catch (err) {
       return { errors: formatYupError(err) };
     }
@@ -63,6 +71,7 @@ export class CategoryResolver {
 
     const categoryAlreadyExists = await CategoryDBA.doExists({
       name,
+      service,
       _id: { $ne: categoryId },
     });
 

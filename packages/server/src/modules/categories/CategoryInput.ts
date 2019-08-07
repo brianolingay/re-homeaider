@@ -8,4 +8,10 @@ export class CategoryInput implements Partial<Category> {
 
   @Field({ nullable: true })
   description: string;
+
+  @Field()
+  statement: string;
+
+  @Field()
+  details: (string | number | object)[];
 }

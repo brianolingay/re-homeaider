@@ -2,7 +2,6 @@ import { validServiceSchema } from "@homeaider/common";
 import { ObjectId } from "mongodb";
 import { Arg, Authorized, Mutation, Query, Resolver } from "type-graphql";
 import { formatYupError } from "../../utils/formatYupError";
-import CategoryDBA from "../categories/CategoryDBA";
 import { FormSubmitResponse } from "../FormSubmitResponse";
 import ServiceDBA from "./ServiceDBA";
 import { ServiceInput } from "./ServiceInput";
@@ -16,25 +15,18 @@ export class ServiceResolver {
   @Authorized()
   @Mutation(() => FormSubmitResponse, { nullable: true })
   async createService(
-    @Arg("categoryId") categoryId: ObjectId,
     @Arg("input") serviceInput: ServiceInput
   ): Promise<FormSubmitResponse | null> {
     try {
-      await validServiceSchema.validate(
-        { ...serviceInput, category: categoryId },
-        { abortEarly: false }
-      );
+      await validServiceSchema.validate(serviceInput, { abortEarly: false });
     } catch (err) {
       return { errors: formatYupError(err) };
     }
 
     const { name } = serviceInput;
 
-    const category = await CategoryDBA.get(categoryId);
-
     const serviceAlreadyExists = await ServiceDBA.doExists({
       name,
-      category: category._id,
     });
 
     if (serviceAlreadyExists) {
@@ -48,15 +40,7 @@ export class ServiceResolver {
       };
     }
 
-    const service = await ServiceDBA.create({
-      ...serviceInput,
-      category: category!._id,
-    });
-
-    await CategoryDBA.update(
-      { _id: categoryId },
-      { services: [...category!.services, service._id] }
-    );
+    await ServiceDBA.create(serviceInput);
 
     return { errors: [] };
   }
@@ -64,15 +48,11 @@ export class ServiceResolver {
   @Authorized()
   @Mutation(() => FormSubmitResponse, { nullable: true })
   async updateService(
-    @Arg("categoryId") categoryId: ObjectId,
     @Arg("serviceId") serviceId: ObjectId,
     @Arg("input") serviceInput: ServiceInput
   ): Promise<FormSubmitResponse | null> {
     try {
-      await validServiceSchema.validate(
-        { ...serviceInput, category: categoryId },
-        { abortEarly: false }
-      );
+      await validServiceSchema.validate(serviceInput, { abortEarly: false });
     } catch (err) {
       return { errors: formatYupError(err) };
     }
@@ -81,7 +61,6 @@ export class ServiceResolver {
 
     const serviceAlreadyExists = await ServiceDBA.doExists({
       name,
-      category: categoryId,
       _id: { $ne: serviceId },
     });
 
@@ -108,29 +87,12 @@ export class ServiceResolver {
   @Authorized()
   @Mutation(() => FormSubmitResponse, { nullable: true })
   async deleteService(
-    @Arg("categoryId") categoryId: ObjectId,
     @Arg("serviceId") serviceId: ObjectId
   ): Promise<FormSubmitResponse | null> {
     try {
-      const category = await CategoryDBA.get(categoryId);
-      const deleted = await ServiceDBA.delete({
+      await ServiceDBA.delete({
         _id: serviceId,
       });
-
-      if (deleted && category) {
-        const newServices = category.services.filter(
-          (id: ObjectId) => id !== serviceId
-        );
-
-        try {
-          await CategoryDBA.update(
-            { _id: categoryId },
-            { services: newServices }
-          );
-        } catch (error) {
-          throw error;
-        }
-      }
     } catch {
       return {
         errors: [
