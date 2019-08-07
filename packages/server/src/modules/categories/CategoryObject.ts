@@ -1,3 +1,4 @@
+import { GraphQLJSON } from "graphql-type-json";
 import { ObjectId } from "mongodb";
 import { Field, ObjectType } from "type-graphql";
 import { Service } from "../services/ServiceObject";
@@ -19,8 +20,8 @@ export class Category {
   @Field()
   statement: string;
 
-  @Field()
-  details: (string | number | object)[];
+  @Field(() => GraphQLJSON)
+  details: any;
 
   @Field(() => Date, { nullable: true })
   createdAt: Date | null;

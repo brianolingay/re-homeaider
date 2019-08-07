@@ -6,7 +6,7 @@ export interface CateogryInterface extends Document {
   description: string | null;
   service: ServiceInterface;
   statement: string;
-  details: [];
+  details: JSON;
   createdAt: Date | null;
   updatedAt: Date | null;
 }

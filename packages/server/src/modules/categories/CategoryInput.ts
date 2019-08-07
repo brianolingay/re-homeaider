@@ -1,3 +1,4 @@
+import { GraphQLJSON } from "graphql-type-json";
 import { Field, InputType } from "type-graphql";
 import { Category } from "./CategoryObject";
 
@@ -12,6 +13,6 @@ export class CategoryInput implements Partial<Category> {
   @Field()
   statement: string;
 
-  @Field()
-  details: (string | number | object)[];
+  @Field(() => GraphQLJSON)
+  details: any;
 }

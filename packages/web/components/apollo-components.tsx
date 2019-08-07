@@ -13,6 +13,8 @@ export type Scalars = {
   ObjectId: any;
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
   DateTime: any;
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSON: any;
 };
 
 export type AvailableCategorieResponse = {
@@ -27,7 +29,9 @@ export type Category = {
   _id: Scalars["ObjectId"];
   name: Scalars["String"];
   description?: Maybe<Scalars["String"]>;
-  services?: Maybe<Array<Service>>;
+  service: Service;
+  statement: Scalars["String"];
+  details: Scalars["JSON"];
   createdAt?: Maybe<Scalars["DateTime"]>;
   updatedAt?: Maybe<Scalars["DateTime"]>;
 };
@@ -35,6 +39,8 @@ export type Category = {
 export type CategoryInput = {
   name: Scalars["String"];
   description?: Maybe<Scalars["String"]>;
+  statement: Scalars["String"];
+  details: Scalars["JSON"];
 };
 
 export type ErrorResponse = {
@@ -104,11 +110,13 @@ export type MutationLoginArgs = {
 
 export type MutationCreateCategoryArgs = {
   input: CategoryInput;
+  service: Scalars["ObjectId"];
 };
 
 export type MutationUpdateCategoryArgs = {
   input: CategoryInput;
   categoryId: Scalars["ObjectId"];
+  service: Scalars["ObjectId"];
 };
 
 export type MutationDeleteCategoryArgs = {
@@ -130,18 +138,15 @@ export type MutationDeleteRoleArgs = {
 
 export type MutationCreateServiceArgs = {
   input: ServiceInput;
-  categoryId: Scalars["ObjectId"];
 };
 
 export type MutationUpdateServiceArgs = {
   input: ServiceInput;
   serviceId: Scalars["ObjectId"];
-  categoryId: Scalars["ObjectId"];
 };
 
 export type MutationDeleteServiceArgs = {
   serviceId: Scalars["ObjectId"];
-  categoryId: Scalars["ObjectId"];
 };
 
 export type MutationCreateUserArgs = {
@@ -224,32 +229,14 @@ export type Service = {
   _id: Scalars["ObjectId"];
   name: Scalars["String"];
   description?: Maybe<Scalars["String"]>;
-  statement: Scalars["String"];
-  category?: Maybe<Category>;
-  serviceActions?: Maybe<Array<ServiceAction>>;
+  categories?: Maybe<Array<Category>>;
   createdAt?: Maybe<Scalars["DateTime"]>;
   updatedAt?: Maybe<Scalars["DateTime"]>;
-};
-
-export type ServiceAction = {
-  __typename?: "ServiceAction";
-  _id: Scalars["ObjectId"];
-  name: Scalars["String"];
-  description?: Maybe<Scalars["String"]>;
-  service?: Maybe<Service>;
-  createdAt?: Maybe<Scalars["DateTime"]>;
-  updatedAt?: Maybe<Scalars["DateTime"]>;
-};
-
-export type ServiceActionInput = {
-  name: Scalars["String"];
-  description?: Maybe<Scalars["String"]>;
 };
 
 export type ServiceInput = {
   name: Scalars["String"];
   description?: Maybe<Scalars["String"]>;
-  statement: Scalars["String"];
 };
 
 export type User = {
@@ -331,6 +318,56 @@ export type RegisterMutation = { __typename?: "Mutation" } & {
   >;
 };
 
+export type CategoryInfoFragment = { __typename?: "Category" } & Pick<
+  Category,
+  "_id" | "name" | "description" | "statement" | "details"
+>;
+
+export type CreateCategoryMutationVariables = {
+  service: Scalars["ObjectId"];
+  input: CategoryInput;
+};
+
+export type CreateCategoryMutation = { __typename?: "Mutation" } & {
+  createCategory: Maybe<
+    { __typename?: "FormSubmitResponse" } & {
+      errors: Maybe<
+        Array<{ __typename?: "ErrorResponse" } & ErrorInfoFragment>
+      >;
+    }
+  >;
+};
+
+export type DeleteCategoryMutationVariables = {
+  categoryId: Scalars["ObjectId"];
+};
+
+export type DeleteCategoryMutation = { __typename?: "Mutation" } & {
+  deleteCategory: Maybe<
+    { __typename?: "FormSubmitResponse" } & {
+      errors: Maybe<
+        Array<{ __typename?: "ErrorResponse" } & ErrorInfoFragment>
+      >;
+    }
+  >;
+};
+
+export type UpdateCategoryMutationVariables = {
+  service: Scalars["ObjectId"];
+  categoryId: Scalars["ObjectId"];
+  input: CategoryInput;
+};
+
+export type UpdateCategoryMutation = { __typename?: "Mutation" } & {
+  updateCategory: Maybe<
+    { __typename?: "FormSubmitResponse" } & {
+      errors: Maybe<
+        Array<{ __typename?: "ErrorResponse" } & ErrorInfoFragment>
+      >;
+    }
+  >;
+};
+
 export type RoleInfoFragment = { __typename?: "Role" } & Pick<
   Role,
   "_id" | "name" | "key" | "description"
@@ -383,6 +420,54 @@ export type AllRolesQueryVariables = {};
 
 export type AllRolesQuery = { __typename?: "Query" } & {
   roles: Maybe<Array<{ __typename?: "Role" } & RoleInfoFragment>>;
+};
+
+export type ServiceInfoFragment = { __typename?: "Service" } & Pick<
+  Service,
+  "_id" | "name" | "description"
+>;
+
+export type CreateServiceMutationVariables = {
+  input: ServiceInput;
+};
+
+export type CreateServiceMutation = { __typename?: "Mutation" } & {
+  createService: Maybe<
+    { __typename?: "FormSubmitResponse" } & {
+      errors: Maybe<
+        Array<{ __typename?: "ErrorResponse" } & ErrorInfoFragment>
+      >;
+    }
+  >;
+};
+
+export type DeleteServiceMutationVariables = {
+  serviceId: Scalars["ObjectId"];
+};
+
+export type DeleteServiceMutation = { __typename?: "Mutation" } & {
+  deleteService: Maybe<
+    { __typename?: "FormSubmitResponse" } & {
+      errors: Maybe<
+        Array<{ __typename?: "ErrorResponse" } & ErrorInfoFragment>
+      >;
+    }
+  >;
+};
+
+export type UpdateServiceMutationVariables = {
+  serviceId: Scalars["ObjectId"];
+  input: ServiceInput;
+};
+
+export type UpdateServiceMutation = { __typename?: "Mutation" } & {
+  updateService: Maybe<
+    { __typename?: "FormSubmitResponse" } & {
+      errors: Maybe<
+        Array<{ __typename?: "ErrorResponse" } & ErrorInfoFragment>
+      >;
+    }
+  >;
 };
 
 export type ErrorInfoFragment = { __typename?: "ErrorResponse" } & Pick<
@@ -453,6 +538,22 @@ export type MeQueryVariables = {};
 export type MeQuery = { __typename?: "Query" } & {
   me: Maybe<{ __typename?: "User" } & UserInfoFragment>;
 };
+export const CategoryInfoFragmentDoc = gql`
+  fragment CategoryInfo on Category {
+    _id
+    name
+    description
+    statement
+    details
+  }
+`;
+export const ServiceInfoFragmentDoc = gql`
+  fragment ServiceInfo on Service {
+    _id
+    name
+    description
+  }
+`;
 export const ErrorInfoFragmentDoc = gql`
   fragment ErrorInfo on ErrorResponse {
     path
@@ -510,6 +611,7 @@ export function useLoginMutation(
     baseOptions
   );
 }
+export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export const LogoutDocument = gql`
   mutation Logout {
     logout
@@ -531,6 +633,7 @@ export function useLogoutMutation(
     baseOptions
   );
 }
+export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export const RegisterDocument = gql`
   mutation Register($role: String!, $input: RegisterInput!) {
     register(role: $role, input: $input) {
@@ -557,6 +660,98 @@ export function useRegisterMutation(
     RegisterMutationVariables
   >(RegisterDocument, baseOptions);
 }
+export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
+export const CreateCategoryDocument = gql`
+  mutation CreateCategory($service: ObjectId!, $input: CategoryInput!) {
+    createCategory(service: $service, input: $input) {
+      errors {
+        ...ErrorInfo
+      }
+    }
+  }
+  ${ErrorInfoFragmentDoc}
+`;
+export type CreateCategoryMutationFn = ReactApollo.MutationFn<
+  CreateCategoryMutation,
+  CreateCategoryMutationVariables
+>;
+
+export function useCreateCategoryMutation(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
+    CreateCategoryMutation,
+    CreateCategoryMutationVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<
+    CreateCategoryMutation,
+    CreateCategoryMutationVariables
+  >(CreateCategoryDocument, baseOptions);
+}
+export type CreateCategoryMutationHookResult = ReturnType<
+  typeof useCreateCategoryMutation
+>;
+export const DeleteCategoryDocument = gql`
+  mutation DeleteCategory($categoryId: ObjectId!) {
+    deleteCategory(categoryId: $categoryId) {
+      errors {
+        ...ErrorInfo
+      }
+    }
+  }
+  ${ErrorInfoFragmentDoc}
+`;
+export type DeleteCategoryMutationFn = ReactApollo.MutationFn<
+  DeleteCategoryMutation,
+  DeleteCategoryMutationVariables
+>;
+
+export function useDeleteCategoryMutation(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
+    DeleteCategoryMutation,
+    DeleteCategoryMutationVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<
+    DeleteCategoryMutation,
+    DeleteCategoryMutationVariables
+  >(DeleteCategoryDocument, baseOptions);
+}
+export type DeleteCategoryMutationHookResult = ReturnType<
+  typeof useDeleteCategoryMutation
+>;
+export const UpdateCategoryDocument = gql`
+  mutation UpdateCategory(
+    $service: ObjectId!
+    $categoryId: ObjectId!
+    $input: CategoryInput!
+  ) {
+    updateCategory(service: $service, categoryId: $categoryId, input: $input) {
+      errors {
+        ...ErrorInfo
+      }
+    }
+  }
+  ${ErrorInfoFragmentDoc}
+`;
+export type UpdateCategoryMutationFn = ReactApollo.MutationFn<
+  UpdateCategoryMutation,
+  UpdateCategoryMutationVariables
+>;
+
+export function useUpdateCategoryMutation(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
+    UpdateCategoryMutation,
+    UpdateCategoryMutationVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<
+    UpdateCategoryMutation,
+    UpdateCategoryMutationVariables
+  >(UpdateCategoryDocument, baseOptions);
+}
+export type UpdateCategoryMutationHookResult = ReturnType<
+  typeof useUpdateCategoryMutation
+>;
 export const CreateRoleDocument = gql`
   mutation CreateRole($input: RoleInput!) {
     createRole(input: $input) {
@@ -583,6 +778,9 @@ export function useCreateRoleMutation(
     CreateRoleMutationVariables
   >(CreateRoleDocument, baseOptions);
 }
+export type CreateRoleMutationHookResult = ReturnType<
+  typeof useCreateRoleMutation
+>;
 export const DeleteRoleDocument = gql`
   mutation DeleteRole($roleId: ObjectId!) {
     deleteRole(roleId: $roleId) {
@@ -609,6 +807,9 @@ export function useDeleteRoleMutation(
     DeleteRoleMutationVariables
   >(DeleteRoleDocument, baseOptions);
 }
+export type DeleteRoleMutationHookResult = ReturnType<
+  typeof useDeleteRoleMutation
+>;
 export const UpdateRoleDocument = gql`
   mutation UpdateRole($roleId: ObjectId!, $input: RoleInput!) {
     updateRole(roleId: $roleId, input: $input) {
@@ -635,6 +836,9 @@ export function useUpdateRoleMutation(
     UpdateRoleMutationVariables
   >(UpdateRoleDocument, baseOptions);
 }
+export type UpdateRoleMutationHookResult = ReturnType<
+  typeof useUpdateRoleMutation
+>;
 export const AllRolesDocument = gql`
   query allRoles {
     roles {
@@ -652,6 +856,94 @@ export function useAllRolesQuery(
     baseOptions
   );
 }
+export type AllRolesQueryHookResult = ReturnType<typeof useAllRolesQuery>;
+export const CreateServiceDocument = gql`
+  mutation CreateService($input: ServiceInput!) {
+    createService(input: $input) {
+      errors {
+        ...ErrorInfo
+      }
+    }
+  }
+  ${ErrorInfoFragmentDoc}
+`;
+export type CreateServiceMutationFn = ReactApollo.MutationFn<
+  CreateServiceMutation,
+  CreateServiceMutationVariables
+>;
+
+export function useCreateServiceMutation(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
+    CreateServiceMutation,
+    CreateServiceMutationVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<
+    CreateServiceMutation,
+    CreateServiceMutationVariables
+  >(CreateServiceDocument, baseOptions);
+}
+export type CreateServiceMutationHookResult = ReturnType<
+  typeof useCreateServiceMutation
+>;
+export const DeleteServiceDocument = gql`
+  mutation DeleteService($serviceId: ObjectId!) {
+    deleteService(serviceId: $serviceId) {
+      errors {
+        ...ErrorInfo
+      }
+    }
+  }
+  ${ErrorInfoFragmentDoc}
+`;
+export type DeleteServiceMutationFn = ReactApollo.MutationFn<
+  DeleteServiceMutation,
+  DeleteServiceMutationVariables
+>;
+
+export function useDeleteServiceMutation(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
+    DeleteServiceMutation,
+    DeleteServiceMutationVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<
+    DeleteServiceMutation,
+    DeleteServiceMutationVariables
+  >(DeleteServiceDocument, baseOptions);
+}
+export type DeleteServiceMutationHookResult = ReturnType<
+  typeof useDeleteServiceMutation
+>;
+export const UpdateServiceDocument = gql`
+  mutation UpdateService($serviceId: ObjectId!, $input: ServiceInput!) {
+    updateService(serviceId: $serviceId, input: $input) {
+      errors {
+        ...ErrorInfo
+      }
+    }
+  }
+  ${ErrorInfoFragmentDoc}
+`;
+export type UpdateServiceMutationFn = ReactApollo.MutationFn<
+  UpdateServiceMutation,
+  UpdateServiceMutationVariables
+>;
+
+export function useUpdateServiceMutation(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
+    UpdateServiceMutation,
+    UpdateServiceMutationVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<
+    UpdateServiceMutation,
+    UpdateServiceMutationVariables
+  >(UpdateServiceDocument, baseOptions);
+}
+export type UpdateServiceMutationHookResult = ReturnType<
+  typeof useUpdateServiceMutation
+>;
 export const CreateUserDocument = gql`
   mutation CreateUser($role: String!, $input: UserInput!) {
     createUser(role: $role, input: $input) {
@@ -678,6 +970,9 @@ export function useCreateUserMutation(
     CreateUserMutationVariables
   >(CreateUserDocument, baseOptions);
 }
+export type CreateUserMutationHookResult = ReturnType<
+  typeof useCreateUserMutation
+>;
 export const DeleteUserDocument = gql`
   mutation DeleteUser($userId: ObjectId!) {
     deleteUser(userId: $userId) {
@@ -704,6 +999,9 @@ export function useDeleteUserMutation(
     DeleteUserMutationVariables
   >(DeleteUserDocument, baseOptions);
 }
+export type DeleteUserMutationHookResult = ReturnType<
+  typeof useDeleteUserMutation
+>;
 export const UpdateUserDocument = gql`
   mutation UpdateUser(
     $userId: ObjectId!
@@ -734,6 +1032,9 @@ export function useUpdateUserMutation(
     UpdateUserMutationVariables
   >(UpdateUserDocument, baseOptions);
 }
+export type UpdateUserMutationHookResult = ReturnType<
+  typeof useUpdateUserMutation
+>;
 export const AllAdminExceptCurrentUserDocument = gql`
   query AllAdminExceptCurrentUser {
     allAdminExceptCurrentUser {
@@ -753,6 +1054,9 @@ export function useAllAdminExceptCurrentUserQuery(
     AllAdminExceptCurrentUserQueryVariables
   >(AllAdminExceptCurrentUserDocument, baseOptions);
 }
+export type AllAdminExceptCurrentUserQueryHookResult = ReturnType<
+  typeof useAllAdminExceptCurrentUserQuery
+>;
 export const MeDocument = gql`
   query Me {
     me {
@@ -770,3 +1074,4 @@ export function useMeQuery(
     baseOptions
   );
 }
+export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
