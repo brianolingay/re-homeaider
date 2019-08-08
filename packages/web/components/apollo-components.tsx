@@ -282,11 +282,7 @@ export type LoginMutationVariables = {
 export type LoginMutation = { __typename?: "Mutation" } & {
   login: Maybe<
     { __typename?: "LoginResponse" } & {
-      user: Maybe<
-        { __typename?: "User" } & {
-          role: Maybe<{ __typename?: "Role" } & RoleInfoFragment>;
-        } & UserInfoFragment
-      >;
+      user: Maybe<{ __typename?: "User" } & UserInfoFragment>;
       errors: Maybe<
         Array<{ __typename?: "ErrorResponse" } & ErrorInfoFragment>
       >;
@@ -490,7 +486,7 @@ export type ErrorInfoFragment = { __typename?: "ErrorResponse" } & Pick<
 export type UserInfoFragment = { __typename?: "User" } & Pick<
   User,
   "_id" | "email" | "firstName" | "lastName" | "mobile"
->;
+> & { role: Maybe<{ __typename?: "Role" } & RoleInfoFragment> };
 
 export type CreateUserMutationVariables = {
   role: Scalars["String"];
@@ -541,22 +537,14 @@ export type AllAdminExceptCurrentUserQueryVariables = {};
 
 export type AllAdminExceptCurrentUserQuery = { __typename?: "Query" } & {
   allAdminExceptCurrentUser: Maybe<
-    Array<
-      { __typename?: "User" } & {
-        role: Maybe<{ __typename?: "Role" } & RoleInfoFragment>;
-      } & UserInfoFragment
-    >
+    Array<{ __typename?: "User" } & UserInfoFragment>
   >;
 };
 
 export type MeQueryVariables = {};
 
 export type MeQuery = { __typename?: "Query" } & {
-  me: Maybe<
-    { __typename?: "User" } & {
-      role: Maybe<{ __typename?: "Role" } & RoleInfoFragment>;
-    } & UserInfoFragment
-  >;
+  me: Maybe<{ __typename?: "User" } & UserInfoFragment>;
 };
 export const CategoryInfoFragmentDoc = gql`
   fragment CategoryInfo on Category {
@@ -565,14 +553,6 @@ export const CategoryInfoFragmentDoc = gql`
     description
     statement
     details
-  }
-`;
-export const RoleInfoFragmentDoc = gql`
-  fragment RoleInfo on Role {
-    _id
-    name
-    key
-    description
   }
 `;
 export const ServiceInfoFragmentDoc = gql`
@@ -588,6 +568,14 @@ export const ErrorInfoFragmentDoc = gql`
     message
   }
 `;
+export const RoleInfoFragmentDoc = gql`
+  fragment RoleInfo on Role {
+    _id
+    name
+    key
+    description
+  }
+`;
 export const UserInfoFragmentDoc = gql`
   fragment UserInfo on User {
     _id
@@ -595,16 +583,17 @@ export const UserInfoFragmentDoc = gql`
     firstName
     lastName
     mobile
+    role {
+      ...RoleInfo
+    }
   }
+  ${RoleInfoFragmentDoc}
 `;
 export const LoginDocument = gql`
   mutation Login($input: LoginInput!) {
     login(input: $input) {
       user {
         ...UserInfo
-        role {
-          ...RoleInfo
-        }
       }
       errors {
         ...ErrorInfo
@@ -612,7 +601,6 @@ export const LoginDocument = gql`
     }
   }
   ${UserInfoFragmentDoc}
-  ${RoleInfoFragmentDoc}
   ${ErrorInfoFragmentDoc}
 `;
 export type LoginMutationFn = ReactApollo.MutationFn<
@@ -1095,13 +1083,9 @@ export const AllAdminExceptCurrentUserDocument = gql`
   query AllAdminExceptCurrentUser {
     allAdminExceptCurrentUser {
       ...UserInfo
-      role {
-        ...RoleInfo
-      }
     }
   }
   ${UserInfoFragmentDoc}
-  ${RoleInfoFragmentDoc}
 `;
 
 export function useAllAdminExceptCurrentUserQuery(
@@ -1121,13 +1105,9 @@ export const MeDocument = gql`
   query Me {
     me {
       ...UserInfo
-      role {
-        ...RoleInfo
-      }
     }
   }
   ${UserInfoFragmentDoc}
-  ${RoleInfoFragmentDoc}
 `;
 
 export function useMeQuery(

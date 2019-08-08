@@ -6,3 +6,6 @@ node_modules/
 
 # production server output
 dist
+
+# GraphQL codegen ApolloComponents
+components/apollo-components.tsx
