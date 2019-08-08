@@ -1,18 +1,11 @@
-import React from "react";
 import { Layout, Menu } from "antd";
 import Link from "next/link";
+import React from "react";
 import { NavProps } from "./HeaderNav";
-import { useRouter } from "next/router";
 
 const { Sider } = Layout;
 
-const AdminSider = ({ pathname }: NavProps) => {
-  const router = useRouter();
-
-  const handleNav = (e: any) => {
-    router.push(e.key);
-  };
-
+const AdminSider = ({ pathname, handleNav }: NavProps) => {
   return (
     <Sider width={200} style={{ background: "#fff" }}>
       <Menu

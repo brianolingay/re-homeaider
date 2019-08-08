@@ -6,7 +6,6 @@ import { FormSubmitResponse } from "../FormSubmitResponse";
 import CategoryDBA from "./CategoryDBA";
 import { CategoryInput } from "./CategoryInput";
 import { Category } from "./CategoryObject";
-import { AvailableCategorieResponse } from "./CategoryResponse";
 
 @Resolver(Category)
 export class CategoryResolver {
@@ -118,13 +117,13 @@ export class CategoryResolver {
 
   @Authorized()
   @Query(() => [Category], { nullable: true })
-  async categories(): Promise<Category[]> {
-    return await CategoryDBA.findAll();
+  async categories(@Arg("serviceId") serviceId: ObjectId): Promise<Category[]> {
+    return await CategoryDBA.findAll({ service: serviceId });
   }
 
   @Authorized()
-  @Query(() => [AvailableCategorieResponse], { nullable: true })
-  async availableCategories(): Promise<AvailableCategorieResponse[]> {
-    return await CategoryDBA.getAllAvailable();
+  @Query(() => Category, { nullable: true })
+  async category(@Arg("categoryId") categoryId: ObjectId): Promise<Category> {
+    return await CategoryDBA.get(categoryId);
   }
 }

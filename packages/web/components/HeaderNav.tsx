@@ -1,27 +1,20 @@
+import { Icon, Layout, Menu } from "antd";
 import React from "react";
-import Link from "next/link";
-import { Layout, Menu, Icon } from "antd";
-import { useMeQuery, useLogoutMutation } from "./apollo-components";
 import { useApolloClient } from "react-apollo-hooks";
-import { useRouter } from "next/router";
+import { useLogoutMutation, MeQuery } from "./apollo-components";
 
 const { SubMenu } = Menu;
 const { Header } = Layout;
 
 export type NavProps = {
+  check: MeQuery | undefined;
   pathname: string;
+  handleNav: (e: any) => void;
 };
 
-export default function HeaderNav({ pathname }: NavProps) {
+export default function HeaderNav({ pathname, handleNav, check }: NavProps) {
   const client = useApolloClient();
-  const { data } = useMeQuery();
   const logout = useLogoutMutation();
-
-  const router = useRouter();
-
-  const handleNav = (e: any) => {
-    router.push(e.key);
-  };
 
   return (
     <Header
@@ -37,7 +30,7 @@ export default function HeaderNav({ pathname }: NavProps) {
           justifyContent: "flex-end",
         }}
       >
-        {data && !data!.me && (
+        {check && !check.me && (
           <Menu
             theme="dark"
             mode="horizontal"
@@ -52,7 +45,7 @@ export default function HeaderNav({ pathname }: NavProps) {
             </Menu.Item>
           </Menu>
         )}
-        {data && data!.me && (
+        {check && check.me && (
           <Menu
             theme="dark"
             mode="horizontal"
@@ -64,7 +57,7 @@ export default function HeaderNav({ pathname }: NavProps) {
               title={
                 <span>
                   <Icon type="user" />
-                  <span>{data.me.email}</span>
+                  <span>{check.me.email}</span>
                 </span>
               }
             >

@@ -6,7 +6,6 @@ import { FormSubmitResponse } from "../FormSubmitResponse";
 import ServiceDBA from "./ServiceDBA";
 import { ServiceInput } from "./ServiceInput";
 import { Service } from "./ServiceObject";
-import { FindServicesByCategoryResponse } from "./ServiceResponse";
 
 @Resolver(Service)
 export class ServiceResolver {
@@ -114,10 +113,8 @@ export class ServiceResolver {
   }
 
   @Authorized()
-  @Query(() => [FindServicesByCategoryResponse], { nullable: true })
-  async findServicesByCategory(
-    @Arg("categoryId") categoryId: ObjectId
-  ): Promise<FindServicesByCategoryResponse[]> {
-    return await ServiceDBA.getAllAvailableServiceByCategory(categoryId);
+  @Query(() => Service, { nullable: true })
+  async service(@Arg("serviceId") serviceId: ObjectId): Promise<Service> {
+    return await ServiceDBA.get(serviceId);
   }
 }

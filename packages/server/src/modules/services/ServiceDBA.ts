@@ -6,52 +6,20 @@ const dba = DBRepository(ServiceModel);
 
 const get = async (serviceId: ObjectId) => {
   return await ServiceModel.findById(serviceId)
+    .populate("categories")
     .lean()
     .exec();
 };
 
 const findAll = async (condition: any = {}) => {
   return await ServiceModel.find(condition)
-    .populate("category")
+    .populate("categories")
     .lean()
     .exec();
-};
-
-const getAllAvailableServiceByCategory = async (categoryId: ObjectId) => {
-  return await ServiceModel.aggregate([
-    {
-      $match: { category: categoryId },
-    },
-    {
-      $lookup: {
-        from: "providerservices",
-        localField: "_id",
-        foreignField: "service",
-        as: "pc_doc",
-      },
-    },
-    { $match: { pc_doc: { $ne: [] } } },
-    {
-      $project: {
-        _id: 1,
-        name: 1,
-        totalUsers: {
-          $size: {
-            $filter: {
-              input: "$pc_doc",
-              as: "pc",
-              cond: { $eq: ["$$pc.approved", true] },
-            },
-          },
-        },
-      },
-    },
-  ]);
 };
 
 export default {
   ...dba,
   findAll,
   get,
-  getAllAvailableServiceByCategory,
 };

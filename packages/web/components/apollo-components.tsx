@@ -17,13 +17,6 @@ export type Scalars = {
   JSON: any;
 };
 
-export type AvailableCategorieResponse = {
-  __typename?: "AvailableCategorieResponse";
-  _id: Scalars["ObjectId"];
-  name: Scalars["String"];
-  totalServices: Scalars["Float"];
-};
-
 export type Category = {
   __typename?: "Category";
   _id: Scalars["ObjectId"];
@@ -47,13 +40,6 @@ export type ErrorResponse = {
   __typename?: "ErrorResponse";
   path: Scalars["String"];
   message: Scalars["String"];
-};
-
-export type FindServicesByCategoryResponse = {
-  __typename?: "FindServicesByCategoryResponse";
-  _id: Scalars["ObjectId"];
-  name: Scalars["String"];
-  totalUsers: Scalars["Float"];
 };
 
 export type FormSubmitResponse = {
@@ -188,18 +174,26 @@ export enum PaymentMode {
 export type Query = {
   __typename?: "Query";
   categories?: Maybe<Array<Category>>;
-  availableCategories?: Maybe<Array<AvailableCategorieResponse>>;
+  category?: Maybe<Category>;
   currentLocation?: Maybe<LocationResponse>;
   roles?: Maybe<Array<Role>>;
   services?: Maybe<Array<Service>>;
-  findServicesByCategory?: Maybe<Array<FindServicesByCategoryResponse>>;
+  service?: Maybe<Service>;
   me?: Maybe<User>;
   allAdminExceptCurrentUser?: Maybe<Array<User>>;
   userSubscriptions?: Maybe<Array<UserSubscription>>;
 };
 
-export type QueryFindServicesByCategoryArgs = {
+export type QueryCategoriesArgs = {
+  serviceId: Scalars["ObjectId"];
+};
+
+export type QueryCategoryArgs = {
   categoryId: Scalars["ObjectId"];
+};
+
+export type QueryServiceArgs = {
+  serviceId: Scalars["ObjectId"];
 };
 
 export type RegisterInput = {
@@ -288,7 +282,11 @@ export type LoginMutationVariables = {
 export type LoginMutation = { __typename?: "Mutation" } & {
   login: Maybe<
     { __typename?: "LoginResponse" } & {
-      user: Maybe<{ __typename?: "User" } & UserInfoFragment>;
+      user: Maybe<
+        { __typename?: "User" } & {
+          role: Maybe<{ __typename?: "Role" } & RoleInfoFragment>;
+        } & UserInfoFragment
+      >;
       errors: Maybe<
         Array<{ __typename?: "ErrorResponse" } & ErrorInfoFragment>
       >;
@@ -366,6 +364,14 @@ export type UpdateCategoryMutation = { __typename?: "Mutation" } & {
       >;
     }
   >;
+};
+
+export type CategoriesQueryVariables = {
+  serviceId: Scalars["ObjectId"];
+};
+
+export type CategoriesQuery = { __typename?: "Query" } & {
+  categories: Maybe<Array<{ __typename?: "Category" } & CategoryInfoFragment>>;
 };
 
 export type RoleInfoFragment = { __typename?: "Role" } & Pick<
@@ -470,6 +476,12 @@ export type UpdateServiceMutation = { __typename?: "Mutation" } & {
   >;
 };
 
+export type ServicesQueryVariables = {};
+
+export type ServicesQuery = { __typename?: "Query" } & {
+  services: Maybe<Array<{ __typename?: "Service" } & ServiceInfoFragment>>;
+};
+
 export type ErrorInfoFragment = { __typename?: "ErrorResponse" } & Pick<
   ErrorResponse,
   "path" | "message"
@@ -478,7 +490,7 @@ export type ErrorInfoFragment = { __typename?: "ErrorResponse" } & Pick<
 export type UserInfoFragment = { __typename?: "User" } & Pick<
   User,
   "_id" | "email" | "firstName" | "lastName" | "mobile"
-> & { role: Maybe<{ __typename?: "Role" } & RoleInfoFragment> };
+>;
 
 export type CreateUserMutationVariables = {
   role: Scalars["String"];
@@ -529,14 +541,22 @@ export type AllAdminExceptCurrentUserQueryVariables = {};
 
 export type AllAdminExceptCurrentUserQuery = { __typename?: "Query" } & {
   allAdminExceptCurrentUser: Maybe<
-    Array<{ __typename?: "User" } & UserInfoFragment>
+    Array<
+      { __typename?: "User" } & {
+        role: Maybe<{ __typename?: "Role" } & RoleInfoFragment>;
+      } & UserInfoFragment
+    >
   >;
 };
 
 export type MeQueryVariables = {};
 
 export type MeQuery = { __typename?: "Query" } & {
-  me: Maybe<{ __typename?: "User" } & UserInfoFragment>;
+  me: Maybe<
+    { __typename?: "User" } & {
+      role: Maybe<{ __typename?: "Role" } & RoleInfoFragment>;
+    } & UserInfoFragment
+  >;
 };
 export const CategoryInfoFragmentDoc = gql`
   fragment CategoryInfo on Category {
@@ -545,6 +565,14 @@ export const CategoryInfoFragmentDoc = gql`
     description
     statement
     details
+  }
+`;
+export const RoleInfoFragmentDoc = gql`
+  fragment RoleInfo on Role {
+    _id
+    name
+    key
+    description
   }
 `;
 export const ServiceInfoFragmentDoc = gql`
@@ -560,14 +588,6 @@ export const ErrorInfoFragmentDoc = gql`
     message
   }
 `;
-export const RoleInfoFragmentDoc = gql`
-  fragment RoleInfo on Role {
-    _id
-    name
-    key
-    description
-  }
-`;
 export const UserInfoFragmentDoc = gql`
   fragment UserInfo on User {
     _id
@@ -575,17 +595,16 @@ export const UserInfoFragmentDoc = gql`
     firstName
     lastName
     mobile
-    role {
-      ...RoleInfo
-    }
   }
-  ${RoleInfoFragmentDoc}
 `;
 export const LoginDocument = gql`
   mutation Login($input: LoginInput!) {
     login(input: $input) {
       user {
         ...UserInfo
+        role {
+          ...RoleInfo
+        }
       }
       errors {
         ...ErrorInfo
@@ -593,6 +612,7 @@ export const LoginDocument = gql`
     }
   }
   ${UserInfoFragmentDoc}
+  ${RoleInfoFragmentDoc}
   ${ErrorInfoFragmentDoc}
 `;
 export type LoginMutationFn = ReactApollo.MutationFn<
@@ -752,6 +772,24 @@ export function useUpdateCategoryMutation(
 export type UpdateCategoryMutationHookResult = ReturnType<
   typeof useUpdateCategoryMutation
 >;
+export const CategoriesDocument = gql`
+  query Categories($serviceId: ObjectId!) {
+    categories(serviceId: $serviceId) {
+      ...CategoryInfo
+    }
+  }
+  ${CategoryInfoFragmentDoc}
+`;
+
+export function useCategoriesQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<CategoriesQueryVariables>
+) {
+  return ReactApolloHooks.useQuery<CategoriesQuery, CategoriesQueryVariables>(
+    CategoriesDocument,
+    baseOptions
+  );
+}
+export type CategoriesQueryHookResult = ReturnType<typeof useCategoriesQuery>;
 export const CreateRoleDocument = gql`
   mutation CreateRole($input: RoleInput!) {
     createRole(input: $input) {
@@ -944,6 +982,24 @@ export function useUpdateServiceMutation(
 export type UpdateServiceMutationHookResult = ReturnType<
   typeof useUpdateServiceMutation
 >;
+export const ServicesDocument = gql`
+  query Services {
+    services {
+      ...ServiceInfo
+    }
+  }
+  ${ServiceInfoFragmentDoc}
+`;
+
+export function useServicesQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<ServicesQueryVariables>
+) {
+  return ReactApolloHooks.useQuery<ServicesQuery, ServicesQueryVariables>(
+    ServicesDocument,
+    baseOptions
+  );
+}
+export type ServicesQueryHookResult = ReturnType<typeof useServicesQuery>;
 export const CreateUserDocument = gql`
   mutation CreateUser($role: String!, $input: UserInput!) {
     createUser(role: $role, input: $input) {
@@ -1039,9 +1095,13 @@ export const AllAdminExceptCurrentUserDocument = gql`
   query AllAdminExceptCurrentUser {
     allAdminExceptCurrentUser {
       ...UserInfo
+      role {
+        ...RoleInfo
+      }
     }
   }
   ${UserInfoFragmentDoc}
+  ${RoleInfoFragmentDoc}
 `;
 
 export function useAllAdminExceptCurrentUserQuery(
@@ -1061,9 +1121,13 @@ export const MeDocument = gql`
   query Me {
     me {
       ...UserInfo
+      role {
+        ...RoleInfo
+      }
     }
   }
   ${UserInfoFragmentDoc}
+  ${RoleInfoFragmentDoc}
 `;
 
 export function useMeQuery(
