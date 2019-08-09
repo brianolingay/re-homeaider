@@ -151,7 +151,7 @@ function Users(props: any) {
 
   return (
     <MyLayout
-      title="Roles"
+      title="Users"
       containerStyle={{
         padding: "24px",
         flex: 1,
