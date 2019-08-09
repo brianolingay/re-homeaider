@@ -22,7 +22,7 @@ interface ServiceRecord extends ServiceInfoFragment {
   key: string;
 }
 
-function Users(props: any) {
+function Services(props: any) {
   const { data, loading, refetch } = useServicesQuery();
 
   const deleteService = useDeleteServiceMutation();
@@ -153,4 +153,4 @@ function Users(props: any) {
   );
 }
 
-export default withAuth(Users);
+export default withAuth(Services);
