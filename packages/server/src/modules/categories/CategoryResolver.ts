@@ -117,7 +117,15 @@ export class CategoryResolver {
 
   @Authorized()
   @Query(() => [Category], { nullable: true })
-  async categories(@Arg("serviceId") serviceId: ObjectId): Promise<Category[]> {
+  async categories(): Promise<Category[]> {
+    return await CategoryDBA.findAll();
+  }
+
+  @Authorized()
+  @Query(() => [Category], { nullable: true })
+  async categoriesByServiceId(
+    @Arg("serviceId") serviceId: ObjectId
+  ): Promise<Category[]> {
     return await CategoryDBA.findAll({ service: serviceId });
   }
 

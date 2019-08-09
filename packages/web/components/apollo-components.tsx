@@ -174,6 +174,7 @@ export enum PaymentMode {
 export type Query = {
   __typename?: "Query";
   categories?: Maybe<Array<Category>>;
+  categoriesByServiceId?: Maybe<Array<Category>>;
   category?: Maybe<Category>;
   currentLocation?: Maybe<LocationResponse>;
   roles?: Maybe<Array<Role>>;
@@ -184,7 +185,7 @@ export type Query = {
   userSubscriptions?: Maybe<Array<UserSubscription>>;
 };
 
-export type QueryCategoriesArgs = {
+export type QueryCategoriesByServiceIdArgs = {
   serviceId: Scalars["ObjectId"];
 };
 
@@ -315,7 +316,7 @@ export type RegisterMutation = { __typename?: "Mutation" } & {
 export type CategoryInfoFragment = { __typename?: "Category" } & Pick<
   Category,
   "_id" | "name" | "description" | "statement" | "details"
->;
+> & { service: { __typename?: "Service" } & ServiceInfoFragment };
 
 export type CreateCategoryMutationVariables = {
   service: Scalars["ObjectId"];
@@ -362,12 +363,20 @@ export type UpdateCategoryMutation = { __typename?: "Mutation" } & {
   >;
 };
 
-export type CategoriesQueryVariables = {
-  serviceId: Scalars["ObjectId"];
-};
+export type CategoriesQueryVariables = {};
 
 export type CategoriesQuery = { __typename?: "Query" } & {
   categories: Maybe<Array<{ __typename?: "Category" } & CategoryInfoFragment>>;
+};
+
+export type CategoriesByServiceIdQueryVariables = {
+  serviceId: Scalars["ObjectId"];
+};
+
+export type CategoriesByServiceIdQuery = { __typename?: "Query" } & {
+  categoriesByServiceId: Maybe<
+    Array<{ __typename?: "Category" } & CategoryInfoFragment>
+  >;
 };
 
 export type RoleInfoFragment = { __typename?: "Role" } & Pick<
@@ -546,6 +555,13 @@ export type MeQueryVariables = {};
 export type MeQuery = { __typename?: "Query" } & {
   me: Maybe<{ __typename?: "User" } & UserInfoFragment>;
 };
+export const ServiceInfoFragmentDoc = gql`
+  fragment ServiceInfo on Service {
+    _id
+    name
+    description
+  }
+`;
 export const CategoryInfoFragmentDoc = gql`
   fragment CategoryInfo on Category {
     _id
@@ -553,14 +569,11 @@ export const CategoryInfoFragmentDoc = gql`
     description
     statement
     details
+    service {
+      ...ServiceInfo
+    }
   }
-`;
-export const ServiceInfoFragmentDoc = gql`
-  fragment ServiceInfo on Service {
-    _id
-    name
-    description
-  }
+  ${ServiceInfoFragmentDoc}
 `;
 export const ErrorInfoFragmentDoc = gql`
   fragment ErrorInfo on ErrorResponse {
@@ -761,8 +774,8 @@ export type UpdateCategoryMutationHookResult = ReturnType<
   typeof useUpdateCategoryMutation
 >;
 export const CategoriesDocument = gql`
-  query Categories($serviceId: ObjectId!) {
-    categories(serviceId: $serviceId) {
+  query Categories {
+    categories {
       ...CategoryInfo
     }
   }
@@ -778,6 +791,28 @@ export function useCategoriesQuery(
   );
 }
 export type CategoriesQueryHookResult = ReturnType<typeof useCategoriesQuery>;
+export const CategoriesByServiceIdDocument = gql`
+  query CategoriesByServiceId($serviceId: ObjectId!) {
+    categoriesByServiceId(serviceId: $serviceId) {
+      ...CategoryInfo
+    }
+  }
+  ${CategoryInfoFragmentDoc}
+`;
+
+export function useCategoriesByServiceIdQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<
+    CategoriesByServiceIdQueryVariables
+  >
+) {
+  return ReactApolloHooks.useQuery<
+    CategoriesByServiceIdQuery,
+    CategoriesByServiceIdQueryVariables
+  >(CategoriesByServiceIdDocument, baseOptions);
+}
+export type CategoriesByServiceIdQueryHookResult = ReturnType<
+  typeof useCategoriesByServiceIdQuery
+>;
 export const CreateRoleDocument = gql`
   mutation CreateRole($input: RoleInput!) {
     createRole(input: $input) {

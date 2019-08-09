@@ -1,9 +1,9 @@
 import gql from "graphql-tag";
 import { categoryInfoFragment } from "../fragments/CategoryInfo";
 
-export const categoriesQuery = gql`
-  query Categories {
-    categories {
+export const categoriesByServiceIdQuery = gql`
+  query CategoriesByServiceId($serviceId: ObjectId!) {
+    categoriesByServiceId(serviceId: $serviceId) {
       ...CategoryInfo
     }
   }
