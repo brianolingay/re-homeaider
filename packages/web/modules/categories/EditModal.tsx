@@ -2,15 +2,15 @@ import { validServiceSchema } from "@homeaider/common";
 import { ApolloQueryResult } from "apollo-boost";
 import React from "react";
 import {
-  ServicesQuery,
-  useUpdateServiceMutation,
+  CategoriesQuery,
+  useUpdateCategoryMutation,
 } from "../../components/apollo-components";
-import { FormValues, ServiceFormModal } from "./FormModal";
+import { CategoryFormModal, FormValues } from "./FormModal";
 
 interface Props {
   showEditModal: boolean;
   handleEditModal: (category: any) => void;
-  refetch: () => Promise<ApolloQueryResult<ServicesQuery>>;
+  refetch: () => Promise<ApolloQueryResult<CategoriesQuery>>;
   category: any;
   services: any;
 }
@@ -22,16 +22,16 @@ export const EditModal = ({
   category,
   services,
 }: Props) => {
-  const updateService = useUpdateServiceMutation();
+  const updateCategory = useUpdateCategoryMutation();
   return (
-    <ServiceFormModal
-      modalName="Edit Service"
-      submit={async ({ serviceId, ...input }: FormValues) => {
-        return await updateService({
-          variables: { serviceId, input },
+    <CategoryFormModal
+      modalName="Edit Category"
+      submit={async ({ categoryId, service, ...input }: FormValues) => {
+        return await updateCategory({
+          variables: { categoryId, service, input },
         });
       }}
-      method="updateService"
+      method="updateCategory"
       refetch={refetch}
       showModal={showEditModal}
       handleModal={handleEditModal}

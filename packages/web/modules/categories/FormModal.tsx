@@ -3,25 +3,27 @@ import { ApolloQueryResult } from "apollo-boost";
 import { Field } from "formik";
 import React, { useState } from "react";
 import {
-  ServiceInput,
-  ServicesQuery,
+  CategoriesQuery,
   CategoryInput,
 } from "../../components/apollo-components";
 import { InputField } from "../../components/formik-fields/InputField";
-import { FormModal } from "../../components/formik-modal/FormModal";
+import { SelectField } from "../../components/formik-fields/SelectField";
 import { TextAreaField } from "../../components/formik-fields/TextAreaField";
+import { FormModal } from "../../components/formik-modal/FormModal";
 
 export interface FormValues extends CategoryInput {
   categoryId: string;
+  service: string;
 }
 
 interface Props {
-  service: any | null;
+  category: any | null;
+  services: any;
   method: string;
   modalName: string;
   showModal: boolean;
   handleModal: (item?: any) => void;
-  refetch: () => Promise<ApolloQueryResult<ServicesQuery>>;
+  refetch: () => Promise<ApolloQueryResult<CategoriesQuery>>;
   validationSchema: any;
   submit: any;
 }
@@ -33,9 +35,9 @@ const defaultInitialValue = {
   statement: "",
 };
 
-export const ServiceFormModal = (props: Props) => {
-  const service = props.service;
-  const initialValues = service ? service : defaultInitialValue;
+export const CategoryFormModal = (props: Props) => {
+  const category = props.category;
+  const initialValues = category ? category : defaultInitialValue;
 
   const [details, setDetails] = useState([{ name: "option 1", options: [""] }]);
 
@@ -68,6 +70,12 @@ export const ServiceFormModal = (props: Props) => {
       submit={handleEditSubmit}
     >
       <Form labelCol={{ span: 7 }} wrapperCol={{ span: 16 }}>
+        <Field
+          name="service"
+          label="Service"
+          options={props.services}
+          component={SelectField}
+        />
         <Field name="name" label="Name" component={InputField} />
         <Field
           name="description"

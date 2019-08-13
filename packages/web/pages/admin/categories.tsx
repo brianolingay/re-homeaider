@@ -2,7 +2,6 @@ import { Button, Divider, message, Modal, Table } from "antd";
 import React, { useState } from "react";
 import {
   CategoryInfoFragment,
-  useDeleteServiceMutation,
   useServicesQuery,
   useCategoriesQuery,
   useDeleteCategoryMutation,

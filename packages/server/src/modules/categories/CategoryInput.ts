@@ -13,6 +13,6 @@ export class CategoryInput implements Partial<Category> {
   @Field()
   statement: string;
 
-  @Field(() => GraphQLJSON)
+  @Field(() => GraphQLJSON, { nullable: true })
   details: any;
 }
