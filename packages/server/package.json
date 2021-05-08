@@ -48,7 +48,7 @@
     "reflect-metadata": "^0.1.10",
     "shortid": "^2.2.14",
     "type-graphql": "^0.16.0",
-    "typeorm": "0.2.11",
+    "typeorm": "0.2.25",
     "uuid": "^3.3.2"
   },
   "scripts": {
