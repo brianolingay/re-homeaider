@@ -42,7 +42,7 @@
     "graphql-subscriptions": "^1.0.0",
     "graphql-upload": "^8.0.6",
     "ioredis": "^4.3.0",
-    "jsonwebtoken": "^8.4.0",
+    "jsonwebtoken": "^9.0.0",
     "mongodb": "^3.0.8",
     "mongoose": "^5.4.3",
     "reflect-metadata": "^0.1.10",
